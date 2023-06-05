@@ -3,11 +3,11 @@
     <string name="app_name">FinControl</string>
 
     <!-- Titles -->
-    <string name="title_feed">Feed</string>
-    <string name="title_useful_advice">Useful advice</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_profile">Profile</string>
-    <string name="title_dark_mode">Dark mode</string>
+    <string name="title_feed">Лента</string>
+    <string name="title_useful_advice">Полезный совет</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_profile">Профиль</string>
+    <string name="title_dark_mode">Тёмный режим</string>
 
     <!-- Advices -->
     <string name="advice_title_1">Постоянно откладывайте часть своих доходов.</string>
