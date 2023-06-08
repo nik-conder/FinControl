@@ -85,6 +85,9 @@ android {
 dependencies {
     val room_version = "2.5.1"
 
+    //Data story
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     // Room
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")

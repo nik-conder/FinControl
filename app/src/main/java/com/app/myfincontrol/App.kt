@@ -2,6 +2,9 @@ package com.app.myfincontrol
 
 import android.app.Application
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.app.myfincontrol.di.AppComponent
 import com.app.myfincontrol.di.DaggerAppComponent
 import dagger.hilt.android.HiltAndroidApp
@@ -22,3 +25,5 @@ val Context.appComponent: AppComponent
         is App -> appComponent
         else -> this.applicationContext.appComponent
     }
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore("data_store")

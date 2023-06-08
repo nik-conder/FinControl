@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.app.myfincontrol.presentation.compose.screens.CreateProfileScreen
 import com.app.myfincontrol.presentation.compose.screens.HomeScreen
 import com.app.myfincontrol.presentation.compose.screens.LoginScreen
 import com.app.myfincontrol.presentation.compose.screens.ProfileScreen
@@ -33,6 +34,9 @@ fun NavGraph(
         }
         composable(route = Screen.Login.route) {
             LoginScreen(navController = navController)
+        }
+        composable(route = Screen.CreateProfile.route) {
+            CreateProfileScreen(navController = navController)
         }
     }
 }

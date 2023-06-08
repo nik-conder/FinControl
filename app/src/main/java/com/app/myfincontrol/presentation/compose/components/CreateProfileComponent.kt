@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.myfincontrol.data.Currency
@@ -60,7 +60,7 @@ fun CreateProfileComponent(
         ) {
             Text(
                 text = "Добро пожаловать!",
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.headlineSmall
             )
         }
 
@@ -75,8 +75,9 @@ fun CreateProfileComponent(
                     .fillMaxWidth(0.8f)
             ) {
                 Text(
-                    text = "Для продолжения необходимо указать название счета и выбрать валюту. Обратите внимание, что после создания счета изменить валюту будет невозможно.",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "Для продолжения необходимо дать название новому профилю и выбрать валюту. Обратите внимание, что после создания счета изменить валюту будет невозможно.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -89,7 +90,7 @@ fun CreateProfileComponent(
             OutlinedTextField(
                 value = accountName.value,
                 label = {
-                    Text(text = "Название счёта / профиля")
+                    Text(text = "Название профиля")
                 },
                 maxLines = 1,
                 onValueChange = {
@@ -163,7 +164,7 @@ fun CreateProfileComponent(
                     .padding(32.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                OutlinedButton(
+                TextButton(
                     onClick = {
                         onEvents.invoke(LoginEvents.CreateAccount(
                             profile = Profile(
@@ -175,7 +176,7 @@ fun CreateProfileComponent(
                     },
                     enabled = accountName.value.text.isNotEmpty()
                 ) {
-                    Text(text = "Создать профиль")
+                    Text(text = "Продолжить")
                 }
             }
         }

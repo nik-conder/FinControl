@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
             FinControlTheme(
                 //useDarkTheme = AppCompatDelegate.getDefaultNightMode()
-            //useDarkTheme = false
+            useDarkTheme = false
             ) {
                 val viewModel = viewModel.states.collectAsState()
                 Surface(

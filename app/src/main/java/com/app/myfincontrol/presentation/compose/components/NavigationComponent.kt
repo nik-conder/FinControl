@@ -18,9 +18,9 @@ fun NavigationComponent(
     navController: NavController
 ) {
     NavigationBar {
-        Text(text = "${navController.graph.route?.length}")
         NavigationBarItem(
-            selected = false,
+            selected = navController.currentDestination?.route == "settingsScreen",
+            enabled = navController.currentDestination?.route != "settingsScreen",
             onClick = {
                 navController.navigate("settingsScreen")
                       },
@@ -38,7 +38,8 @@ fun NavigationComponent(
         )
 
         NavigationBarItem(
-            selected = true,
+            selected = navController.currentDestination?.route == "homeScreen",
+            enabled = navController.currentDestination?.route != "homeScreen",
             onClick = { navController.navigate("homeScreen") },
             label = {
                 Text(
@@ -55,6 +56,7 @@ fun NavigationComponent(
 
         NavigationBarItem(
             selected = false,
+            //enabled = navController.currentDestination?.route == "homeScreen",
             onClick = { /* navController.navigate(item.route) */ },
             label = {
                 Text(
@@ -67,7 +69,8 @@ fun NavigationComponent(
         )
 
         NavigationBarItem(
-            selected = false,
+            selected = navController.currentDestination?.route == "profileScreen",
+            enabled = navController.currentDestination?.route != "profileScreen",
             onClick = {  navController.navigate("profileScreen")  },
             label = {
                 Text(
@@ -80,7 +83,8 @@ fun NavigationComponent(
         )
 
         NavigationBarItem(
-            selected = false,
+            selected = navController.currentDestination?.route == "loginScreen",
+            enabled = navController.currentDestination?.route != "loginScreen",
             onClick = {  navController.navigate("loginScreen")  },
             label = {
                 Text(

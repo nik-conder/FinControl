@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
+import com.app.myfincontrol.data.sources.dataStore.LoginDataStore
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
+import com.app.myfincontrol.domain.useCases.LoginUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
@@ -28,8 +30,9 @@ class PresentationModule @Inject constructor() {
     @Provides
     fun providerHomeViewModel(
         @ApplicationContext context: Context,
+        loginUseCase: LoginUseCase
     ): HomeViewModel {
-        return HomeViewModel(context)
+        return HomeViewModel(context, loginUseCase)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -38,9 +41,10 @@ class PresentationModule @Inject constructor() {
     fun providerLoginViewModel(
         @ApplicationContext context: Context,
         profileUseCase: ProfileUseCase,
-        balanceUseCase: BalanceUseCase
+        balanceUseCase: BalanceUseCase,
+        loginUseCase: LoginUseCase
     ): LoginViewModel {
-        return LoginViewModel(context, profileUseCase, balanceUseCase)
+        return LoginViewModel(context, profileUseCase, balanceUseCase, loginUseCase)
     }
 
 }
