@@ -2,10 +2,13 @@ package com.app.myfincontrol.di.modules
 
 import com.app.myfincontrol.data.repositories.BalanceRepository
 import com.app.myfincontrol.data.repositories.ProfileRepository
-import com.app.myfincontrol.data.sources.dataStore.LoginDataStore
+import com.app.myfincontrol.data.repositories.SessionRepository
+import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
-import com.app.myfincontrol.domain.useCases.LoginUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
+import com.app.myfincontrol.domain.useCases.RegistrationUseCase
+import com.app.myfincontrol.domain.useCases.SessionUseCase
+import com.app.myfincontrol.domain.useCases.TransactionUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +25,7 @@ class DomainModule @Inject constructor() {
     fun providerProfileUseCase(
         profileRepository: ProfileRepository
     ): ProfileUseCase = ProfileUseCase(
-        profileRepository
+        profileRepository,
     )
 
     @Singleton
@@ -35,9 +38,29 @@ class DomainModule @Inject constructor() {
 
     @Singleton
     @Provides
-    fun providerLoginUseCase(
-        loginDataStore: LoginDataStore
-    ) : LoginUseCase = LoginUseCase(
-        loginDataStore
+    fun providerSessionUseCase(
+        sessionRepository: SessionRepository
+    ): SessionUseCase = SessionUseCase(
+        sessionRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providerRegistrationUseCase(
+        profileRepository: ProfileRepository,
+        balanceRepository: BalanceRepository
+
+    ): RegistrationUseCase = RegistrationUseCase(
+        profileRepository, balanceRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providerTransactionUseCase(
+        balanceRepository: BalanceRepository,
+        transactionRepository: TransactionRepository
+    ): TransactionUseCase = TransactionUseCase(
+        balanceRepository,
+        transactionRepository
     )
 }

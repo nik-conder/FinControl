@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.presentation.compose.components.CreateProfileComponent
 import com.app.myfincontrol.presentation.compose.components.LoginComponent
+import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
 
@@ -64,32 +65,12 @@ fun LoginScreen(
                 contentAlignment = Alignment.Center
             ) {
                 if (states.value.isLoading) {
-                    if (states.value.profilesList.isNotEmpty()) {
-                        LoginComponent(onEvents = onEvents, profilesList = states.value.profilesList)
-                    } else {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Row(
-                            ) {
-                                Text(
-                                    text = "Я не могу найти ни один профиль \uD83D\uDE15",
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-                            Row() {
-                                TextButton(onClick = {
-                                    onEvents.invoke(LoginEvents.NewProfile)
-                                }) {
-                                    Text(text = "Создать новый")
-                                }
-                            }
-                        }
-                    }
-
+                    LoginComponent(
+                        onEvents = onEvents,
+                        profilesList = states.value.profilesList,
+                        selectedProfile = states.value.selectedProfile,
+                        navController = navController
+                    )
                 } else {
                     Column(
                         modifier = Modifier

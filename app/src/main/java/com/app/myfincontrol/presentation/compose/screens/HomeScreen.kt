@@ -3,39 +3,33 @@ package com.app.myfincontrol.presentation.compose.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myfincontrol.R
+import com.app.myfincontrol.data.Currency
 import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.FinancialChartsComponent
@@ -48,8 +42,22 @@ import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 fun HomeScreen(
     navController: NavHostController,
 ) {
-
     val vm = hiltViewModel<HomeViewModel>()
+    val onEvents = vm::onEvents
+    val onEventsTransaction = vm::onEventsTransaction
+
+    val states = vm.states.collectAsState()
+
+    val feedDataSource = remember {
+        Pager(
+            PagingConfig(pageSize = 10),
+            pagingSourceFactory = { vm.feedDataSource }
+        ).flow
+    }.collectAsLazyPagingItems()
+
+//    LaunchedEffect(!states.value.isLogin) {
+//        navController.navigate(Screen.Login.route)
+//    }
 
     Scaffold(
         modifier = Modifier
@@ -98,7 +106,12 @@ fun HomeScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-                HomeMainBoxComponent()
+                HomeMainBoxComponent(
+                    profileName = states.value.selectedProfile?.name ?: "...",
+                    balance = states.value.balance,
+                    currency = states.value.selectedProfile?.currency ?: Currency.USD,
+                    onEventsTransaction = onEventsTransaction,
+                )
             }
             BoxWithConstraints(
                 modifier = Modifier
@@ -128,7 +141,7 @@ fun HomeScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-               FeedComponent()
+               FeedComponent(feedDataSource)
             }
         }
     }

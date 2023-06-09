@@ -4,10 +4,11 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
-import com.app.myfincontrol.data.sources.dataStore.LoginDataStore
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
-import com.app.myfincontrol.domain.useCases.LoginUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
+import com.app.myfincontrol.domain.useCases.RegistrationUseCase
+import com.app.myfincontrol.domain.useCases.SessionUseCase
+import com.app.myfincontrol.domain.useCases.TransactionUseCase
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
 import dagger.Module
@@ -30,9 +31,12 @@ class PresentationModule @Inject constructor() {
     @Provides
     fun providerHomeViewModel(
         @ApplicationContext context: Context,
-        loginUseCase: LoginUseCase
+        sessionUseCase: SessionUseCase,
+        profileUseCase: ProfileUseCase,
+        balanceUseCase: BalanceUseCase,
+        transactionUseCase: TransactionUseCase
     ): HomeViewModel {
-        return HomeViewModel(context, loginUseCase)
+        return HomeViewModel(context, sessionUseCase, profileUseCase, balanceUseCase, transactionUseCase)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -40,11 +44,11 @@ class PresentationModule @Inject constructor() {
     @Provides
     fun providerLoginViewModel(
         @ApplicationContext context: Context,
-        profileUseCase: ProfileUseCase,
-        balanceUseCase: BalanceUseCase,
-        loginUseCase: LoginUseCase
+        sessionUseCase: SessionUseCase,
+        registrationUseCase: RegistrationUseCase,
+        profileUseCase: ProfileUseCase
     ): LoginViewModel {
-        return LoginViewModel(context, profileUseCase, balanceUseCase, loginUseCase)
+        return LoginViewModel(context, sessionUseCase, registrationUseCase, profileUseCase)
     }
 
 }

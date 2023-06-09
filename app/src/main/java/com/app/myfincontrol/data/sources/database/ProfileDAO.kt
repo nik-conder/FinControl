@@ -1,4 +1,4 @@
-package com.app.myfincontrol.data.sources.database.DAO
+package com.app.myfincontrol.data.sources.database
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -10,9 +10,12 @@ import com.app.myfincontrol.data.entities.Profile
 interface ProfileDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertProfile(profile: Profile)
+    suspend fun insertProfile(profile: Profile): Long
 
     @Query("SELECT * FROM profile")
     fun getProfiles(): List<Profile>
+
+    @Query("SELECT * FROM profile WHERE uid = :uid")
+    fun getProfile(uid: Int): Profile
 
 }

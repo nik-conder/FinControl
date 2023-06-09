@@ -1,17 +1,16 @@
 package com.app.myfincontrol.presentation.viewModels
 
 import android.content.Context
-import android.icu.math.BigDecimal
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.app.myfincontrol.data.entities.Balance
-import com.app.myfincontrol.data.sources.dataStore.LoginDataStore
-import com.app.myfincontrol.dataStore
-import com.app.myfincontrol.domain.useCases.BalanceUseCase
-import com.app.myfincontrol.domain.useCases.LoginUseCase
+import com.app.myfincontrol.data.Configuration
+import com.app.myfincontrol.data.entities.Profile
+import com.app.myfincontrol.data.entities.Session
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
+import com.app.myfincontrol.domain.useCases.RegistrationUseCase
+import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
 import com.app.myfincontrol.presentation.viewModels.states.LoginState
@@ -19,116 +18,105 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.forEach
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val sessionUseCase: SessionUseCase,
+    private val registrationUseCase: RegistrationUseCase,
     private val profileUseCase: ProfileUseCase,
-    private val balanceUseCase: BalanceUseCase,
-    private val loginUseCase: LoginUseCase
 ): ViewModel() {
 
     private val _states = MutableStateFlow(LoginState())
     val states = _states.asStateFlow()
 
+    private val navController: NavController = NavController(context)
+
     init {
         loading()
     }
 
-    fun loading() {
+    private fun loading() {
         viewModelScope.launch {
-            getProfiles()
-            delay(2000)
-            _states.update { it.copy(isLoading = true) }
+
+            val listProfiles = profileUseCase.getProfiles()
+            if (listProfiles.isNotEmpty()) {
+                _states.update { it.copy(isLoading = true, profilesList = listProfiles) }
+                autoSelectProfile()
+            } else {
+                _states.update { it.copy(isLoading = true, startDestination = Screen.CreateProfile.route) }
+            }
+
         }
     }
 
-    private fun getProfiles() {
-        if (states.value.profilesList.isEmpty()) {
-            viewModelScope.launch {
-                val list = profileUseCase.getProfiles()
-                if (list.isEmpty()) {
-                    Toast.makeText(context, "Not profiles", Toast.LENGTH_SHORT).show()
-                } else {
-                    _states.update {
-                        it.copy(
-                            profilesList = list
-                        )
-                    }
+    private fun autoSelectProfile() {
+        viewModelScope.launch {
+            val lastSession = sessionUseCase.getAllSession().first()
+            if (lastSession.isNotEmpty()) {
+                _states.update {
+                    it.copy(selectedProfile = lastSession.first().profile_id)
                 }
             }
         }
     }
+
+//    private suspend fun checkSessions(): List<Session> {
+//        return sessionUseCase.getAllSession()
+//    }
+
 
     fun onEvents(event: LoginEvents) {
         when (event) {
             is LoginEvents.Login -> {
-                if (!states.value.isLogin) {
-                    _states.update { it.copy(isLogin = true, startDestination = Screen.Home.route) }
-
-                    viewModelScope.launch {
-                        loginUseCase.setLoggedProfile(event.profile.uid)
-                        val profile = loginUseCase.getLoggedProfile()
-
-                        context.dataStore.data.collect {
-                            println(it)
-                        }
-
-                        println("logged: $profile")
-                    }
-
-                    Toast.makeText(context, "Login", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Вы уже вошли", Toast.LENGTH_SHORT).show()
+                viewModelScope.launch {
+                    sessionUseCase.setSession(Session(profile_id = states.value.selectedProfile, timestamp = System.currentTimeMillis()))
                 }
-
+                _states.update {
+                    it.copy(startDestination = Screen.Home.route)
+                }
             }
 
-            is LoginEvents.NewProfile -> {
-                _states.update { it.copy(startDestination = Screen.CreateProfile.route) }
+            is LoginEvents.SelectProfile -> {
+                Toast.makeText(context, "Select profile ${event.uid}", Toast.LENGTH_SHORT).show()
+                _states.update {
+                    it.copy(selectedProfile = event.uid)
+                }
             }
 
             is LoginEvents.CreateAccount -> {
-                if (event.profile.name.isEmpty() || event.profile.currency.name.isEmpty()) {
-                    Toast.makeText(context, "Заполните все поля", Toast.LENGTH_SHORT).show()
 
-                } else {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        launch {
-                            profileUseCase.createProfile(event.profile)
-                        }.join()
+                if (states.value.profilesList.size <= Configuration.Limits.LIMIT_PROFILES) {
+                    if (event.profile != null) {
+                        if (event.profile.uid > 0 || event.profile.name.isNotEmpty()) {
 
-                        launch {
-                            val profilesList = profileUseCase.getProfiles()
-                            _states.update { it.copy(profilesList = profilesList) }
-                        }.join()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val result: Boolean = withContext(Dispatchers.IO) { registrationUseCase.createProfile(
+                                    Profile(name = event.profile.name, currency = event.profile.currency)
+                                ) }
 
-                        launch {
-                            if (states.value.profilesList.isNotEmpty()) {
-                                balanceUseCase.createBalance(balance =
-                                Balance(profile_id = states.value.profilesList[0].uid, main_balance = BigDecimal("0.00"))
-                                )
-                            } else {
-                                Toast.makeText(context, "Profile not created", Toast.LENGTH_SHORT).show()
+                                if (result) {
+                                    _states.update { it.copy(startDestination = Screen.Home.route) }
+                                } else {
+                                    this.cancel()
+                                    Toast.makeText(context, "Не удалось создать", Toast.LENGTH_SHORT).show()
+                                }
                             }
-                        }.join()
-                    }
 
-                    if (states.value.profilesList.isNotEmpty()) {
-                        _states.update { it.copy(startDestination = Screen.Home.route) }
-                        Toast.makeText(context, "Create Account", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(context, "Profile not created", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Не удалось создать", Toast.LENGTH_SHORT).show()
+                        }
                     }
+                } else {
+                    Toast.makeText(context, "Limit", Toast.LENGTH_SHORT).show()
                 }
             }
         }

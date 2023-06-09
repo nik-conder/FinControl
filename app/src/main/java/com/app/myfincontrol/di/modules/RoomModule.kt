@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import com.app.myfincontrol.data.AppDatabase
 import com.app.myfincontrol.data.Configuration
-import com.app.myfincontrol.data.sources.database.DAO.ProfileDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

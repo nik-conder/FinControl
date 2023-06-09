@@ -84,6 +84,13 @@ android {
 
 dependencies {
     val room_version = "2.5.1"
+    val paging_version = "3.1.1"
+
+    // Paging
+    implementation("androidx.paging:paging-runtime:$paging_version")
+
+    // optional - Jetpack Compose integration
+    implementation("androidx.paging:paging-compose:3.2.0-beta01")
 
     //Data story
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -116,6 +123,9 @@ dependencies {
 //
 //    // optional - Paging 3 Integration
 //    implementation("androidx.room:room-paging:$room_version")
+
+//    // alternatively - without Android dependencies for tests
+//    testImplementation("androidx.paging:paging-common:$paging_version")
 
     // For instrumentation tests
 //    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.46.1'

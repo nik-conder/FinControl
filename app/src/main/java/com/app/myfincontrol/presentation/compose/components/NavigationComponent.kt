@@ -68,33 +68,33 @@ fun NavigationComponent(
             }
         )
 
-        NavigationBarItem(
-            selected = navController.currentDestination?.route == "profileScreen",
-            enabled = navController.currentDestination?.route != "profileScreen",
-            onClick = {  navController.navigate("profileScreen")  },
-            label = {
-                Text(
-                    text = "Profile",
-                )
-            },
-            icon = {
-                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Profile")
-            }
-        )
+//        NavigationBarItem(
+//            selected = navController.currentDestination?.route == "profileScreen",
+//            enabled = navController.currentDestination?.route != "profileScreen",
+//            onClick = {  navController.navigate("profileScreen")  },
+//            label = {
+//                Text(
+//                    text = "Profile",
+//                )
+//            },
+//            icon = {
+//                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Profile")
+//            }
+//        )
 
-        NavigationBarItem(
-            selected = navController.currentDestination?.route == "loginScreen",
-            enabled = navController.currentDestination?.route != "loginScreen",
-            onClick = {  navController.navigate("loginScreen")  },
-            label = {
-                Text(
-                    text = "Login",
-                )
-            },
-            icon = {
-                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Login")
-            }
-        )
+//        NavigationBarItem(
+//            selected = navController.currentDestination?.route == "loginScreen",
+//            enabled = navController.currentDestination?.route != "loginScreen",
+//            onClick = {  navController.navigate("loginScreen")  },
+//            label = {
+//                Text(
+//                    text = "Login",
+//                )
+//            },
+//            icon = {
+//                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Login")
+//            }
+//        )
 
     }
 }

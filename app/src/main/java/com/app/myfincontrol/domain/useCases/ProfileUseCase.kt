@@ -5,15 +5,20 @@ import com.app.myfincontrol.data.repositories.ProfileRepository
 import javax.inject.Inject
 
 class ProfileUseCase @Inject constructor(
-    private val profileRepository: ProfileRepository,
+    private val profileRepository: ProfileRepository
 
 ) {
 
-    suspend fun createProfile(profile: Profile) {
-        return profileRepository.createProfile(profile = profile)
+    suspend fun createProfile(profile: Profile): Boolean {
+        //profileRepository.createProfile(profile = profile)
+        return false
     }
 
     fun getProfiles(): List<Profile> {
         return profileRepository.getProfiles()
+    }
+
+    fun getProfile(uid: Int): Profile {
+        return profileRepository.getProfile(uid = uid)
     }
 }

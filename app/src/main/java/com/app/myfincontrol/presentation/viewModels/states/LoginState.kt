@@ -5,7 +5,7 @@ import com.app.myfincontrol.presentation.compose.navigation.Screen
 
 data class LoginState(
     val isLoading: Boolean = false,
-    val isLogin: Boolean = false,
     val startDestination: String = Screen.Login.route,
-    val profilesList: List<Profile> = emptyList()
+    val profilesList: List<Profile> = emptyList(),
+    val selectedProfile: Int = 0
 )
