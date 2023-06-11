@@ -1,7 +1,9 @@
 package com.app.myfincontrol.presentation.viewModels.events
 
-import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.entities.Transactions
 
 sealed class TransactionEvents {
-    class AddTransaction(val transaction: Transaction) : TransactionEvents()
+    class AddTransaction(val transactions: Transactions) : TransactionEvents()
+
+    object GenerateEvents : TransactionEvents()
 }

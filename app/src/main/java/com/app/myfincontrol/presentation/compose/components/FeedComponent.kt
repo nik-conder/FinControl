@@ -1,8 +1,6 @@
 package com.app.myfincontrol.presentation.compose.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,27 +11,45 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myfincontrol.R
-import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.entities.Transactions
+import com.app.myfincontrol.data.sources.FeedDataSource
+import kotlinx.coroutines.launch
 
 @Composable
 fun FeedComponent(
-    feedDataSource: LazyPagingItems<Transaction>
+    feedDataSource: FeedDataSource
 ) {
     val listState = rememberLazyListState()
     val scroll = rememberScrollState()
+
+    val scope = rememberCoroutineScope()
+
+
+    val feedDataSourcePaging = remember {
+        Pager(
+            PagingConfig(pageSize = 30),
+            pagingSourceFactory = { feedDataSource }
+        ).flow.cachedIn(scope)
+    }.collectAsLazyPagingItems()
+
 
     Column (
         modifier = Modifier
@@ -42,7 +58,7 @@ fun FeedComponent(
     ) {
 
         Row() {
-            HeaderComponent(title = stringResource(id = R.string.title_feed))
+            HeaderComponent(title = stringResource(id = R.string.title_feed) + " " + feedDataSourcePaging.itemCount)
         }
 
         Row() {
@@ -50,67 +66,51 @@ fun FeedComponent(
                 modifier = Modifier
                     //.fillMaxHeight(0.5f)
                     .height(600.dp)
-                    .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.tertiaryContainer,
-                        shape = RoundedCornerShape(20.dp)
-                    ),
+                    .fillMaxWidth(),
                 contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                userScrollEnabled = true,
-                state = listState
+                state = rememberLazyListState(),
             ) {
-                item {
-
-                    TextButton(onClick = { feedDataSource.refresh() }) {
-                        Text(text = "count: ${feedDataSource.itemCount}")
-                    }
-                }
-
-                items(feedDataSource.itemSnapshotList) { item ->
+                items(feedDataSourcePaging.itemSnapshotList) { item ->
                     if (item != null) {
-                        TransactionComponent(item)
+                        TransactionComponent(transactions = item)
                     } else {
                         Text(text = "Нет данных")
                     }
+                }
 
-                    feedDataSource.apply {
-                        when {
-                            loadState.refresh is LoadState.Loading -> {
-                                Box(
+                feedDataSource.apply {
+                    when (feedDataSourcePaging.loadState.append) {
+                        is LoadState.Loading -> {
+                            item {
+                                CircularProgressIndicator(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator()
-                                }
-                            }
-
-                            loadState.append is LoadState.Loading -> {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator()
-                                }
-                            }
-
-                            loadState.append is LoadState.Error -> {
-                                val errorState = feedDataSource.loadState.append as LoadState.Error
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(text = errorState.error.localizedMessage!!)
-                                }
+                                        .padding(16.dp)
+                                )
                             }
                         }
-
+                        is LoadState.NotLoading -> {
+                            scope.launch {
+                                //feedDataSource.load(feedDataSourcePaging.loadState.append.endOfPaginationReached)
+                            }
+                        }
+                        is LoadState.Error -> {
+                            val errorState = feedDataSourcePaging.loadState.append as LoadState.Error
+                            item {
+                                Text(
+                                    text = "Ошибка: ${errorState.error}",
+                                    color = Color.Red,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
+                        else -> {
+                            // Do nothing
+                        }
                     }
                 }
             }

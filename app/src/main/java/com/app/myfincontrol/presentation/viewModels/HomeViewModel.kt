@@ -1,14 +1,13 @@
 package com.app.myfincontrol.presentation.viewModels
 
 import android.content.Context
+import android.icu.math.BigDecimal
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.TransactionCategories
+import com.app.myfincontrol.data.TransactionType
+import com.app.myfincontrol.data.entities.Transactions
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
@@ -20,7 +19,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -40,7 +38,6 @@ class HomeViewModel @Inject constructor(
     val states = _states.asStateFlow()
 
     val feedDataSource = transactionUseCase.getAllTransactions()
-
 
     init {
         viewModelScope.launch {
@@ -95,11 +92,39 @@ class HomeViewModel @Inject constructor(
             is TransactionEvents.AddTransaction -> {
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    val transaction = transactionUseCase.addTransaction(event.transaction)
+                    val transaction = transactionUseCase.addTransaction(event.transactions)
 
                 }
 
                 Toast.makeText(context, "Transaction added", Toast.LENGTH_SHORT).show()
+            }
+
+            is TransactionEvents.GenerateEvents -> {
+                viewModelScope.launch {
+                    val randType = (0..1).random()
+                    repeat(20) {
+                        transactionUseCase.addTransaction(
+                            Transactions(
+                                type = when (randType) {
+                                    0 -> {
+                                        TransactionType.EXPENSE
+                                    } else -> {
+                                        TransactionType.INCOME
+                                    }
+                                },
+                                amount = BigDecimal.valueOf((0..100000).random().toDouble()),
+                                datetime = System.currentTimeMillis(),
+                                category = when (randType) {
+                                    0 -> {
+                                        TransactionCategories.ExpenseCategories.ENTERTAINMENT.name
+                                    } else -> {
+                                        TransactionCategories.IncomeCategories.INVESTS.name
+                                    }
+                                }
+                            )
+                        )
+                    }
+                }
             }
         }
     }

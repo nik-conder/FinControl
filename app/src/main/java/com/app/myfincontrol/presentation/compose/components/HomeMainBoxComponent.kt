@@ -32,7 +32,7 @@ import com.app.myfincontrol.R
 import com.app.myfincontrol.data.Currency
 import com.app.myfincontrol.data.TransactionCategories
 import com.app.myfincontrol.data.TransactionType
-import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.entities.Transactions
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,7 +117,7 @@ fun HomeMainBoxComponent(
                 Column() {
                     TextButton(onClick = {
                         onEventsTransaction(TransactionEvents.AddTransaction(
-                            Transaction(
+                            Transactions(
                                 amount = BigDecimal.valueOf((0..1000).random().toLong()),
                                 type = TransactionType.INCOME,
                                 datetime = System.currentTimeMillis(),

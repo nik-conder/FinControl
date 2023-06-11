@@ -4,22 +4,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.app.myfincontrol.data.entities.Profile
-import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.entities.Transactions
 
 @Dao
 interface TransactionDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTransaction(transaction: Transaction): Long
+    suspend fun insertTransaction(transactions: Transactions): Long
 
-    @Query("SELECT * FROM `transaction`")
-    suspend fun getAllTransactions(): List<Transaction>
+    @Query("SELECT * FROM `transactions`")
+    suspend fun getAllTransactions(): List<Transactions>
 
-    @Query("SELECT * FROM `transaction` WHERE id >= :lastID ORDER BY datetime DESC LIMIT :limit")
-    suspend fun getTransactionById(lastID: Int, limit: Int): List<Transaction>
+    @Query("SELECT * FROM `transactions` WHERE id > :lastID ORDER BY datetime DESC LIMIT :limit")
+    suspend fun getTransactions(lastID: Int, limit: Int): List<Transactions>
 
-    @Query("DELETE FROM `transaction`")
+    @Query("DELETE FROM `transactions`")
     suspend fun deleteAllTransactions()
 
 }

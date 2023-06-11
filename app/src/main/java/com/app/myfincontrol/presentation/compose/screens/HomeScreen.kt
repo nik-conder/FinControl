@@ -3,6 +3,8 @@ package com.app.myfincontrol.presentation.compose.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -24,9 +27,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.Currency
@@ -36,6 +41,7 @@ import com.app.myfincontrol.presentation.compose.components.FinancialChartsCompo
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
+import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,12 +54,7 @@ fun HomeScreen(
 
     val states = vm.states.collectAsState()
 
-    val feedDataSource = remember {
-        Pager(
-            PagingConfig(pageSize = 10),
-            pagingSourceFactory = { vm.feedDataSource }
-        ).flow
-    }.collectAsLazyPagingItems()
+
 
 //    LaunchedEffect(!states.value.isLogin) {
 //        navController.navigate(Screen.Login.route)
@@ -141,7 +142,16 @@ fun HomeScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-               FeedComponent(feedDataSource)
+                Column() {
+                    Row() {
+                        TextButton(onClick = { onEventsTransaction.invoke(TransactionEvents.GenerateEvents) }) {
+                            Text(text = "Generate events")
+                        }
+                    }
+                    Row() {
+                        FeedComponent(vm.feedDataSource)
+                    }
+                }
             }
         }
     }

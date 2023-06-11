@@ -9,14 +9,14 @@ import com.app.myfincontrol.data.converters.TransactionConverter
 import com.app.myfincontrol.data.entities.Balance
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.entities.Session
-import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.entities.Transactions
 import com.app.myfincontrol.data.sources.database.BalanceDao
 import com.app.myfincontrol.data.sources.database.ProfileDao
 import com.app.myfincontrol.data.sources.database.SessionDAO
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 
 @Database(
-    entities = [Profile::class, Balance::class, Session::class, Transaction::class],
+    entities = [Profile::class, Balance::class, Session::class, Transactions::class],
     version = 1,
     exportSchema = true
 )
