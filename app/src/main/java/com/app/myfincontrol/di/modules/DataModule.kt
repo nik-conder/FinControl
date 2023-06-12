@@ -5,6 +5,7 @@ import com.app.myfincontrol.data.repositories.ProfileRepository
 import com.app.myfincontrol.data.repositories.SessionRepository
 import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.app.myfincontrol.data.sources.FeedDataSource
+import com.app.myfincontrol.data.sources.FeedDataSourceMediator
 import com.app.myfincontrol.data.sources.database.BalanceDao
 import com.app.myfincontrol.data.sources.database.ProfileDao
 import com.app.myfincontrol.data.sources.database.SessionDAO
@@ -54,8 +55,9 @@ class DataModule @Inject constructor() {
     @Provides
     fun providerTransactionRepository(
         transactionDAO: TransactionDAO,
-        feedDataSource: FeedDataSource
+        feedDataSource: FeedDataSource,
+        feedDataSourceMediator: FeedDataSourceMediator
     ): TransactionRepository = TransactionRepository(
-        transactionDAO, feedDataSource
+        transactionDAO, feedDataSource, feedDataSourceMediator
     )
 }

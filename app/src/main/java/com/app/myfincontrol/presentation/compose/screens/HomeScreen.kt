@@ -21,18 +21,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.Currency
 import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
@@ -53,6 +47,7 @@ fun HomeScreen(
     val onEventsTransaction = vm::onEventsTransaction
 
     val states = vm.states.collectAsState()
+
 
 
 

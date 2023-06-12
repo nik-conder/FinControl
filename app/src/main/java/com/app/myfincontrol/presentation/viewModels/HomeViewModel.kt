@@ -5,6 +5,10 @@ import android.icu.math.BigDecimal
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import androidx.paging.filter
 import com.app.myfincontrol.data.TransactionCategories
 import com.app.myfincontrol.data.TransactionType
 import com.app.myfincontrol.data.entities.Transactions
@@ -21,6 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,7 +43,15 @@ class HomeViewModel @Inject constructor(
     private val _states = MutableStateFlow(HomeStates())
     val states = _states.asStateFlow()
 
-    val feedDataSource = transactionUseCase.getAllTransactions()
+    val feedDataSource = transactionUseCase.getAllTransactionsSource()
+
+    val feedTest = Pager(
+        config = PagingConfig(
+            pageSize = 10,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { feedDataSource }
+    ).flow.cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {

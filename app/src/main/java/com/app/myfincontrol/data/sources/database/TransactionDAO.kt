@@ -15,10 +15,13 @@ interface TransactionDAO {
     @Query("SELECT * FROM `transactions`")
     suspend fun getAllTransactions(): List<Transactions>
 
-    @Query("SELECT * FROM `transactions` WHERE id > :lastID ORDER BY datetime DESC LIMIT :limit")
+    @Query("SELECT * FROM `transactions` WHERE id < :lastID ORDER BY datetime DESC LIMIT :limit")
     suspend fun getTransactions(lastID: Int, limit: Int): List<Transactions>
 
     @Query("DELETE FROM `transactions`")
     suspend fun deleteAllTransactions()
+
+    @Query("SELECT id FROM `transactions` ORDER BY id DESC LIMIT 1")
+    suspend fun getLastID(): Long
 
 }

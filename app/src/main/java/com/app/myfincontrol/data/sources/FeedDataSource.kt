@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.app.myfincontrol.data.entities.Transactions
 import com.app.myfincontrol.data.sources.database.TransactionDAO
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class FeedDataSource @Inject constructor(
@@ -17,11 +18,20 @@ class FeedDataSource @Inject constructor(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Transactions> {
-        println("вызван load")
+        println("вызван load, key ${params.key}, loadSize ${params.loadSize}")
+        println(params.key)
         return try {
-            val nextPage = params.key ?: 0
-            val response = transactionDAO.getTransactions(nextPage * params.loadSize, params.loadSize)
+            var nextPage = params.key ?: 0
+
+            if (nextPage == null || nextPage == 0) {
+                nextPage = transactionDAO.getLastID().toInt()
+            }
+
+            println("query: lastID: ${nextPage}, loadsize: ${params.loadSize}")
+            val response = transactionDAO.getTransactions(nextPage, params.loadSize)
             val nextKey = response.lastOrNull()?.id
+
+            println(response)
 
             LoadResult.Page(
                 data = response,

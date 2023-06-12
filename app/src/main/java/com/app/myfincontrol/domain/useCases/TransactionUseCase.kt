@@ -14,6 +14,9 @@ class TransactionUseCase @Inject constructor(
         transactionRepository.addTransaction(transactions)
     }
 
-    fun getAllTransactions() = transactionRepository.getAllTransactions()
+    fun getAllTransactionsSource() = transactionRepository.getAllTransactionsSource()
+    fun getAllTransactionsMediator() = transactionRepository.getAllTransactionsMediator()
+
+
 
 }
