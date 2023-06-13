@@ -7,11 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.filter
+import androidx.paging.flatMap
+import androidx.paging.map
 import com.app.myfincontrol.data.TransactionCategories
 import com.app.myfincontrol.data.TransactionType
 import com.app.myfincontrol.data.entities.Transactions
+import com.app.myfincontrol.data.sources.FeedDataSource
+import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
@@ -23,10 +28,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,29 +49,38 @@ class HomeViewModel @Inject constructor(
     private val sessionUseCase: SessionUseCase,
     private val profileUseCase: ProfileUseCase,
     private val balanceUseCase: BalanceUseCase,
-    private val transactionUseCase: TransactionUseCase
+    private val transactionUseCase: TransactionUseCase,
+    private val transactionDAO: TransactionDAO
 ): ViewModel() {
 
     private val _states = MutableStateFlow(HomeStates())
     val states = _states.asStateFlow()
 
-    val feedDataSource = transactionUseCase.getAllTransactionsSource()
+    private val _transactionsStateFlow = MutableStateFlow<PagingData<Transactions>>(PagingData.empty())
+    val transactionsStateFlow: StateFlow<PagingData<Transactions>> = _transactionsStateFlow
 
-    val feedTest = Pager(
-        config = PagingConfig(
-            pageSize = 10,
-            enablePlaceholders = false
-        ),
-        pagingSourceFactory = { feedDataSource }
-    ).flow.cachedIn(viewModelScope)
+    val transactionsFlow: SharedFlow<PagingData<Transactions>> = Pager(
+        config = PagingConfig(pageSize = 30),
+        pagingSourceFactory = { FeedDataSource(transactionDAO) }
+    ).flow.shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
     init {
         viewModelScope.launch {
             loading()
         }
 
+        CoroutineScope(Dispatchers.IO).launch {
+            transactionsFlow.collectLatest { pagingData ->
+                _transactionsStateFlow.value = pagingData
+            }
+        }
+
         println("viewModel created")
     }
+
+
+
+    fun feedFlow() = FeedDataSource(transactionDAO)
 
     private suspend fun loading() {
         val session = sessionUseCase.getAllSession()
@@ -103,6 +124,11 @@ class HomeViewModel @Inject constructor(
 
     fun onEventsTransaction(event: TransactionEvents) {
         when (event) {
+
+            is TransactionEvents.LoadTransactions -> {
+
+            }
+
             is TransactionEvents.AddTransaction -> {
 
                 CoroutineScope(Dispatchers.IO).launch {

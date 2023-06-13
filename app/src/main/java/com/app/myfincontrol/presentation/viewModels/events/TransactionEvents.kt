@@ -6,4 +6,6 @@ sealed class TransactionEvents {
     class AddTransaction(val transactions: Transactions) : TransactionEvents()
 
     object GenerateEvents : TransactionEvents()
+
+    object LoadTransactions: TransactionEvents()
 }

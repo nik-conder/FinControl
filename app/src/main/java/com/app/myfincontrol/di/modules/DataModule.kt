@@ -21,11 +21,11 @@ import javax.inject.Singleton
 @Module
 class DataModule @Inject constructor() {
 
-    @Singleton
-    @Provides
-    fun providerFeedPagingSource(
-        transactionDAO: TransactionDAO
-    ): FeedDataSource = FeedDataSource(transactionDAO)
+//    @Singleton
+//    @Provides
+//    fun providerFeedPagingSource(
+//        transactionDAO: TransactionDAO
+//    ): FeedDataSource = FeedDataSource(transactionDAO)
 
     @Singleton
     @Provides
@@ -55,9 +55,8 @@ class DataModule @Inject constructor() {
     @Provides
     fun providerTransactionRepository(
         transactionDAO: TransactionDAO,
-        feedDataSource: FeedDataSource,
-        feedDataSourceMediator: FeedDataSourceMediator
+        feedDataSource: FeedDataSource
     ): TransactionRepository = TransactionRepository(
-        transactionDAO, feedDataSource, feedDataSourceMediator
+        transactionDAO, feedDataSource
     )
 }

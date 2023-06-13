@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
+import com.app.myfincontrol.data.sources.FeedDataSource
+import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.RegistrationUseCase
@@ -34,9 +36,10 @@ class PresentationModule @Inject constructor() {
         sessionUseCase: SessionUseCase,
         profileUseCase: ProfileUseCase,
         balanceUseCase: BalanceUseCase,
-        transactionUseCase: TransactionUseCase
+        transactionUseCase: TransactionUseCase,
+        transactionDAO: TransactionDAO
     ): HomeViewModel {
-        return HomeViewModel(context, sessionUseCase, profileUseCase, balanceUseCase, transactionUseCase)
+        return HomeViewModel(context, sessionUseCase, profileUseCase, balanceUseCase, transactionUseCase, transactionDAO)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

@@ -8,15 +8,12 @@ import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(
     private val transactionDAO: TransactionDAO,
-    private val feedDataSource: FeedDataSource,
-    private val feedDataSourceMediator: FeedDataSourceMediator
+    private val feedDataSource: FeedDataSource
 ) {
     suspend fun addTransaction(transactions: Transactions): Long {
         return transactionDAO.insertTransaction(transactions)
     }
 
-    fun getAllTransactionsSource(): FeedDataSource = feedDataSource
-
-    fun getAllTransactionsMediator(): FeedDataSourceMediator = feedDataSourceMediator
+    fun getAllTransactions(): FeedDataSource = feedDataSource
 
 }

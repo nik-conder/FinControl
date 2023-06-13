@@ -84,10 +84,9 @@ android {
 
 dependencies {
     val room_version = "2.5.1"
-    val paging_version = "3.1.1"
 
     // Paging
-    implementation("androidx.paging:paging-runtime:$paging_version")
+    implementation("androidx.paging:paging-runtime:3.1.1")
 
     // optional - Jetpack Compose integration
     implementation("androidx.paging:paging-compose:3.2.0-beta01")

@@ -48,8 +48,7 @@ fun HomeScreen(
 
     val states = vm.states.collectAsState()
 
-
-
+    //val feedPagingItems = vm.transactionsFlow.collectAsLazyPagingItems()
 
 //    LaunchedEffect(!states.value.isLogin) {
 //        navController.navigate(Screen.Login.route)
@@ -144,7 +143,7 @@ fun HomeScreen(
                         }
                     }
                     Row() {
-                        FeedComponent(vm.feedDataSource)
+                        FeedComponent(vm.transactionsFlow, onEventsTransaction)
                     }
                 }
             }
