@@ -32,7 +32,7 @@ import com.app.myfincontrol.R
 import com.app.myfincontrol.data.Currency
 import com.app.myfincontrol.data.TransactionCategories
 import com.app.myfincontrol.data.TransactionType
-import com.app.myfincontrol.data.entities.Transactions
+import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,14 +76,7 @@ fun HomeMainBoxComponent(
                 Column() {
                     Text(
                         text =  " ${if (showBalance.value) balance else "***"} $currencySymbol",
-                        fontSize =
-                        when (balance.toInt()) {
-                            in 0..1_000_000 -> 42.sp
-                            in 1_000_001..1_000_000_000 -> 22.sp
-                            in 1_000_000_001..10_000_000_000_000 -> 20.sp
-                            in 10_000_000_000_001..100_000_000_000_000 -> 18.sp
-                            else -> 12.sp
-                        },
+                        fontSize = 42.sp,
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight(500)
                     )
@@ -117,11 +110,12 @@ fun HomeMainBoxComponent(
                 Column() {
                     TextButton(onClick = {
                         onEventsTransaction(TransactionEvents.AddTransaction(
-                            Transactions(
+                            Transaction(
                                 amount = BigDecimal.valueOf((0..1000).random().toLong()),
                                 type = TransactionType.INCOME,
                                 datetime = System.currentTimeMillis(),
-                                category = TransactionCategories.IncomeCategories.SALARY.name
+                                category = TransactionCategories.IncomeCategories.SALARY.name,
+                                profileId = 1 // todo
                             )
                         ))
                     }) {

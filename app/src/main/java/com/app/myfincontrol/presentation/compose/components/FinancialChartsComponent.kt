@@ -93,7 +93,7 @@ fun FinancialChartsComponent() {
                                 Text(
                                     text = "График дохода за последний месяц",
                                     color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleMedium
                                 )
                             }
                             Column() {

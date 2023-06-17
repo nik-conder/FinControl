@@ -86,10 +86,9 @@ dependencies {
     val room_version = "2.5.1"
 
     // Paging
-    implementation("androidx.paging:paging-runtime:3.1.1")
-
-    // optional - Jetpack Compose integration
     implementation("androidx.paging:paging-compose:3.2.0-beta01")
+    implementation("androidx.paging:paging-common-ktx:3.1.1")
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
 
     //Data story
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -146,6 +145,8 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.4.3")
     implementation("androidx.compose.ui:ui-graphics:1.4.3")
     implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
+
+    implementation("androidx.compose.material:material:1.4.3")
     implementation("androidx.compose.material3:material3:1.2.0-alpha02")
 
     testImplementation("junit:junit:4.13.2")

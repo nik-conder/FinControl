@@ -9,92 +9,57 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.app.myfincontrol.R
+import com.app.myfincontrol.presentation.compose.navigation.Screen
 
 @Composable
 fun NavigationComponent(
     navController: NavController
 ) {
+
+    val items = listOf(
+        Screen.Profile,
+        Screen.Home,
+        Screen.Settings,
+    )
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
     NavigationBar {
-        NavigationBarItem(
-            selected = navController.currentDestination?.route == "settingsScreen",
-            enabled = navController.currentDestination?.route != "settingsScreen",
-            onClick = {
-                navController.navigate("settingsScreen")
-                      },
-            label = {
-                Text(
-                    text = "Settings",
-                )
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Settings",
-                )
-            }
-        )
-
-        NavigationBarItem(
-            selected = navController.currentDestination?.route == "homeScreen",
-            enabled = navController.currentDestination?.route != "homeScreen",
-            onClick = { navController.navigate("homeScreen") },
-            label = {
-                Text(
-                    text = "Home",
-                )
-            },
-            icon = {
-                Icon(
-                    imageVector = Icons.Outlined.Home,
-                    contentDescription = "Home",
-                )
-            }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            //enabled = navController.currentDestination?.route == "homeScreen",
-            onClick = { /* navController.navigate(item.route) */ },
-            label = {
-                Text(
-                    text = "Charts",
-                )
-            },
-            icon = {
-                Icon(painter = painterResource(id = R.drawable.ic_baseline_show_chart_24), contentDescription = "Chars")
-            }
-        )
-
-//        NavigationBarItem(
-//            selected = navController.currentDestination?.route == "profileScreen",
-//            enabled = navController.currentDestination?.route != "profileScreen",
-//            onClick = {  navController.navigate("profileScreen")  },
-//            label = {
-//                Text(
-//                    text = "Profile",
-//                )
-//            },
-//            icon = {
-//                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Profile")
-//            }
-//        )
-
-//        NavigationBarItem(
-//            selected = navController.currentDestination?.route == "loginScreen",
-//            enabled = navController.currentDestination?.route != "loginScreen",
-//            onClick = {  navController.navigate("loginScreen")  },
-//            label = {
-//                Text(
-//                    text = "Login",
-//                )
-//            },
-//            icon = {
-//                Icon(imageVector = Icons.Outlined.Person, contentDescription = "Login")
-//            }
-//        )
-
+        items.forEach { screen ->
+            NavigationBarItem(
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                //enabled = navController.currentDestination?.route != "settingsScreen",
+                onClick = {
+                    navController.navigate(screen.route) {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        // on the back stack as users select items
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        // Avoid multiple copies of the same destination when
+                        // reselecting the same item
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+                        restoreState = true
+                    }
+                },
+                label = {
+                    Text(
+                        text = stringResource(id = screen.resourceId)
+                    )
+                },
+                icon = { Icon(imageVector = screen.iconResource, contentDescription = "") }
+            )
+        }
     }
 }

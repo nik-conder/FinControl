@@ -7,8 +7,9 @@ import androidx.room.PrimaryKey
 import com.app.myfincontrol.data.TransactionType
 
     @Entity
-    data class Transactions(
+    data class Transaction(
         @PrimaryKey(autoGenerate = true) val id: Int = 0,
+        @ColumnInfo(name = "profile_id") val profileId: Int,
         @ColumnInfo(name = "type") val type: TransactionType,
         @ColumnInfo(name = "amount") val amount: BigDecimal = BigDecimal("0.00"),
         @ColumnInfo(name = "datetime") val datetime: Long,

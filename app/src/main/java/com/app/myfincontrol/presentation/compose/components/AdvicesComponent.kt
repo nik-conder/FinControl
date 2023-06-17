@@ -2,7 +2,6 @@ package com.app.myfincontrol.presentation.compose.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,71 +47,65 @@ fun AdvicesComponent() {
         randomIndexAdvice.value = (0..4).random()
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
-    ) {
-        Column() {
-            Row() {
-                HeaderComponent(title = "Полезные советы")
-            }
-            Row {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = MaterialTheme.colorScheme.tertiaryContainer,
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                        .wrapContentHeight()
-                        .padding(16.dp)
 
+    ) {
+        Row() {
+            HeaderComponent(title = "Полезные советы")
+        }
+        Row {
+            Column(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Column() {
+                        Icon(painter = painterResource(id = R.drawable.ic_baseline_tips_and_updates_24), contentDescription = "Advice")
+                    }
                     Column(
                         modifier = Modifier
+                            .fillMaxWidth(0.85f)
                             .padding(start = 8.dp)
                     ) {
-                        Row(
-                            modifier = Modifier,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column() {
-                                Icon(painter = painterResource(id = R.drawable.ic_baseline_tips_and_updates_24), contentDescription = "Advice")
-                            }
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.9f)
-                                    .padding(start = 8.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = adviceList[randomIndexAdvice.value].title),
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    style = MaterialTheme.typography.titleSmall
-                                )
-                            }
-                            Column() {
-                                IconButton(onClick = {
-                                    showAdvice.value = !showAdvice.value
-                                }) {
-                                    Icon(
-                                        painter = painterResource(
-                                            id = if (showAdvice.value) R.drawable.ic_baseline_expand_less_24 else R.drawable.ic_baseline_expand_more_24),
-                                        contentDescription = "Advice"
-                                    )
-                                }
-                            }
+                        Text(
+                            text = stringResource(id = adviceList[randomIndexAdvice.value].title),
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                    Column() {
+                        IconButton(onClick = {
+                            showAdvice.value = !showAdvice.value
+                        }) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (showAdvice.value) R.drawable.ic_baseline_expand_less_24 else R.drawable.ic_baseline_expand_more_24),
+                                contentDescription = "Advice"
+                            )
                         }
-                        AnimatedVisibility(visible = showAdvice.value) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(top = 8.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = adviceList[randomIndexAdvice.value].description),
-                                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
+                    }
+                }
+                AnimatedVisibility(visible = showAdvice.value) {
+                    Row(
+                        modifier = Modifier
+                            .padding(bottom = 16.dp, start = 24.dp, end = 24.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = adviceList[randomIndexAdvice.value].description),
+                            color = MaterialTheme.colorScheme.onTertiaryContainer,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             }

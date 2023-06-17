@@ -31,9 +31,10 @@ class DomainModule @Inject constructor() {
     @Singleton
     @Provides
     fun providerBalanceUseCase(
-        balanceRepository: BalanceRepository
+        balanceRepository: BalanceRepository,
+        transactionRepository: TransactionRepository
     ): BalanceUseCase = BalanceUseCase(
-        balanceRepository
+        balanceRepository, transactionRepository
     )
 
     @Singleton
@@ -54,7 +55,7 @@ class DomainModule @Inject constructor() {
         profileRepository, balanceRepository
     )
 
-    @Singleton
+    //@Singleton
     @Provides
     fun providerTransactionUseCase(
         balanceRepository: BalanceRepository,

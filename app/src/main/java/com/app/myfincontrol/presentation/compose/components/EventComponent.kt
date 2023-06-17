@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.myfincontrol.data.TransactionCategories
 import com.app.myfincontrol.data.TransactionType
-import com.app.myfincontrol.data.entities.Transactions
+import com.app.myfincontrol.data.entities.Transaction
 import com.example.compose.FinControlTheme
 import java.util.Date
 
@@ -32,14 +32,14 @@ enum class TypeEvent {
 @Composable
 fun EventComponent(
     type: TypeEvent,
-    transactions: Transactions
+    transaction: Transaction
 ) {
     when (type) {
         TypeEvent.NOTIFICATION -> {
             NotificationComponent()
         }
         TypeEvent.TRANSACTION -> {
-            TransactionComponent(transactions)
+            TransactionComponent(transaction)
         }
     }
 }
@@ -51,7 +51,7 @@ fun NotificationComponent() {
 
 @Composable
 fun TransactionComponent(
-    transactions: Transactions
+    transaction: Transaction
 ) {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm")
 
@@ -60,7 +60,7 @@ fun TransactionComponent(
             .fillMaxWidth()
             .wrapContentHeight()
             .background(
-                color = if (transactions.type == TransactionType.EXPENSE) Color(0xFFBF2F1A) else Color(
+                color = if (transaction.type == TransactionType.EXPENSE) Color(0xFFBF2F1A) else Color(
                     0xFF1F7601
                 ), shape = RoundedCornerShape(20.dp)
             )
@@ -76,7 +76,7 @@ fun TransactionComponent(
                         weight(1f)
             ) {
                 Text(
-                    text = "${if (transactions.type == TransactionType.EXPENSE) "-" else "+"} ${transactions.amount}",
+                    text = "${if (transaction.type == TransactionType.EXPENSE) "-" else "+"} ${transaction.amount}",
                     style = MaterialTheme.typography.bodyLarge, fontSize = 24.sp,
                     color = Color.White,
                     fontWeight = FontWeight(700)
@@ -84,8 +84,8 @@ fun TransactionComponent(
             }
             Column() {
                 TagComponent(
-                    text = transactions.category,
-                    colorBackground = if (transactions.type == TransactionType.EXPENSE) Color(0xFF691307) else Color(
+                    text = transaction.category,
+                    colorBackground = if (transaction.type == TransactionType.EXPENSE) Color(0xFF691307) else Color(
                         0xFF144603
                     ),
                     colorText = Color.White
@@ -99,25 +99,24 @@ fun TransactionComponent(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            Text(
-                text = dateFormat.format(Date(transactions.datetime)),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.LightGray
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            Text(
-                text = transactions.id.toString(),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.LightGray,
-                fontSize = 20.sp
-            )
+            Column() {
+                Text(
+                    text = "# ${transaction.id}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.LightGray,
+                    fontSize = 12.sp
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+            ) {
+                Text(
+                    text = dateFormat.format(Date(transaction.datetime)),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.LightGray
+                )
+            }
         }
     }
 }
@@ -131,34 +130,37 @@ fun TransactionComponentPreview() {
         Column() {
             Row() {
                 TransactionComponent(
-                    transactions = Transactions(
+                    transaction = Transaction(
                         id = 1,
                         amount = BigDecimal("500.00"),
                         type = TransactionType.EXPENSE,
                         category = TransactionCategories.ExpenseCategories.CLOTHES.name,
-                        datetime = System.currentTimeMillis()
+                        datetime = System.currentTimeMillis(),
+                        profileId = 1
                     )
                 )
             }
             Row() {
                 TransactionComponent(
-                    transactions = Transactions(
+                    transaction = Transaction(
                         id = 2,
                         amount = BigDecimal("432432.00"),
                         type = TransactionType.EXPENSE,
                         category = TransactionCategories.ExpenseCategories.FOOD.name,
-                        datetime = System.currentTimeMillis()
+                        datetime = System.currentTimeMillis(),
+                        profileId = 1
                     )
                 )
             }
             Row() {
                 TransactionComponent(
-                    transactions = Transactions(
+                    transaction = Transaction(
                         id = 2,
                         amount = BigDecimal("674564.00"),
                         type = TransactionType.INCOME,
                         category = TransactionCategories.IncomeCategories.INVESTS.name,
-                        datetime = System.currentTimeMillis()
+                        datetime = System.currentTimeMillis(),
+                        profileId = 1
                     )
                 )
             }

@@ -136,15 +136,8 @@ fun HomeScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-                Column() {
-                    Row() {
-                        TextButton(onClick = { onEventsTransaction.invoke(TransactionEvents.GenerateEvents) }) {
-                            Text(text = "Generate events")
-                        }
-                    }
-                    Row() {
-                        FeedComponent(vm.transactionsFlow, onEventsTransaction)
-                    }
+                Row() {
+                FeedComponent(vm.feedPager, onEventsTransaction)
                 }
             }
         }

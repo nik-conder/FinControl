@@ -13,7 +13,8 @@ import com.app.myfincontrol.presentation.compose.screens.SettingsScreen
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String
+    startDestination: String,
+    modifier: Any
 ) {
 
     NavHost(

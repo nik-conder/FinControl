@@ -1,5 +1,7 @@
 package com.app.myfincontrol.presentation.compose.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,10 +10,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,26 +30,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.app.myfincontrol.R
-import com.app.myfincontrol.data.entities.Transactions
+import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FeedComponent(
-    feedSource: SharedFlow<PagingData<Transactions>>,
+    feedPager: Pager<Int, Transaction>,
     onEvens: (TransactionEvents) -> Unit
 ) {
-    val listState = rememberLazyListState()
+
     val scroll = rememberScrollState()
 
     val scope = rememberCoroutineScope()
 
-    val feedPagingItems = feedSource.collectAsLazyPagingItems()
+    val feedPagingItems = feedPager.flow.collectAsLazyPagingItems()
+    val listState = rememberLazyListState()
 
 
 
@@ -67,43 +76,50 @@ fun FeedComponent(
         Row() {
             HeaderComponent(title = stringResource(id = R.string.title_feed) + " " + feedPagingItems.itemCount)
         }
-        Row {
-            Column() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
                 TextButton(onClick = {
                     scope.launch {
-                        listState.animateScrollToItem(feedPagingItems.itemCount - 1)
+                        onEvens(TransactionEvents.GenerateEvents)
                     }
                 }) {
-                    Text(text = "Bottom scroll")
+                    Text(text = "Generate")
                 }
             }
+
             Column() {
-                TextButton(onClick = {
+                IconButton(onClick = {
                     scope.launch {
                         feedPagingItems.refresh()
                     }
                 }) {
-                    Text(text = "Refresh")
+                    Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
                 }
             }
 
             Column() {
-                TextButton(onClick = {
+                IconButton(onClick = {
                     scope.launch {
-                        onEvens(TransactionEvents.LoadTransactions)
+                        listState.animateScrollToItem(index = 0)
                     }
                 }) {
-                    Text(text = "Invalidate")
+                    Icon(imageVector = Icons.Outlined.KeyboardArrowUp, contentDescription = "")
                 }
             }
-
             Column() {
-                TextButton(onClick = {
+                IconButton(onClick = {
                     scope.launch {
-                        feedPagingItems.retry()
+                        listState.animateScrollToItem(index = feedPagingItems.itemCount)
                     }
                 }) {
-                    Text(text = "Retry")
+                    Icon(imageVector = Icons.Outlined.KeyboardArrowDown, contentDescription = "")
                 }
             }
         }
@@ -116,15 +132,13 @@ fun FeedComponent(
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                state = listState,
-                userScrollEnabled = true
+                state = listState
             ) {
 
-                items(
-                    items = feedPagingItems.itemSnapshotList.items,
-                    key = { it.id ?: 0 }
-                ) { item ->
-                    TransactionComponent(transactions = item)
+                items(count = feedPagingItems.itemCount) {
+                    val item = feedPagingItems[it]
+                    feedPagingItems.itemKey { item!!.id }
+                    TransactionComponent(transaction = item!!)
                 }
 
                 when (feedPagingItems.loadState.append) {
@@ -132,24 +146,32 @@ fun FeedComponent(
                         item {
                             CircularProgressIndicator()
                         }
-                        println("append loading")
                     }
                     is LoadState.Error -> {
                         item {
-                            Text(text = "Error")
-                            println("append error")
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = " ${(feedPagingItems.loadState.append as LoadState.Error).error.localizedMessage}")
+                            }
                         }
                     }
                     is LoadState.NotLoading -> {
-                        println("append not loading")
                         item {
-                            Text(text ="append not loading")
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(text ="Больше нет данных")
+                            }
                         }
                     }
                 }
             }
-
-            }
+        }
         }
 
 }
