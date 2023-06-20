@@ -17,14 +17,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberPlainTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.RenderEffect
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,19 +45,13 @@ import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeMainBoxComponent(
+    hideBalance: Boolean,
     profileName: String,
     balance: BigDecimal,
     currency: Currency,
     onEventsTransaction: (TransactionEvents) -> Unit,
 ) {
-    val showBalance = remember { mutableStateOf(true) }
-    val currencySymbol = when (currency) {
-        Currency.USD -> "$"
-        Currency.EUR -> "€"
-        Currency.RUB -> "₽"
-    }
-
-
+    val tooltipState = rememberPlainTooltipState()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,7 +76,8 @@ fun HomeMainBoxComponent(
             ) {
                 Column() {
                     Text(
-                        text =  " ${if (showBalance.value) balance else "***"} $currencySymbol",
+                        text = if (hideBalance) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "$balance ${currencySymbolComponent(currency)}",
+                        modifier = Modifier.padding(16.dp),
                         fontSize = 42.sp,
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight(500)
@@ -83,65 +85,32 @@ fun HomeMainBoxComponent(
                 }
                 Column() {
                     PlainTooltipBox(
-                        tooltip = { Text(text = "Вы можете скрыть баланс") },
+                        tooltip = {
+                            Text(text = "Вы можете скрыть баланс")
+                                  },
+                        tooltipState = tooltipState,
+                        shape = RoundedCornerShape(20.dp),
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
                         IconButton(onClick = {
-                            showBalance.value = !showBalance.value
+                            onEventsTransaction(TransactionEvents.HideBalance)
                         }) {
                             Icon(
-                                painter = painterResource(id = if (showBalance.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
-                                contentDescription = "Visibility",
+                                painter = painterResource(id = if (hideBalance) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
+                                contentDescription = stringResource(id = R.string.visibility_content_description),
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )
-                        }   
+                        }
                     }
                 }
             }
             Row {
                 Text(
                     text = profileName,
-                    fontSize = 12.sp,
+                    fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSecondary
                 )
-            }
-            Row(
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Column() {
-                    TextButton(onClick = {
-                        onEventsTransaction(TransactionEvents.AddTransaction(
-                            Transaction(
-                                amount = BigDecimal.valueOf((0..1000).random().toLong()),
-                                type = TransactionType.INCOME,
-                                datetime = System.currentTimeMillis(),
-                                category = TransactionCategories.IncomeCategories.SALARY.name,
-                                profileId = 1 // todo
-                            )
-                        ))
-                    }) {
-                        Text(text = "Добавить доход")
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                ) {
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "Добавить расход")
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                ) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
-                            contentDescription = "Update",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
             }
         }
     }

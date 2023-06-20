@@ -25,9 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -160,12 +162,18 @@ fun FeedComponent(
                     }
                     is LoadState.NotLoading -> {
                         item {
-                            Row(
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
+                                    .fillMaxWidth()
+                                    .padding(top = 32.dp, bottom = 32.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text ="Больше нет данных")
+                                Row() {
+                                    Text(text ="Дальше только тишина", style = MaterialTheme.typography.bodyMedium)
+                                }
+                                Row {
+                                    Text(text = "\uD83E\uDD2B", fontSize = 48.sp)
+                                }
                             }
                         }
                     }

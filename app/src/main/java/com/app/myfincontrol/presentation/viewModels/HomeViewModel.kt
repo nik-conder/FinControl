@@ -144,6 +144,12 @@ class HomeViewModel @Inject constructor(
                 }
                 Toast.makeText(context, "Сгенерированно $count транзакции", Toast.LENGTH_SHORT).show()
             }
+
+            is TransactionEvents.HideBalance -> {
+                _states.update {
+                    it.copy(hideBalance = !states.value.hideBalance)
+                }
+            }
         }
     }
 }
