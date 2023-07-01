@@ -88,39 +88,3 @@ fun ChartsComponent(
         }
     }
 }
-
-@Preview(device = "id:Nexus 5", showSystemUi = true, showBackground = true)
-@Composable
-fun FinancialChartsComponentPreview() {
-
-    val chartSort = remember {
-        mutableStateOf(ChartSort.YEAR)
-    }
-
-    val barDataList = listOf(
-        BarData(1f, 245359f),
-        BarData(2f, 234534f),
-        BarData(4f, 153450f),
-        BarData(5f, 155345f),
-        BarData(6f, 205374f),
-        BarData(7f, 255453f),
-        BarData(8f, 304573f),
-        BarData(9f, 255345f),
-        BarData(10f, 103434f),
-        BarData(11f, 155374f),
-        BarData(12f, 104735f),
-        )
-
-    val dataPoints = remember {
-        mutableListOf(
-            PointData(1f, 2f),
-            PointData(2f, 5f),
-            PointData(4f, 10f),
-            PointData(5f, 15f),
-            PointData(6f, 20f),
-        )
-    }
-    FinControlTheme() {
-        ChartsComponent(barDataList)
-    }
-}

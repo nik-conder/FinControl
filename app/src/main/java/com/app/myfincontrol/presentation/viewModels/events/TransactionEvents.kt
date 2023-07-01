@@ -11,5 +11,4 @@ sealed class TransactionEvents {
     object GenerateEvents : TransactionEvents()
 
     object LoadTransactions: TransactionEvents()
-    object HideBalance: TransactionEvents()
 }

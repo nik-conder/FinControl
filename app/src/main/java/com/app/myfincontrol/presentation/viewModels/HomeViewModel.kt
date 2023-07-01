@@ -11,6 +11,7 @@ import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
+import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
@@ -41,6 +42,8 @@ class HomeViewModel @Inject constructor(
 
     private val _states = MutableStateFlow(HomeStates())
     val states = _states.asStateFlow()
+
+    val store = context.dataStore
 
 //    private val _transactionsStateFlow = MutableStateFlow<PagingData<Transaction>>(PagingData.empty())
 //    val transactionsStateFlow: StateFlow<PagingData<Transaction>> = _transactionsStateFlow
@@ -154,12 +157,6 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 Toast.makeText(context, "Сгенерированно $count транзакции", Toast.LENGTH_SHORT).show()
-            }
-
-            is TransactionEvents.HideBalance -> {
-                _states.update {
-                    it.copy(hideBalance = !states.value.hideBalance)
-                }
             }
         }
     }

@@ -5,6 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.datastore.preferences.core.Preferences
+import com.app.myfincontrol.MainActivity
 
 
 private val LightColors = lightColorScheme(
@@ -74,8 +76,9 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun FinControlTheme(
-  useDarkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable() () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit,
+
 ) {
   val colors = if (!useDarkTheme) {
     LightColors

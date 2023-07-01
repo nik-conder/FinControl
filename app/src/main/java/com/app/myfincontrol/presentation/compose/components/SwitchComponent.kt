@@ -82,18 +82,3 @@ fun SwitchComponent(
         }
     }
 }
-
-@Preview(showSystemUi = true, backgroundColor = 0xFFFFFFFF, showBackground = true)
-@Composable
-fun PreviewSwitchComponent() {
- FinControlTheme() {
-     Column() {
-         Row() {
-             SwitchComponent(state = true, onValueChange = {}, title = "Заголовок с описанием", description = "Какое то очень очень длинное описание функции и возможно ещё что то")
-         }
-         Row() {
-             SwitchComponent(state = false, onValueChange = {}, title = "Заголовок без описания")
-         }
-     }
- }
-}

@@ -31,10 +31,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -44,23 +44,25 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.app.myfincontrol.MainActivity
 import com.app.myfincontrol.R
+import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
 import com.app.myfincontrol.presentation.compose.components.BoxChart
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
-import com.app.myfincontrol.presentation.compose.components.NotProfileComponent
 import com.app.myfincontrol.presentation.compose.components.currencySymbolComponent
 import com.app.myfincontrol.presentation.compose.components.sheets.AddTransactionSheet
-import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
+    store: UserStore
 ) {
     val vm = hiltViewModel<HomeViewModel>()
     val onEvents = vm::onEvents
@@ -72,6 +74,11 @@ fun HomeScreen(
     val sheetState = rememberModalBottomSheetState()
 
     val scrollState = rememberScrollState()
+
+    val scope = rememberCoroutineScope()
+
+    val darkMode = store.getDarkMode.collectAsState(initial = false)
+    val hideBalance = store.hideBalance.collectAsState(initial = false)
 
 
     //val feedPagingItems = vm.transactionsFlow.collectAsLazyPagingItems()
@@ -118,8 +125,14 @@ fun HomeScreen(
                                          )
                                          .padding(8.dp)
                                  ) {
-                                     Text(text = if (state.value.hideBalance) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "${currencySymbolComponent(
-                                         state.value.selectedProfile!!.currency)} ${state.value.balance}", fontSize = 14.sp)
+                                     Text(
+                                         text = if (hideBalance.value)
+                                             "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11"
+                                         else
+                                             "${currencySymbolComponent(
+                                         state.value.selectedProfile!!.currency)} ${state.value.balance}",
+                                         fontSize = 14.sp
+                                     )
                                  }
                              }
                          }
@@ -128,8 +141,12 @@ fun HomeScreen(
                  }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(painter = painterResource(id = if (isSystemInDarkTheme()) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24), contentDescription = stringResource(
+                    IconButton(onClick = {
+                        scope.launch {
+                            store.setDarkMode()
+                        }
+                    }) {
+                        Icon(painter = painterResource(id = if (darkMode.value) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24), contentDescription = stringResource(
                             id = R.string.title_dark_mode
                         ))
                     }
@@ -177,9 +194,9 @@ fun HomeScreen(
                 HomeMainBoxComponent(
                     profileName = state.value.selectedProfile?.name ?: "...",
                     balance = state.value.balance,
+                    store = store,
                     currency = state.value.selectedProfile?.currency ?: Currency.USD,
                     onEventsTransaction = onEventsTransaction,
-                    hideBalance = state.value.hideBalance
                 )
             }
             BoxWithConstraints(
@@ -211,7 +228,7 @@ fun HomeScreen(
                     }
             ) {
                 Row() {
-                    FeedComponent(vm.feedPager, state.value.hideBalance, onEventsTransaction)
+                    FeedComponent(vm.feedPager, hideBalance.value, onEventsTransaction)
                 }
             }
         }

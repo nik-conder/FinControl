@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,8 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
+import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
@@ -39,11 +41,13 @@ import com.app.myfincontrol.presentation.compose.components.SwitchComponent
 import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.SettingsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.SettingsEvents
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
+    store: UserStore
 ) {
 
     val vm = hiltViewModel<SettingsViewModel>()
@@ -128,7 +132,8 @@ fun SettingsScreen(
                         }
                         Row {
                             SettingsBox(
-                                onEvents = onEvents
+                                onEvents = onEvents,
+                                store = store
                             )
                         }
                     }
@@ -140,14 +145,23 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsBox(
+    store: UserStore,
     onEvents: (SettingsEvents) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+    val darkMode = store.getDarkMode.collectAsState(initial = false)
+    val hideBalance = store.hideBalance.collectAsState(initial = false)
+
     Column() {
         Row() {
            SwitchComponent(
                title = "Тёмная тема",
-               state = true,
-               onValueChange = { }
+               state = darkMode.value,
+               onValueChange = {
+                   scope.launch {
+                       store.setDarkMode()
+                   }
+               }
            )
         }
         Row() {
@@ -171,9 +185,12 @@ fun SettingsBox(
             SwitchComponent(
                 title = "Баланс скрыт по умолчанию",
                 description = "Опция позволит скрыть баланс при открытии приложения",
-                state = false,
-                enabled = false,
-                onValueChange = { }
+                state = hideBalance.value,
+                onValueChange = { value ->
+                    scope.launch {
+                        store.setHideBalance()
+                    }
+                }
             )
         }
     }

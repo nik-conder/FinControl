@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val viewModel: LoginViewModel by viewModels()
@@ -31,11 +32,13 @@ class MainActivity : AppCompatActivity() {
         setContent {
             //val viewModel = viewModel.statesMain.collectAsState()
             val navController = rememberNavController()
-            val viewModel = viewModel.states.collectAsState()
+            val states = viewModel.states.collectAsState()
+            val store = UserStore(applicationContext)
+
+            val darkMode = store.getDarkMode.collectAsState(initial = false)
 
             FinControlTheme(
-                //useDarkTheme = AppCompatDelegate.getDefaultNightMode()
-            useDarkTheme = false
+                useDarkTheme = darkMode.value
             ) {
                 Scaffold(
                     bottomBar = {
@@ -43,8 +46,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 ) { innerPadding ->
                     NavGraph(
+                        store = store,
                         navController = navController,
-                        startDestination = viewModel.value.startDestination,
+                        startDestination = states.value.startDestination,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

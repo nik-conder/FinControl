@@ -7,5 +7,6 @@ data class LoginState(
     val isLoading: Boolean = false,
     val startDestination: String = Screen.Login.route,
     val profilesList: List<Profile> = emptyList(),
-    val selectedProfile: Int = 0
+    val selectedProfile: Int = 0,
+    val darkMode: Boolean = false
 )
