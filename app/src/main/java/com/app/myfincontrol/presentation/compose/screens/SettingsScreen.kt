@@ -1,6 +1,7 @@
 package com.app.myfincontrol.presentation.compose.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +15,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +61,7 @@ fun SettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.title_settings),
+                        text = stringResource(id = R.string.settings),
                     )
                 }
             )
@@ -79,7 +79,7 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
                 .fillMaxSize(1f),
         ) {
-            val (profileBox, settingsBox, notProfileBox) = createRefs()
+            val (profileBox, settingsBox) = createRefs()
 
             if (state.value.selectedProfile == null) {
                 NotProfileComponent()
@@ -87,9 +87,9 @@ fun SettingsScreen(
                 BoxWithConstraints(
                     modifier = Modifier
                         .constrainAs(profileBox) {
-                            top.linkTo(parent.top, 16.dp)
-                            start.linkTo(parent.start, 16.dp)
-                            end.linkTo(parent.end, 16.dp)
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
                         }
                 ) {
                     Column(
@@ -102,40 +102,31 @@ fun SettingsScreen(
                             .fillMaxWidth()
                             .wrapContentHeight()
                     ) {
-                        Row() {
-                            HeaderComponent(title = "Profile")
-                        }
-                        Row {
-                            ProfileBox(
-                                profile = state.value.selectedProfile!!,
-                                onEvents = onEvents,
-                                navController = navController
-                            )
-                        }
+                        ProfileBox(
+                            profile = state.value.selectedProfile!!,
+                            onEvents = onEvents,
+                            navController = navController
+                        )
                     }
                 }
                 BoxWithConstraints(
                     modifier = Modifier
                         .constrainAs(settingsBox) {
-                            top.linkTo(profileBox.bottom, 16.dp)
-                            bottom.linkTo(parent.bottom, 16.dp)
-                            start.linkTo(parent.start, 16.dp)
-                            end.linkTo(parent.end, 16.dp)
+                            top.linkTo(profileBox.bottom)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
                         }
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                            .wrapContentHeight()
                     ) {
-                        Row() {
-                            HeaderComponent(title = "Settings")
-                        }
-                        Row {
-                            SettingsBox(
-                                onEvents = onEvents,
-                                store = store
-                            )
-                        }
+                        SettingsBox(
+                            store = store
+                        )
                     }
                 }
             }
@@ -146,7 +137,6 @@ fun SettingsScreen(
 @Composable
 fun SettingsBox(
     store: UserStore,
-    onEvents: (SettingsEvents) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val darkMode = store.getDarkMode.collectAsState(initial = false)
@@ -154,8 +144,11 @@ fun SettingsBox(
 
     Column() {
         Row() {
+            HeaderComponent(title = "Settings")
+        }
+        Row() {
            SwitchComponent(
-               title = "Тёмная тема",
+               title = stringResource(id = R.string.dark_mode),
                state = darkMode.value,
                onValueChange = {
                    scope.launch {
@@ -202,12 +195,25 @@ fun ProfileBox(
     onEvents: (SettingsEvents) -> Unit,
     navController: NavHostController,
 ) {
-    Column() {
-        Row() {
-            Text(
-                text = profile.name,
-                style = MaterialTheme.typography.titleLarge
-            )
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+    ) {
+        Row {
+            Column(
+                modifier = Modifier
+                    .weight(1f),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Profile", style = MaterialTheme.typography.headlineSmall)
+            }
+            Column() {
+                Text(
+                    text = profile.name,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
         }
         Row() {
             TextButton(onClick = {

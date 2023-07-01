@@ -15,9 +15,9 @@ sealed class Screen(
     @StringRes val resourceId: Int,
     val iconResource: ImageVector
 ) {
-    object Home : Screen(route = "homeScreen", R.string.title_feed, iconResource = Icons.Outlined.Home)
-    object Settings : Screen(route = "settingsScreen",  R.string.title_settings, iconResource = Icons.Outlined.Settings)
-    object Login : Screen(route = "loginScreen", R.string.title_feed, iconResource = Icons.Outlined.Lock)
-    object CreateProfile : Screen(route = "createProfileScreen", R.string.title_feed, iconResource = Icons.Outlined.Person)
-    object Charts: Screen(route = "chartsScreen", R.string.title_charts, iconResource = Icons.Outlined.Info)
+    object Home : Screen(route = "homeScreen", R.string.feed, iconResource = Icons.Outlined.Home)
+    object Settings : Screen(route = "settingsScreen",  R.string.settings, iconResource = Icons.Outlined.Settings)
+    object Login : Screen(route = "loginScreen", R.string.feed, iconResource = Icons.Outlined.Lock)
+    object CreateProfile : Screen(route = "createProfileScreen", R.string.feed, iconResource = Icons.Outlined.Person)
+    object Charts: Screen(route = "chartsScreen", R.string.statistics, iconResource = Icons.Outlined.Info)
 }

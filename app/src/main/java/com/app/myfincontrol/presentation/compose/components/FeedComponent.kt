@@ -1,6 +1,5 @@
 package com.app.myfincontrol.presentation.compose.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
@@ -36,7 +34,6 @@ import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FeedComponent(
     feedPager: Pager<Int, Transaction>,
@@ -44,29 +41,10 @@ fun FeedComponent(
     onEvens: (TransactionEvents) -> Unit
 ) {
 
-    val scroll = rememberScrollState()
-
     val scope = rememberCoroutineScope()
-
     val feedPagingItems = feedPager.flow.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
 
-
-
-//    LaunchedEffect(listState) {
-//        println("что то происходит...")
-//        val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-//
-//        while (true) {
-//            listState.let {
-//                println("it.firstVisibleItemIndex ${it.firstVisibleItemIndex}")
-//                println("it.firstVisibleItemScrollOffset ${it.firstVisibleItemScrollOffset}")
-//                println("lastVisibleItemIndex $lastVisibleItemIndex")
-//
-//            }
-//            delay(1000)
-//        }
-//    }
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -74,7 +52,7 @@ fun FeedComponent(
     ) {
 
         Row() {
-            HeaderComponent(title = stringResource(id = R.string.title_feed) + " " + feedPagingItems.itemCount)
+            HeaderComponent(title = stringResource(id = R.string.feed) + " " + feedPagingItems.itemCount)
         }
         Row(
             modifier = Modifier
@@ -127,7 +105,6 @@ fun FeedComponent(
         Row() {
             LazyColumn(
                 modifier = Modifier
-                    //.fillMaxHeight(0.5f)
                     .height(600.dp)
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),

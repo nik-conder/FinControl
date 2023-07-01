@@ -38,8 +38,8 @@ import com.himanshoe.charty.bar.model.BarData
 fun ChartsScreen(
     navController: NavHostController,
 ) {
-    val vm = hiltViewModel<ChartsViewModel>()
     /*
+    val vm = hiltViewModel<ChartsViewModel>()
     val onEvents = vm::onEvents
     val state = vm.states.collectAsState()
      */
@@ -61,7 +61,7 @@ fun ChartsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.title_charts),
+                        text = stringResource(id = R.string.statistics),
                     )
                 }
             )

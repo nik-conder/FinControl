@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,10 +41,10 @@ fun AdvicesComponent() {
         Advice(title = R.string.advice_title_4, description = R.string.advice_description_4),
         Advice(title = R.string.advice_title_5, description = R.string.advice_description_5)
        )
-    val randomIndexAdvice = remember { mutableStateOf(0) }
+    val randomIndexAdvice = remember { mutableIntStateOf(0) }
 
     LaunchedEffect(true) {
-        randomIndexAdvice.value = (0..4).random()
+        randomIndexAdvice.intValue = (0..4).random()
     }
 
     Column(
@@ -52,7 +53,7 @@ fun AdvicesComponent() {
 
     ) {
         Row() {
-            HeaderComponent(title = "Полезные советы")
+            HeaderComponent(title = stringResource(id = R.string.useful_advice))
         }
         Row {
             Column(
@@ -78,7 +79,7 @@ fun AdvicesComponent() {
                             .padding(start = 8.dp)
                     ) {
                         Text(
-                            text = stringResource(id = adviceList[randomIndexAdvice.value].title),
+                            text = stringResource(id = adviceList[randomIndexAdvice.intValue].title),
                             color = MaterialTheme.colorScheme.onTertiaryContainer,
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -101,7 +102,7 @@ fun AdvicesComponent() {
                             .padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
                     ) {
                         Text(
-                            text = stringResource(id = adviceList[randomIndexAdvice.value].description),
+                            text = stringResource(id = adviceList[randomIndexAdvice.intValue].description),
                             color = MaterialTheme.colorScheme.onTertiaryContainer,
                             style = MaterialTheme.typography.bodyLarge,
                         )

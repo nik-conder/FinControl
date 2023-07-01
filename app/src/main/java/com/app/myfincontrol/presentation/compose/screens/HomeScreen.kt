@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -44,12 +43,10 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.app.myfincontrol.MainActivity
 import com.app.myfincontrol.R
 import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
-import com.app.myfincontrol.presentation.compose.components.BoxChart
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
@@ -65,7 +62,6 @@ fun HomeScreen(
     store: UserStore
 ) {
     val vm = hiltViewModel<HomeViewModel>()
-    val onEvents = vm::onEvents
     val onEventsTransaction = vm::onEventsTransaction
 
     val state = vm.states.collectAsState()
@@ -79,13 +75,6 @@ fun HomeScreen(
 
     val darkMode = store.getDarkMode.collectAsState(initial = false)
     val hideBalance = store.hideBalance.collectAsState(initial = false)
-
-
-    //val feedPagingItems = vm.transactionsFlow.collectAsLazyPagingItems()
-
-//    LaunchedEffect(!states.value.isLogin) {
-//        navController.navigate(Screen.Login.route)
-//    }
 
     Scaffold(
         modifier = Modifier
@@ -147,7 +136,7 @@ fun HomeScreen(
                         }
                     }) {
                         Icon(painter = painterResource(id = if (darkMode.value) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24), contentDescription = stringResource(
-                            id = R.string.title_dark_mode
+                            id = R.string.dark_mode
                         ))
                     }
                 }
@@ -157,7 +146,7 @@ fun HomeScreen(
             FloatingActionButton(onClick = {
                 showBottomSheet.value = !showBottomSheet.value
             }) {
-                Icon(imageVector = Icons.Outlined.Add, contentDescription = stringResource(id = R.string.add_transaction_content_description))
+                Icon(imageVector = Icons.Outlined.Add, contentDescription = stringResource(id = R.string.add_transaction))
             }
         },
         bottomBar = {
@@ -173,7 +162,7 @@ fun HomeScreen(
                 .verticalScroll(scrollState)
                 .fillMaxSize(1f),
         ) {
-            val (mainBox, adviceBox, feedBox, financeCharts, notProfileBox) = createRefs()
+            val (mainBox, adviceBox, feedBox, financeCharts) = createRefs()
             if (showBottomSheet.value) {
                 ModalBottomSheet(
                     onDismissRequest = {
@@ -217,7 +206,19 @@ fun HomeScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-                BoxChart()
+//                Column(
+//                    modifier = Modifier
+//                        .padding(16.dp)
+//                        .background(
+//                            color = MaterialTheme.colorScheme.tertiaryContainer,
+//                            shape = RoundedCornerShape(20.dp)
+//                        )
+//                        .fillMaxWidth()
+//                        .heightIn(min = 200.dp, max = 300.dp),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    ChartsComponent(data = barDataList)
+//                }
             }
 
             BoxWithConstraints(

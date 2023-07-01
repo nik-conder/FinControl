@@ -2,18 +2,31 @@
 <resources>
     <string name="app_name">FinControl</string>
 
-    <!-- Titles -->
-    <string name="title_feed">Лента</string>
-    <string name="title_useful_advice">Полезный совет</string>
-    <string name="title_settings">Настройки</string>
-    <string name="title_profile">Профиль</string>
-    <string name="title_dark_mode">Тёмный режим</string>
+    <string name="feed">Лента</string>
+    <string name="useful_advice">Полезный совет</string>
+    <string name="settings">Настройки</string>
+    <string name="statistics">Статистика</string>
+    <string name="dark_mode">Тёмный режим</string>
+    <string name="amount">Сумма</string>
+    <string name="income">Доход</string>
+    <string name="expense">Расход</string>
+    <string name="total">Итого</string>
+    <string name="back">Назад</string>
+    <string name="next">Далее</string>
+    <string name="done">Готово</string>
+    <string name="error">Ошибка</string>
 
-    <!-- Content description -->
-    <string name="add_transaction_content_description">Добавить транзакцию</string>
+    <string name="add_transaction">Добавить транзакцию</string>
+    <string name="add_transaction_description">Добавить новую транзакцию. Укажите тип, категорию и сумму</string>
+    <string name="type_transaction">Тип транзакции</string>
+    <string name="type_transaction_description">Укажите тип транзакции</string>
+    <string name="category_transaction">Категория транзакции</string>
+    <string name="category_transaction_description">Укажите категорию транзакции</string>
+    <string name="amount_description">Укажите сумму транзакции</string>
+    <string name="add_transaction_total">%1$s в категории %2$s на сумму %3$s</string>
+
     <string name="visibility_content_description">Видимость</string>
 
-    <!-- Advices -->
     <string name="advice_title_1">Постоянно откладывайте часть своих доходов.</string>
     <string name="advice_description_1">Стремитесь к тому, чтобы откладывать не менее 20% своего дохода в качестве накоплений. Если вы начнете эту практику сегодня, то сможете создать капитал для будущих нужд и решительно улучшить свое финансовое положение.</string>
     <string name="advice_title_2">Управляйте своими расходами.</string>
@@ -24,7 +37,4 @@
     <string name="advice_description_4">Если у вас есть долги, планируйте их выплату и снижайте процентные ставки. Старайтесь выплачивать кредиты и задолженности вовремя, чтобы избежать штрафов и дополнительных затрат.</string>
     <string name="advice_title_5">Образуйте финансовую подушку безопасности.</string>
     <string name="advice_description_5">Накопите достаточно денег на случай неожиданных расходов. Это может быть эквивалентом от трех до шести месяцев расходов на жизнь. Такая подушка позволит избежать финансовых проблем в случае увольнения, неожиданных расходов на ремонт или медицинские услуги.</string>
-
-    <!-- Other -->
-
 </resources>

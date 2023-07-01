@@ -2,37 +2,39 @@
 <resources>
     <string name="app_name">FinControl</string>
 
-    <!-- Titles -->
-    <string name="title_feed">Feed</string>
-    <string name="title_useful_advice">Useful advice</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_charts">Charts</string>
-    <string name="title_dark_mode">Dark mode</string>
-
-    <!-- Content description -->
-    <string name="add_transaction_content_description">Add transaction</string>
-    <string name="add_transaction_description">Add a new transaction. Specify the type, category and amount.</string>
-    <string name="visibility_content_description">Visibility</string>
-
-    <!-- Advices -->
-    <string name="advice_title_1">Постоянно откладывайте часть своих доходов.</string>
-    <string name="advice_description_1">Стремитесь к тому, чтобы откладывать не менее 20% своего дохода в качестве накоплений. Если вы начнете эту практику сегодня, то сможете создать капитал для будущих нужд и решительно улучшить свое финансовое положение.</string>
-    <string name="advice_title_2">Управляйте своими расходами.</string>
-    <string name="advice_description_2">Проводите регулярный анализ своих трат и ищите возможности сэкономить. Например, можно отказаться от ненужных подписок, покупать дешевле продукты, экономить на энергозатратах и т.д.</string>
-    <string name="advice_title_3">Инвестируйте свои деньги.</string>
-    <string name="advice_description_3">Инвестирование - это один из наиболее эффективных способов увеличить свои сбережения. Разнообразьте свой портфель, вкладывая деньги в акции, облигации, недвижимость и другие виды инвестиций.</string>
-    <string name="advice_title_4">Управляйте своим долгом.</string>
-    <string name="advice_description_4">Если у вас есть долги, планируйте их выплату и снижайте процентные ставки. Старайтесь выплачивать кредиты и задолженности вовремя, чтобы избежать штрафов и дополнительных затрат.</string>
-    <string name="advice_title_5">Образуйте финансовую подушку безопасности.</string>
-    <string name="advice_description_5">Накопите достаточно денег на случай неожиданных расходов. Это может быть эквивалентом от трех до шести месяцев расходов на жизнь. Такая подушка позволит избежать финансовых проблем в случае увольнения, неожиданных расходов на ремонт или медицинские услуги.</string>
-
-    <!-- Other -->
+    <string name="feed">Feed</string>
+    <string name="useful_advice">Useful advice</string>
+    <string name="settings">Settings</string>
+    <string name="statistics">Statistics</string>
+    <string name="dark_mode">Dark mode</string>
     <string name="amount">Amount</string>
     <string name="income">Income</string>
     <string name="expense">Expense</string>
     <string name="total">Total</string>
-    <string name="type_transaction">Type of transaction</string>
-    <string name="category_transaction">Category of transaction</string>
-    <string name="add_transaction_total">%1$s in the %2$s category in the amount of %3$d %4$s</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="done">Done</string>
+    <string name="error">Error</string>
 
+    <string name="add_transaction">Add transaction</string>
+    <string name="add_transaction_description">Add a new transaction. Specify the type, category and amount</string>
+    <string name="type_transaction">Type of transaction</string>
+    <string name="type_transaction_description">Specify the transaction type</string>
+    <string name="category_transaction">Category of transaction</string>
+    <string name="category_transaction_description">Specify the transaction category</string>
+    <string name="amount_description">Specify the transaction amount</string>
+    <string name="add_transaction_total">%1$s in the %2$s category in the amount of %3$s</string>
+
+    <string name="visibility_content_description">Visibility</string>
+
+    <string name="advice_title_1">Always set aside a portion of your income.</string>
+    <string name="advice_description_1">Strive to save at least 20% of your income as savings. If you start this practice today, you can create a fund for future needs and significantly improve your financial situation.</string>
+    <string name="advice_title_2">Manage your expenses.</string>
+    <string name="advice_description_2">Regularly analyze your expenses and look for opportunities to save. For example, you can cancel unnecessary subscriptions, buy cheaper products, save on energy costs, etc.</string>
+    <string name="advice_title_3">Invest your money.</string>
+    <string name="advice_description_3">Investing is one of the most effective ways to increase your savings. Diversify your portfolio by investing in stocks, bonds, real estate, and other types of investments.</string>
+    <string name="advice_title_4">Manage your debt.</string>
+    <string name="advice_description_4">If you have debts, plan your repayments and reduce interest rates. Try to pay off loans and debts on time to avoid penalties and additional costs.</string>
+    <string name="advice_title_5">Build a financial safety net.</string>
+    <string name="advice_description_5">Build up enough money for unexpected expenses. This can be the equivalent of three to six months\' worth of living expenses. Such a safety net will help you avoid financial problems in case of job loss, unexpected repair costs, or medical expenses.</string>
 </resources>

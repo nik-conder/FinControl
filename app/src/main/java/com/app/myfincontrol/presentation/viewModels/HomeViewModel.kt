@@ -11,7 +11,6 @@ import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
-import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
@@ -43,11 +42,6 @@ class HomeViewModel @Inject constructor(
     private val _states = MutableStateFlow(HomeStates())
     val states = _states.asStateFlow()
 
-    val store = context.dataStore
-
-//    private val _transactionsStateFlow = MutableStateFlow<PagingData<Transaction>>(PagingData.empty())
-//    val transactionsStateFlow: StateFlow<PagingData<Transaction>> = _transactionsStateFlow
-
     val feedPager = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = true),
         pagingSourceFactory = { FeedDataSource(transactionDAO) }
@@ -62,10 +56,10 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun loading() {
         val session = sessionUseCase.getAllSession()
-        session.collect() { session ->
-            if (session.isNotEmpty()) {
-                _states.update { it.copy(isLogin = true, isLoading = true, selectedProfile = profileUseCase.getProfile(session.first().profile_id)) }
-                getBalance(session.first().profile_id)
+        session.collect() { item ->
+            if (item.isNotEmpty()) {
+                _states.update { it.copy(isLogin = true, isLoading = true, selectedProfile = profileUseCase.getProfile(item.first().profile_id)) }
+                getBalance(item.first().profile_id)
             } else {
                 _states.update { it.copy(isLogin = false) }
             }
@@ -76,16 +70,6 @@ class HomeViewModel @Inject constructor(
             if (states.value.selectedProfile!!.uid != 0) getBalance(states.value.selectedProfile!!.uid)
         }
     }
-
-    private fun getProfile(id: Int) {
-        val profile = profileUseCase.getProfile(uid = id)
-        _states.update {
-            it.copy(
-                selectedProfile = profile
-            )
-        }
-    }
-
 
     private suspend fun getBalance(profile_id: Int) {
         balanceUseCase.getBalance(profile_id).collect() {newValue ->
@@ -111,7 +95,7 @@ class HomeViewModel @Inject constructor(
             is TransactionEvents.AddTransaction -> {
                 if (states.value.selectedProfile != null) {
                     CoroutineScope(Dispatchers.IO).launch {
-                        val result = transactionUseCase.addTransaction(
+                        transactionUseCase.addTransaction(
                             Transaction(
                                 profileId = states.value.selectedProfile!!.uid,
                                 type = event.type,
@@ -148,7 +132,7 @@ class HomeViewModel @Inject constructor(
                                     0 -> {
                                         TransactionCategories.ExpenseCategories.ENTERTAINMENT.name
                                     } else -> {
-                                        TransactionCategories.IncomeCategories.INVESTS.name
+                                        TransactionCategories.IncomeCategories.INVESTMENTS.name
                                     }
                                 }
                             )
