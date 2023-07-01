@@ -1,7 +1,6 @@
 package com.app.myfincontrol.presentation.compose.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,14 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun FeedComponent(
     feedPager: Pager<Int, Transaction>,
+    hideBalance: Boolean,
     onEvens: (TransactionEvents) -> Unit
 ) {
 
@@ -136,18 +134,68 @@ fun FeedComponent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 state = listState
             ) {
+                if (feedPagingItems.itemCount == 0) {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 32.dp, bottom = 32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Row() {
+                                Text(text = "Вы ещё не добавляли транзакции..", style = MaterialTheme.typography.bodyMedium)
+                            }
+                            Row {
+                                Text(text = "\uD83D\uDE43", fontSize = 48.sp)
+                            }
+                        }
+                    }
+                }
 
                 items(count = feedPagingItems.itemCount) {
                     val item = feedPagingItems[it]
                     feedPagingItems.itemKey { item!!.id }
-                    TransactionComponent(transaction = item!!)
+                    TransactionComponent(transaction = item!!, hideBalance = hideBalance)
                 }
 
+                when (feedPagingItems.loadState.prepend) {
+                    is LoadState.Loading -> {
+                        item { CircularProgressComponent() }
+                    }
+                    is LoadState.Error -> {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = " ${(feedPagingItems.loadState.append as LoadState.Error).error.localizedMessage}")
+                            }
+                        }
+                    }
+                    is LoadState.NotLoading -> {}
+                }
+
+                when (feedPagingItems.loadState.refresh) {
+                    is LoadState.Loading -> {
+                        item { CircularProgressComponent() }
+                    }
+                    is LoadState.Error -> {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = " ${(feedPagingItems.loadState.append as LoadState.Error).error.localizedMessage}")
+                            }
+                        }
+                    }
+                    is LoadState.NotLoading -> {}
+                }
                 when (feedPagingItems.loadState.append) {
                     is LoadState.Loading -> {
-                        item {
-                            CircularProgressIndicator()
-                        }
+                        item { CircularProgressComponent() }
                     }
                     is LoadState.Error -> {
                         item {
@@ -161,18 +209,20 @@ fun FeedComponent(
                         }
                     }
                     is LoadState.NotLoading -> {
-                        item {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 32.dp, bottom = 32.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Row() {
-                                    Text(text ="Дальше только тишина", style = MaterialTheme.typography.bodyMedium)
-                                }
-                                Row {
-                                    Text(text = "\uD83E\uDD2B", fontSize = 48.sp)
+                        if (feedPagingItems.itemCount > 0) {
+                            item {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 32.dp, bottom = 32.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Row() {
+                                        Text(text = "Дальше только тишина..", style = MaterialTheme.typography.bodyMedium)
+                                    }
+                                    Row {
+                                        Text(text = "\uD83E\uDD2B", fontSize = 48.sp)
+                                    }
                                 }
                             }
                         }
@@ -180,6 +230,5 @@ fun FeedComponent(
                 }
             }
         }
-        }
-
+    }
 }

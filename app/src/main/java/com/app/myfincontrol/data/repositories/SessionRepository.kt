@@ -9,21 +9,18 @@ import javax.inject.Inject
 class SessionRepository @Inject constructor(
     private val sessionDAO: SessionDAO
 ) {
-    fun addSession() {
-        TODO("Not yet implemented")
-    }
-
-    fun getSession(): Any {
-        TODO("Not yet implemented")
-    }
 
     suspend fun setSession(session: Session): Long {
         sessionDAO.deleteAllSessions()
         return sessionDAO.insertSession(session)
     }
 
-        fun getAllSession(): Flow<List<Session>> {
-            return sessionDAO.getAllSession()
-        }
+    fun getAllSession(): Flow<List<Session>> {
+        return sessionDAO.getAllSession()
+    }
+
+    fun getLastSession(): Session {
+        return sessionDAO.getLastSession()
+    }
 
 }

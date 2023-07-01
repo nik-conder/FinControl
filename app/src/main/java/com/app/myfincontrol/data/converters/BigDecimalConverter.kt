@@ -1,7 +1,7 @@
 package com.app.myfincontrol.data.converters
 
-import android.icu.math.BigDecimal
 import androidx.room.TypeConverter
+import java.math.BigDecimal
 
 class BigDecimalConverter {
     @TypeConverter

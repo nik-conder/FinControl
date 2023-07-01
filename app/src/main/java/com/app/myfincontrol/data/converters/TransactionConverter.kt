@@ -1,7 +1,7 @@
 package com.app.myfincontrol.data.converters
 
 import androidx.room.TypeConverter
-import com.app.myfincontrol.data.TransactionCategories
+import com.app.myfincontrol.data.enums.TransactionCategories
 
 class TransactionConverter {
 

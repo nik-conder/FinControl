@@ -1,5 +1,7 @@
 package com.app.myfincontrol.data
 
+import com.app.myfincontrol.data.enums.DarkMode
+
 interface Configuration {
 
     object Database: Configuration {
@@ -8,5 +10,13 @@ interface Configuration {
 
     object Limits: Configuration {
         const val LIMIT_PROFILES = 5
+        const val LIMIT_CHARS_NAME_PROFILE = 32
+
     }
+
+    object Settings: Configuration {
+        val DARK_MODE: DarkMode = DarkMode.DISABLED
+    }
+
+
 }

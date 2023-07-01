@@ -6,7 +6,6 @@ import com.app.myfincontrol.data.repositories.SessionRepository
 import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
-import com.app.myfincontrol.domain.useCases.RegistrationUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.domain.useCases.TransactionUseCase
 import dagger.Module
@@ -31,10 +30,9 @@ class DomainModule @Inject constructor() {
     @Singleton
     @Provides
     fun providerBalanceUseCase(
-        balanceRepository: BalanceRepository,
         transactionRepository: TransactionRepository
     ): BalanceUseCase = BalanceUseCase(
-        balanceRepository, transactionRepository
+        transactionRepository
     )
 
     @Singleton
@@ -45,23 +43,11 @@ class DomainModule @Inject constructor() {
         sessionRepository
     )
 
-    @Singleton
-    @Provides
-    fun providerRegistrationUseCase(
-        profileRepository: ProfileRepository,
-        balanceRepository: BalanceRepository
-
-    ): RegistrationUseCase = RegistrationUseCase(
-        profileRepository, balanceRepository
-    )
-
     //@Singleton
     @Provides
     fun providerTransactionUseCase(
-        balanceRepository: BalanceRepository,
         transactionRepository: TransactionRepository
     ): TransactionUseCase = TransactionUseCase(
-        balanceRepository,
         transactionRepository
     )
 }

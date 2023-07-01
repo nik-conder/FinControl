@@ -26,8 +26,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.myfincontrol.data.Currency
+import com.app.myfincontrol.data.Configuration
 import com.app.myfincontrol.data.entities.Profile
+import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
 
 @Composable
@@ -38,7 +39,7 @@ fun CreateProfileComponent(
         mutableStateOf(TextFieldValue(""))
     }
 
-    val accountNameMaxChar = 32
+    val accountNameMaxChar = Configuration.Limits.LIMIT_CHARS_NAME_PROFILE
 
     val selectedCurrency = remember {
         mutableStateOf(Currency.USD)

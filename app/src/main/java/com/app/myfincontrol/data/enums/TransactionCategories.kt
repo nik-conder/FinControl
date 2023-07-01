@@ -1,8 +1,4 @@
-package com.app.myfincontrol.data
-
-enum class TransactionType {
-    INCOME, EXPENSE
-}
+package com.app.myfincontrol.data.enums
 
 interface TransactionCategories {
 

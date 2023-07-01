@@ -9,16 +9,22 @@ class ProfileUseCase @Inject constructor(
 
 ) {
 
-    suspend fun createProfile(profile: Profile): Boolean {
-        //profileRepository.createProfile(profile = profile)
-        return false
-    }
-
     fun getProfiles(): List<Profile> {
         return profileRepository.getProfiles()
     }
 
     fun getProfile(uid: Int): Profile {
         return profileRepository.getProfile(uid = uid)
+    }
+    suspend fun deleteProfile(profile: Profile) {
+        return profileRepository.deleteProfile(profile = profile)
+    }
+
+    fun getLastProfile(): Profile {
+        return profileRepository.getLastProfile()
+    }
+
+    suspend fun createProfile(profile: Profile): Long {
+        return profileRepository.createProfile(profile = profile)
     }
 }

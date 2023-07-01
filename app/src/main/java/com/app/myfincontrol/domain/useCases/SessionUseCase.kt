@@ -9,9 +9,8 @@ class SessionUseCase @Inject constructor(
     private val sessionRepository: SessionRepository
 ) {
 
-    fun getSession() = sessionRepository.getSession()
-
     suspend fun setSession(session: Session) = sessionRepository.setSession(session)
 
-    suspend fun getAllSession(): Flow<List<Session>> = sessionRepository.getAllSession()
+    fun getAllSession(): Flow<List<Session>> = sessionRepository.getAllSession()
+    fun getLastSession(): Session = sessionRepository.getLastSession()
 }

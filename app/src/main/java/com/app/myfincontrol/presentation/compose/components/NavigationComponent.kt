@@ -19,7 +19,7 @@ fun NavigationComponent(
 ) {
 
     val items = listOf(
-        Screen.Profile,
+        Screen.Charts,
         Screen.Home,
         Screen.Settings,
     )

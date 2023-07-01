@@ -17,4 +17,7 @@ interface SessionDAO {
 
     @Query("SELECT * FROM session")
     fun getAllSession(): Flow<List<Session>>
+
+    @Query("SELECT * FROM session ORDER BY uid DESC LIMIT 1")
+    fun getLastSession(): Session
 }

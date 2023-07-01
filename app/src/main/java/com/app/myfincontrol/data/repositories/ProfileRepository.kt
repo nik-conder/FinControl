@@ -20,4 +20,12 @@ class ProfileRepository @Inject constructor(
         return profileDao.getProfile(uid = uid)
     }
 
+    suspend fun deleteProfile(profile: Profile) {
+        return profileDao.deleteProfile(profile = profile)
+    }
+
+    fun getLastProfile(): Profile {
+        return profileDao.getLastProfile()
+    }
+
 }

@@ -3,7 +3,7 @@ package com.app.myfincontrol.data.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.app.myfincontrol.data.Currency
+import com.app.myfincontrol.data.enums.Currency
 
 @Entity
 data class Profile(

@@ -1,15 +1,14 @@
 package com.app.myfincontrol.presentation.viewModels
 
 import android.content.Context
-import android.icu.math.BigDecimal
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.app.myfincontrol.data.TransactionCategories
-import com.app.myfincontrol.data.TransactionType
 import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.enums.TransactionCategories
+import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
@@ -27,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,7 +46,7 @@ class HomeViewModel @Inject constructor(
 //    val transactionsStateFlow: StateFlow<PagingData<Transaction>> = _transactionsStateFlow
 
     val feedPager = Pager(
-        config = PagingConfig(pageSize = 10),
+        config = PagingConfig(pageSize = 10, enablePlaceholders = true),
         pagingSourceFactory = { FeedDataSource(transactionDAO) }
     )
 
@@ -67,6 +67,7 @@ class HomeViewModel @Inject constructor(
                 _states.update { it.copy(isLogin = false) }
             }
         }
+
 
         if (states.value.selectedProfile != null) {
             if (states.value.selectedProfile!!.uid != 0) getBalance(states.value.selectedProfile!!.uid)
@@ -105,17 +106,26 @@ class HomeViewModel @Inject constructor(
             }
 
             is TransactionEvents.AddTransaction -> {
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    val transaction = transactionUseCase.addTransaction(event.transactions)
-
+                if (states.value.selectedProfile != null) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val result = transactionUseCase.addTransaction(
+                            Transaction(
+                                profileId = states.value.selectedProfile!!.uid,
+                                type = event.type,
+                                amount = event.amount,
+                                datetime = System.currentTimeMillis(),
+                                category = event.category.toString()
+                            )
+                        )
+                    }
+                    Toast.makeText(context, "Transaction added", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                 }
-
-                Toast.makeText(context, "Transaction added", Toast.LENGTH_SHORT).show()
             }
 
             is TransactionEvents.GenerateEvents -> {
-                val count = 5
+                val count = 10
                 viewModelScope.launch {
                     val randType = (0..1).random()
                     repeat(count) {
@@ -140,6 +150,7 @@ class HomeViewModel @Inject constructor(
                                 }
                             )
                         )
+                        println(it)
                     }
                 }
                 Toast.makeText(context, "Сгенерированно $count транзакции", Toast.LENGTH_SHORT).show()

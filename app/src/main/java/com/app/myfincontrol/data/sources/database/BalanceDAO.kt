@@ -1,13 +1,12 @@
 package com.app.myfincontrol.data.sources.database
 
-import android.icu.math.BigDecimal
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.app.myfincontrol.data.entities.Balance
-import com.app.myfincontrol.data.entities.Profile
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
 
 @Dao
 interface BalanceDao {

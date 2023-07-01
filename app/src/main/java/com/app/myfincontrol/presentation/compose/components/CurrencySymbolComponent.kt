@@ -1,7 +1,7 @@
 package com.app.myfincontrol.presentation.compose.components
 
-import androidx.compose.runtime.Composable
-import com.app.myfincontrol.data.Currency
+import com.app.myfincontrol.data.enums.Currency
+
 
 fun currencySymbolComponent(currency: Currency): String {
     return when (currency) {

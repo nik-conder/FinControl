@@ -1,8 +1,7 @@
 package com.app.myfincontrol.presentation.compose.components
 
-import android.icu.math.BigDecimal
+import java.math.BigDecimal
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,30 +15,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberPlainTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.RenderEffect
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.myfincontrol.R
-import com.app.myfincontrol.data.Currency
-import com.app.myfincontrol.data.TransactionCategories
-import com.app.myfincontrol.data.TransactionType
-import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 
 @OptIn(ExperimentalMaterial3Api::class)

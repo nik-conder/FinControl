@@ -1,6 +1,6 @@
 package com.app.myfincontrol.presentation.viewModels.states
 
-import android.icu.math.BigDecimal
+import java.math.BigDecimal
 import com.app.myfincontrol.data.entities.Profile
 
 data class HomeStates(

@@ -4,15 +4,14 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
-import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
-import com.app.myfincontrol.domain.useCases.RegistrationUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.domain.useCases.TransactionUseCase
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
+import com.app.myfincontrol.presentation.viewModels.SettingsViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,10 +47,23 @@ class PresentationModule @Inject constructor() {
     fun providerLoginViewModel(
         @ApplicationContext context: Context,
         sessionUseCase: SessionUseCase,
-        registrationUseCase: RegistrationUseCase,
         profileUseCase: ProfileUseCase
     ): LoginViewModel {
-        return LoginViewModel(context, sessionUseCase, registrationUseCase, profileUseCase)
+        return LoginViewModel(context, sessionUseCase, profileUseCase)
+    }
+
+    @Singleton
+    @Provides
+    fun providerSettingsViewModel(
+        @ApplicationContext context: Context,
+        sessionUseCase: SessionUseCase,
+        profileUseCase: ProfileUseCase
+    ): SettingsViewModel {
+        return SettingsViewModel(
+            context,
+            sessionUseCase,
+            profileUseCase
+        )
     }
 
 }
