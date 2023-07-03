@@ -86,7 +86,7 @@ dependencies {
     val room_version = "2.5.1"
 
     // Paging
-    implementation("androidx.paging:paging-compose:3.2.0-beta01")
+    implementation("androidx.paging:paging-compose:3.2.0-rc01")
     implementation("androidx.paging:paging-common-ktx:3.1.1")
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
 
@@ -104,7 +104,7 @@ dependencies {
 
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
 
     // Dagger Hilt
     implementation ("com.google.dagger:hilt-android:2.46.1")
@@ -114,7 +114,10 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Charts
-    implementation("com.himanshoe:charty:1.0.1")
+    implementation("com.patrykandpatrick.vico:core:1.6.5")
+    implementation("com.patrykandpatrick.vico:compose:1.6.5")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.6.5")
+    //implementation("com.himanshoe:charty:1.0.1")
 
 //    // optional - Test helpers
 //    testImplementation("androidx.room:room-testing:$room_version")

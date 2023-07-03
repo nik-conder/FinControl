@@ -19,5 +19,5 @@ sealed class Screen(
     object Settings : Screen(route = "settingsScreen",  R.string.settings, iconResource = Icons.Outlined.Settings)
     object Login : Screen(route = "loginScreen", R.string.feed, iconResource = Icons.Outlined.Lock)
     object CreateProfile : Screen(route = "createProfileScreen", R.string.feed, iconResource = Icons.Outlined.Person)
-    object Charts: Screen(route = "chartsScreen", R.string.statistics, iconResource = Icons.Outlined.Info)
+    object Statistics: Screen(route = "statisticsScreen", R.string.statistics, iconResource = Icons.Outlined.Info)
 }

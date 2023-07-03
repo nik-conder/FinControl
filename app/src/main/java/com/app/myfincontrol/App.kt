@@ -8,7 +8,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.app.myfincontrol.di.AppComponent
 import com.app.myfincontrol.di.DaggerAppComponent
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 
 @HiltAndroidApp
 class App : Application() {

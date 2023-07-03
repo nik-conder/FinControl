@@ -5,18 +5,17 @@ import com.app.myfincontrol.MainActivity
 import com.app.myfincontrol.di.modules.AppModule
 import dagger.BindsInstance
 import dagger.Component
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class])
+@Component(modules = [AppModule::class ])
 interface AppComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance context: Context): AppComponent
+        fun create(@BindsInstance @ApplicationContext context: Context): AppComponent
     }
 
     fun inject(activity: MainActivity)
-
-    val appModule: AppModule
 }

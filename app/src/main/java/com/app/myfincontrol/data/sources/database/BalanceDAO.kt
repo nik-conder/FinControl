@@ -16,8 +16,4 @@ interface BalanceDao {
 
     @Query("SELECT main_balance FROM balance WHERE profile_id = :profile_id")
     fun getBalance(profile_id: Int): Flow<BigDecimal>
-
-//    @Query("SELECT * FROM balance")
-//    fun getBalance(profile_id: Int): BigDecimal
-
 }

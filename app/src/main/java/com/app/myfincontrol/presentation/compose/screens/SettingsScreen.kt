@@ -19,12 +19,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -125,7 +128,8 @@ fun SettingsScreen(
                             .wrapContentHeight()
                     ) {
                         SettingsBox(
-                            store = store
+                            store = store,
+                            onEvents = onEvents
                         )
                     }
                 }
@@ -137,14 +141,17 @@ fun SettingsScreen(
 @Composable
 fun SettingsBox(
     store: UserStore,
+    onEvents: (SettingsEvents) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val darkMode = store.getDarkMode.collectAsState(initial = false)
-    val hideBalance = store.hideBalance.collectAsState(initial = false)
+    val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
+    val darkMode = store.darkModeState.collectAsState(initial = false)
+    val adviceBox = store.adviceBox.collectAsState(initial = false)
+    val debugModeState = store.debugModeState.collectAsState(initial = false)
 
     Column() {
         Row() {
-            HeaderComponent(title = "Settings")
+            HeaderComponent(title = stringResource(id = R.string.settings))
         }
         Row() {
            SwitchComponent(
@@ -159,31 +166,42 @@ fun SettingsBox(
         }
         Row() {
             SwitchComponent(
-                title = "Автоматический вход",
-                description = "...",
-                state = false,
-                enabled = false,
-                onValueChange = { }
-            )
-        }
-        Row() {
-            SwitchComponent(
                 title = "Блок \"Полезные советы\"",
-                state = false,
-                enabled = false,
-                onValueChange = { }
+                state = adviceBox.value,
+                onValueChange = {
+                    scope.launch {
+                        store.setAdviceBox()
+                    }
+                }
             )
         }
         Row() {
             SwitchComponent(
                 title = "Баланс скрыт по умолчанию",
                 description = "Опция позволит скрыть баланс при открытии приложения",
-                state = hideBalance.value,
-                onValueChange = { value ->
+                state = hideBalanceState.value,
+                onValueChange = {
                     scope.launch {
-                        store.setHideBalance()
+                        store.sethideBalanceState()
                     }
                 }
+            )
+        }
+        Row() {
+            SwitchComponent(title = "Debug mode", state = debugModeState.value, onValueChange = {
+                scope.launch {
+                    store.setDebugMode()
+                }
+            })
+        }
+
+        Row() {
+            SwitchComponent(
+                title = "Автоматический вход",
+                description = "...",
+                state = false,
+                enabled = false,
+                onValueChange = { }
             )
         }
     }
@@ -197,32 +215,28 @@ fun ProfileBox(
 ) {
     Column(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
-        Row {
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+                ) {
             Column(
                 modifier = Modifier
                     .weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Profile", style = MaterialTheme.typography.headlineSmall)
+                Text(text = profile.name, style = MaterialTheme.typography.headlineSmall)
             }
             Column() {
-                Text(
-                    text = profile.name,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                TextButton(onClick = {
+                    onEvents.invoke(SettingsEvents.DeleteProfile)
+                    navController.navigate(Screen.Login.route)
+                }) {
+                    Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
+                    Text(text = "Удалить")
+                }
             }
 
-        }
-        Row() {
-            TextButton(onClick = {
-                onEvents.invoke(SettingsEvents.DeleteProfile)
-                navController.navigate(Screen.Login.route)
-            }) {
-                Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
-                Text(text = "Удалить")
-            }
         }
     }
 }

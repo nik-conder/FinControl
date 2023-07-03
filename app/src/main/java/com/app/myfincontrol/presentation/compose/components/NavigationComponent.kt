@@ -18,8 +18,8 @@ fun NavigationComponent(
     navController: NavController
 ) {
 
-    val items = listOf(
-        Screen.Charts,
+    val itemsScreen = listOf(
+        Screen.Statistics,
         Screen.Home,
         Screen.Settings,
     )
@@ -28,7 +28,7 @@ fun NavigationComponent(
     val currentDestination = navBackStackEntry?.destination
 
     NavigationBar {
-        items.forEach { screen ->
+        itemsScreen.forEach { screen ->
             NavigationBarItem(
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 //enabled = navController.currentDestination?.route != "settingsScreen",

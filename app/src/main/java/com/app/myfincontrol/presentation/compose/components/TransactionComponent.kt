@@ -28,7 +28,7 @@ enum class TypeEvent {
 @Composable
 fun TransactionComponent(
     transaction: Transaction,
-    hideBalance: Boolean
+    hideBalanceState: Boolean
 ) {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm")
 
@@ -69,7 +69,7 @@ fun TransactionComponent(
                         weight(1f)
             ) {
                 Text(
-                    text = if (hideBalance)
+                    text = if (hideBalanceState)
                         "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11"
                     else
                         "${if (transaction.type == TransactionType.EXPENSE) "-" else "+"} ${transaction.amount}",
@@ -108,7 +108,7 @@ fun TransactionComponent(
                     .padding(start = 16.dp)
             ) {
                 Text(
-                    text = dateFormat.format(Date(transaction.datetime)),
+                    text = dateFormat.format(Date(transaction.datetime * 1000)),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.secondary
                 )

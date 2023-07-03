@@ -1,7 +1,9 @@
 package com.app.myfincontrol.presentation.viewModels
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -11,6 +13,7 @@ import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
+import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
@@ -27,6 +30,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +44,6 @@ class HomeViewModel @Inject constructor(
     private val transactionUseCase: TransactionUseCase,
     private val transactionDAO: TransactionDAO
 ): ViewModel() {
-
     private val _states = MutableStateFlow(HomeStates())
     val states = _states.asStateFlow()
 
@@ -46,6 +51,7 @@ class HomeViewModel @Inject constructor(
         config = PagingConfig(pageSize = 10, enablePlaceholders = true),
         pagingSourceFactory = { FeedDataSource(transactionDAO) }
     )
+
 
     init {
         viewModelScope.launch {
@@ -77,6 +83,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+
     fun onEvents(event: HomeEvents) {
         when (event) {
             is HomeEvents.Login -> {
@@ -85,6 +92,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onEventsTransaction(event: TransactionEvents) {
         when (event) {
 
@@ -100,7 +108,7 @@ class HomeViewModel @Inject constructor(
                                 profileId = states.value.selectedProfile!!.uid,
                                 type = event.type,
                                 amount = event.amount,
-                                datetime = System.currentTimeMillis(),
+                                datetime = System.currentTimeMillis() / 1000L,
                                 category = event.category.toString()
                             )
                         )
@@ -114,26 +122,17 @@ class HomeViewModel @Inject constructor(
             is TransactionEvents.GenerateEvents -> {
                 val count = 10
                 viewModelScope.launch {
-                    val randType = (0..1).random()
                     repeat(count) {
                         transactionUseCase.addTransaction(
                             Transaction(
-                                type = when (randType) {
-                                    0 -> {
-                                        TransactionType.EXPENSE
-                                    } else -> {
-                                        TransactionType.INCOME
-                                    }
-                                },
+                                type = event.type,
                                 amount = BigDecimal.valueOf((0..100).random().toDouble()),
-                                datetime = System.currentTimeMillis(),
+                                datetime = System.currentTimeMillis() / 1000,
                                 profileId = states.value.selectedProfile!!.uid,
-                                category = when (randType) {
-                                    0 -> {
-                                        TransactionCategories.ExpenseCategories.ENTERTAINMENT.name
-                                    } else -> {
-                                        TransactionCategories.IncomeCategories.INVESTMENTS.name
-                                    }
+                                category = if (event.type == TransactionType.EXPENSE) {
+                                    TransactionCategories.ExpenseCategories.HEALTH.name
+                                } else {
+                                    TransactionCategories.IncomeCategories.INVESTMENTS.name
                                 }
                             )
                         )

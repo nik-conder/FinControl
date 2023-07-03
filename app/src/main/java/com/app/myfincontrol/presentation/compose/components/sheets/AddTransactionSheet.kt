@@ -14,7 +14,7 @@ fun AddTransactionSheet(
 ) {
     Box(
         modifier = Modifier
-            .heightIn(min = 400.dp)
+            .heightIn(min = 350.dp)
             //.padding(32.dp)
     ) {
         AddTransactionComponent(onEvents = onEvents)

@@ -108,6 +108,7 @@ fun CreateProfileComponent(
                         )
                     }
                 },
+
                 supportingText = {
                     Text(
                         text = "Осталось: ${accountNameMaxChar - accountName.value.text.length} символов",
@@ -116,7 +117,8 @@ fun CreateProfileComponent(
                     )
                 },
                 keyboardOptions = KeyboardOptions.Default,
-                isError = accountName.value.text.length >= accountNameMaxChar
+                isError = accountName.value.text.length >= accountNameMaxChar,
+                singleLine = true
             )
         }
         Row(

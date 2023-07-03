@@ -7,6 +7,7 @@ import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
+import com.app.myfincontrol.domain.useCases.StatisticsUseCase
 import com.app.myfincontrol.domain.useCases.TransactionUseCase
 import dagger.Module
 import dagger.Provides
@@ -43,11 +44,19 @@ class DomainModule @Inject constructor() {
         sessionRepository
     )
 
-    //@Singleton
+    @Singleton
     @Provides
     fun providerTransactionUseCase(
         transactionRepository: TransactionRepository
     ): TransactionUseCase = TransactionUseCase(
+        transactionRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providerStatisticsUseCase(
+        transactionRepository: TransactionRepository
+    ): StatisticsUseCase = StatisticsUseCase(
         transactionRepository
     )
 }

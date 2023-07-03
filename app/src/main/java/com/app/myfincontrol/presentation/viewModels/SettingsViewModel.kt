@@ -3,9 +3,12 @@ package com.app.myfincontrol.presentation.viewModels
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.entities.Profile
+import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.presentation.viewModels.events.SettingsEvents
@@ -16,6 +19,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,7 +46,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun loading(profile_id: Int) {
+    private suspend fun loading(profile_id: Int) {
         val profile = loadingProfile(profile_id)
         _states.update {
             it.copy(

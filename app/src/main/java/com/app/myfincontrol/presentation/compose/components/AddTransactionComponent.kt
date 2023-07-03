@@ -3,6 +3,7 @@ package com.app.myfincontrol.presentation.compose.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import java.math.BigDecimal
 
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddTransactionComponent(
@@ -63,6 +65,7 @@ fun AddTransactionComponent(
         }
     }
 
+
     Column {
         when (steep.intValue) {
             0 -> {
@@ -72,7 +75,10 @@ fun AddTransactionComponent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row() {
-                        HeaderComponent(title = stringResource(id = R.string.add_transaction))
+                        HeaderComponent(
+                            title = stringResource(id = R.string.add_transaction),
+                            paddingValues = PaddingValues(bottom = 16.dp)
+                        )
                     }
                     Row () {
                         Text(
@@ -100,7 +106,8 @@ fun AddTransactionComponent(
                     Row() {
                         HeaderComponent(
                             title = stringResource(id = R.string.type_transaction),
-                            textStyle = MaterialTheme.typography.titleLarge
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            paddingValues = PaddingValues(bottom = 16.dp)
                         )
                     }
                     Row () {
@@ -190,7 +197,8 @@ fun AddTransactionComponent(
                     Row() {
                         HeaderComponent(
                             title = stringResource(id = R.string.category_transaction),
-                            textStyle = MaterialTheme.typography.titleLarge
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            paddingValues = PaddingValues(bottom = 16.dp)
                         )
                     }
                     Row () {
@@ -207,7 +215,11 @@ fun AddTransactionComponent(
                         TextButton(onClick = {
                             dropdownMenuState.value = !dropdownMenuState.value
                         }) {
-                            Text(text = selectedCategory.value.toString())
+                            Text(text = stringResource(
+                                id = categoriesTranscript(
+                                    category = selectedCategory.value
+                                )
+                            ))
                         }
 
                     }
@@ -224,14 +236,22 @@ fun AddTransactionComponent(
                             if (selectedType.value == TransactionType.INCOME) {
                                 categoriesIncome.forEach {
                                     DropdownMenuItem(
-                                        text = { Text(text = it.toString()) },
+                                        text = { Text(text = stringResource(
+                                            id = categoriesTranscript(
+                                                category = it
+                                            )
+                                        ))},
                                         onClick = { selectedCategory.value = it }
                                     )
                                 }
                             } else {
                                 categoriesExpense.forEach {
                                     DropdownMenuItem(
-                                        text = { Text(text = it.toString()) },
+                                        text = { Text(text = stringResource(
+                                            id = categoriesTranscript(
+                                                category = it
+                                            )
+                                        ))},
                                         onClick = { selectedCategory.value = it }
                                     )
                                 }
@@ -272,7 +292,8 @@ fun AddTransactionComponent(
                     Row() {
                         HeaderComponent(
                             title = stringResource(id = R.string.amount),
-                            textStyle = MaterialTheme.typography.titleLarge
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            paddingValues = PaddingValues(bottom = 16.dp)
                         )
                     }
                     Row () {
@@ -343,7 +364,8 @@ fun AddTransactionComponent(
                     Row() {
                         HeaderComponent(
                             title = stringResource(id = R.string.total),
-                            textStyle = MaterialTheme.typography.titleLarge
+                            textStyle = MaterialTheme.typography.titleLarge,
+                            paddingValues = PaddingValues(bottom = 16.dp)
                         )
                     }
                     Row (
@@ -351,7 +373,12 @@ fun AddTransactionComponent(
                             .padding(start = 16.dp, end = 16.dp)
                     ) {
                         Text(
-                            text = stringResource(id = R.string.add_transaction_total, selectedType.value, selectedCategory.value, amount.toString()),
+                            text = stringResource(
+                                id = R.string.add_transaction_total,
+                                stringResource(id = typeTransactionTranslate(type = selectedType.value)),
+                                stringResource(id = categoriesTranscript(category = selectedCategory.value)),
+                                amount.toString()
+                            ),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }

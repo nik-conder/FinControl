@@ -44,7 +44,7 @@ fun HomeMainBoxComponent(
     onEventsTransaction: (TransactionEvents) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val hideBalance = store.hideBalance.collectAsState(initial = false)
+    val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
 
     val tooltipState = rememberPlainTooltipState()
     Box(
@@ -62,8 +62,7 @@ fun HomeMainBoxComponent(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -71,10 +70,10 @@ fun HomeMainBoxComponent(
             ) {
                 Column() {
                     Text(
-                        text = if (hideBalance.value) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "$balance ${currencySymbolComponent(currency)}",
+                        text = if (hideBalanceState.value) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "$balance ${currencySymbolComponent(currency)}",
                         modifier = Modifier.padding(16.dp),
                         fontSize = 42.sp,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         fontWeight = FontWeight(500)
                     )
                 }
@@ -90,11 +89,11 @@ fun HomeMainBoxComponent(
                     ) {
                         IconButton(onClick = {
                             scope.launch {
-                                store.setHideBalance()
+                                store.sethideBalanceState()
                             }
                         }) {
                             Icon(
-                                painter = painterResource(id = if (hideBalance.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
+                                painter = painterResource(id = if (hideBalanceState.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
                                 contentDescription = stringResource(id = R.string.visibility_content_description),
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )

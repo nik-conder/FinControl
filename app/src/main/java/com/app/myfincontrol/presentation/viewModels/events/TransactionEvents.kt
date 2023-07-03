@@ -8,7 +8,7 @@ import java.math.BigDecimal
 sealed class TransactionEvents {
     class AddTransaction(val type: TransactionType, val category: TransactionCategories, val amount: BigDecimal) : TransactionEvents()
 
-    object GenerateEvents : TransactionEvents()
+    class GenerateEvents(val type: TransactionType) : TransactionEvents()
 
     object LoadTransactions: TransactionEvents()
 }

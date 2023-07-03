@@ -31,13 +31,15 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import kotlinx.coroutines.launch
 
 @Composable
 fun FeedComponent(
     feedPager: Pager<Int, Transaction>,
-    hideBalance: Boolean,
+    hideBalanceState: Boolean,
+    debugModeState: Boolean,
     onEvens: (TransactionEvents) -> Unit
 ) {
 
@@ -52,23 +54,33 @@ fun FeedComponent(
     ) {
 
         Row() {
-            HeaderComponent(title = stringResource(id = R.string.feed) + " " + feedPagingItems.itemCount)
+            HeaderComponent(
+                title = stringResource(id = R.string.feed) + " " + feedPagingItems.itemCount,
+                paddingValues = PaddingValues(top = 16.dp)
+            )
         }
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                TextButton(onClick = {
-                    scope.launch {
-                        onEvens(TransactionEvents.GenerateEvents)
+            if (debugModeState) {
+                Column() {
+                    Text(text = "Generate:")
+                }
+                Column() {
+                    TextButton(onClick = { onEvens(TransactionEvents.GenerateEvents(TransactionType.INCOME)) }) {
+                        Text(text = "+")
                     }
-                }) {
-                    Text(text = "Generate")
+                }
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    TextButton(onClick = { onEvens(TransactionEvents.GenerateEvents(TransactionType.EXPENSE)) }) {
+                        Text(text = "-")
+                    }
                 }
             }
 
@@ -132,7 +144,7 @@ fun FeedComponent(
                 items(count = feedPagingItems.itemCount) {
                     val item = feedPagingItems[it]
                     feedPagingItems.itemKey { item!!.id }
-                    TransactionComponent(transaction = item!!, hideBalance = hideBalance)
+                    TransactionComponent(transaction = item!!, hideBalanceState = hideBalanceState)
                 }
 
                 when (feedPagingItems.loadState.prepend) {

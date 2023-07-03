@@ -1,5 +1,7 @@
 package com.app.myfincontrol.di.modules
 
+import android.content.Context
+import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.repositories.BalanceRepository
 import com.app.myfincontrol.data.repositories.ProfileRepository
 import com.app.myfincontrol.data.repositories.SessionRepository
@@ -12,6 +14,7 @@ import com.app.myfincontrol.data.sources.database.TransactionDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,12 +22,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class DataModule @Inject constructor() {
-
-//    @Singleton
-//    @Provides
-//    fun providerFeedPagingSource(
-//        transactionDAO: TransactionDAO
-//    ): FeedDataSource = FeedDataSource(transactionDAO)
+    @Singleton
+    @Provides
+    fun provideUserStore(
+        @ApplicationContext context: Context,
+    ): UserStore {
+        return UserStore(context)
+    }
 
     @Singleton
     @Provides

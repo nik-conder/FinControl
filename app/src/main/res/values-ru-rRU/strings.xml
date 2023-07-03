@@ -16,6 +16,37 @@
     <string name="done">Готово</string>
     <string name="error">Ошибка</string>
 
+    <string name="salary">Зарплата</string>
+    <string name="freelance">Фриланс</string>
+    <string name="investments">Инвестиции</string>
+    <string name="rent">Аренда</string>
+    <string name="business">Бизнес</string>
+    <string name="part_time_jobs">Частичная занятость</string>
+    <string name="pension">Пенсия</string>
+    <string name="gifts">Подарки</string>
+    <string name="dividends">Дивиденды</string>
+    <string name="scholarships_and_grants">Стипендии и гранты</string>
+    <string name="alimony">Алименты</string>
+    <string name="social_benefits">Социальные выплаты</string>
+    <string name="copyright_royalties">Авторские вознаграждения</string>
+    <string name="prizes_and_lotteries">Призы и лотереи</string>
+    <string name="refunds">Возвраты</string>
+    <string name="other_income">Другой доход</string>
+
+    <string name="food">Еда</string>
+    <string name="housing">Жилье</string>
+    <string name="transportation">Транспорт</string>
+    <string name="health">Здоровье</string>
+    <string name="entertainment">Развлечения</string>
+    <string name="clothing_and_footwear">Одежда и обувь</string>
+    <string name="personal_hygiene_and_beauty">Гигиена и красота</string>
+    <string name="education">Образование</string>
+    <string name="pets">Домашние животные</string>
+    <string name="travel">Путешествия</string>
+    <string name="children">Дети</string>
+    <string name="charity">Благотворительность</string>
+    <string name="technology_and_electronics">Техника и электроника</string>
+
     <string name="add_transaction">Добавить транзакцию</string>
     <string name="add_transaction_description">Добавить новую транзакцию. Укажите тип, категорию и сумму</string>
     <string name="type_transaction">Тип транзакции</string>

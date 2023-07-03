@@ -42,7 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun settingsDao(): SettingsDAO
 }
 
-//val MIGRATE_5_6 = object : Migration(5,6) {
+//val MIGRATE_1_2 = object : Migration(1,2) {
 //    override fun migrate(database: SupportSQLiteDatabase) {
 //        database.execSQL("ALTER TABLE Settings ADD btnSaveResult INTEGER NOT NULL DEFAULT 0")
 //    }

@@ -3,6 +3,7 @@ package com.app.myfincontrol.presentation.compose.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -53,7 +54,10 @@ fun AdvicesComponent() {
 
     ) {
         Row() {
-            HeaderComponent(title = stringResource(id = R.string.useful_advice))
+            HeaderComponent(
+                title = stringResource(id = R.string.useful_advice),
+                paddingValues = PaddingValues(top = 16.dp, bottom = 16.dp)
+            )
         }
         Row {
             Column(

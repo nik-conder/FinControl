@@ -1,5 +1,7 @@
 package com.app.myfincontrol.presentation.compose.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -55,6 +57,7 @@ import com.app.myfincontrol.presentation.compose.components.sheets.AddTransactio
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -73,8 +76,10 @@ fun HomeScreen(
 
     val scope = rememberCoroutineScope()
 
-    val darkMode = store.getDarkMode.collectAsState(initial = false)
-    val hideBalance = store.hideBalance.collectAsState(initial = false)
+    val darkMode = store.darkModeState.collectAsState(initial = false)
+    val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
+    val adviceBoxState = store.adviceBox.collectAsState(initial = false)
+    val debugModeState = store.debugModeState.collectAsState(initial = false)
 
     Scaffold(
         modifier = Modifier
@@ -100,7 +105,7 @@ fun HomeScreen(
                          Text(text = stringResource(id = R.string.app_name))
                      }
                      AnimatedVisibility(
-                         visible = scrollState.value > 400,
+                         visible = scrollState.value > 100,
                          enter = fadeIn() + slideInVertically(),
                          exit = fadeOut() + slideOutVertically(),
                      ) {
@@ -115,7 +120,7 @@ fun HomeScreen(
                                          .padding(8.dp)
                                  ) {
                                      Text(
-                                         text = if (hideBalance.value)
+                                         text = if (hideBalanceState.value)
                                              "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11"
                                          else
                                              "${currencySymbolComponent(
@@ -196,7 +201,9 @@ fun HomeScreen(
                         end.linkTo(parent.end)
                     }
             ) {
-                AdvicesComponent()
+                if (adviceBoxState.value) {
+                    AdvicesComponent()
+                }
             }
 
             BoxWithConstraints(
@@ -229,7 +236,7 @@ fun HomeScreen(
                     }
             ) {
                 Row() {
-                    FeedComponent(vm.feedPager, hideBalance.value, onEventsTransaction)
+                    FeedComponent(vm.feedPager, hideBalanceState.value, debugModeState.value,onEventsTransaction)
                 }
             }
         }

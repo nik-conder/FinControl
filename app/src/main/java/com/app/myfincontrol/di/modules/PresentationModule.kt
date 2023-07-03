@@ -4,14 +4,17 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
+import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
+import com.app.myfincontrol.domain.useCases.StatisticsUseCase
 import com.app.myfincontrol.domain.useCases.TransactionUseCase
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
 import com.app.myfincontrol.presentation.viewModels.SettingsViewModel
+import com.app.myfincontrol.presentation.viewModels.StatisticsViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,5 +68,14 @@ class PresentationModule @Inject constructor() {
             profileUseCase
         )
     }
+
+
+    @Singleton
+    @Provides
+    fun providerStatisticsViewModel(
+        statisticsUseCase: StatisticsUseCase
+    ): StatisticsViewModel = StatisticsViewModel(
+        statisticsUseCase
+    )
 
 }

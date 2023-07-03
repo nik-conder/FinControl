@@ -8,7 +8,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
-@Module( includes = [PresentationModule::class, RoomModule::class, DataModule::class, DomainModule::class] )
+@Module( includes = [
+    DataBaseSourcesModule::class,
+    DataModule::class,
+    DomainModule::class,
+    PresentationModule::class,
+    RoomModule::class,
+] )
 class AppModule @Inject constructor() {
 
     @Singleton
@@ -26,5 +32,9 @@ class AppModule @Inject constructor() {
     @Singleton
     @Provides
     fun providerDomainModule(): DomainModule = DomainModule()
+
+    @Singleton
+    @Provides
+    fun providerDataBaseSourcesModule(): DataBaseSourcesModule = DataBaseSourcesModule()
 
 }

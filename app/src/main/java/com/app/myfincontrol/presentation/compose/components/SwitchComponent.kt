@@ -33,7 +33,7 @@ fun SwitchComponent(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(top = 8.dp),
+            .padding(top = 16.dp),
         verticalAlignment = Alignment.CenterVertically
             //.padding(8.dp)
     ) {
@@ -50,7 +50,7 @@ fun SwitchComponent(
             if (!description.isNullOrEmpty()) {
                 Row(
                     modifier = Modifier
-                        .padding(top = 8.dp)
+                        .padding(top = 16.dp)
                 ) {
                     Text(
                         text = description,
@@ -62,7 +62,7 @@ fun SwitchComponent(
         Column() {
             Switch(
                 checked = state,
-                onCheckedChange = { onValueChange },
+                onCheckedChange = onValueChange,
                 enabled = enabled,
                 thumbContent = {
                     Icon(

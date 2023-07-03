@@ -15,9 +15,13 @@ import com.app.myfincontrol.presentation.compose.navigation.NavGraph
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
 import com.example.compose.FinControlTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
+
+    @Inject
+    lateinit var dataStore: UserStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -33,9 +37,8 @@ class MainActivity : AppCompatActivity() {
             //val viewModel = viewModel.statesMain.collectAsState()
             val navController = rememberNavController()
             val states = viewModel.states.collectAsState()
-            val store = UserStore(applicationContext)
 
-            val darkMode = store.getDarkMode.collectAsState(initial = false)
+            val darkMode = dataStore.darkModeState.collectAsState(initial = false)
 
             FinControlTheme(
                 useDarkTheme = darkMode.value
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 ) { innerPadding ->
                     NavGraph(
-                        store = store,
+                        store = dataStore,
                         navController = navController,
                         startDestination = states.value.startDestination,
                         modifier = Modifier.padding(innerPadding)

@@ -4,13 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.app.myfincontrol.MainActivity
 import com.app.myfincontrol.UserStore
-import com.app.myfincontrol.presentation.compose.screens.ChartsScreen
 import com.app.myfincontrol.presentation.compose.screens.CreateProfileScreen
 import com.app.myfincontrol.presentation.compose.screens.HomeScreen
 import com.app.myfincontrol.presentation.compose.screens.LoginScreen
 import com.app.myfincontrol.presentation.compose.screens.SettingsScreen
+import com.app.myfincontrol.presentation.compose.screens.StatisticsScreen
 
 @Composable
 fun NavGraph(
@@ -41,8 +40,8 @@ fun NavGraph(
             CreateProfileScreen(navController = navController)
         }
 
-        composable(route = Screen.Charts.route) {
-            ChartsScreen(navController = navController)
+        composable(route = Screen.Statistics.route) {
+            StatisticsScreen(navController = navController)
         }
 
     }

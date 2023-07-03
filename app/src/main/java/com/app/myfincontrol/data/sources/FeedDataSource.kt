@@ -10,22 +10,17 @@ import javax.inject.Inject
 class FeedDataSource @Inject constructor(
     private val transactionDAO: TransactionDAO
 ) : PagingSource<Int, Transaction>() {
-    override fun getRefreshKey(state: PagingState<Int, Transaction>): Int? {
-        // Используем текущее время в качестве ключа обновления
+    override fun getRefreshKey(state: PagingState<Int, Transaction>): Int {
         return System.currentTimeMillis().toInt()
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Transaction> {
-        delay(1000)
-        val lastId = params.key ?: transactionDAO.getLastID()?.plus(1) ?: 0L // Если placeholdersEnabled == true, то lastId = 0
-        val actualLastId = if (lastId == 1) 0 else lastId // Если lastId == 1, то заменяем его на 0 для первого запроса
+        //delay(1000)
+        val lastId = params.key ?: transactionDAO.getLastID()?.plus(1) ?: 0L
+        val actualLastId = if (lastId == 1) 0 else lastId
         return try {
             val response = transactionDAO.getTransactions(actualLastId.toLong(), params.loadSize)
-            val nextKey = if (response.isNotEmpty()) {
-                response.last().id
-            } else {
-                null
-            }
+            val nextKey = if (response.isNotEmpty()) { response.last().id } else { null }
             LoadResult.Page(
                 data = response,
                 prevKey = null,
