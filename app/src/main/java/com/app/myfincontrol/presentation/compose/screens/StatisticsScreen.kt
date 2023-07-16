@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
+import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.StatisticsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis

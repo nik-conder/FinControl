@@ -11,6 +11,8 @@ class SessionUseCase @Inject constructor(
 
     suspend fun setSession(session: Session) = sessionRepository.setSession(session)
 
-    fun getAllSession(): Flow<List<Session>> = sessionRepository.getAllSession()
+    fun getAllSessions(): Flow<List<Session>> = sessionRepository.getAllSessions()
     fun getLastSession(): Session = sessionRepository.getLastSession()
+
+    suspend fun deleteSession() = sessionRepository.deleteAllSessions()
 }

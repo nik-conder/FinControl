@@ -15,12 +15,16 @@ class SessionRepository @Inject constructor(
         return sessionDAO.insertSession(session)
     }
 
-    fun getAllSession(): Flow<List<Session>> {
-        return sessionDAO.getAllSession()
+    fun getAllSessions(): Flow<List<Session>> {
+        return sessionDAO.getAllSessions()
     }
 
     fun getLastSession(): Session {
         return sessionDAO.getLastSession()
+    }
+
+    suspend fun deleteAllSessions() {
+        return sessionDAO.deleteAllSessions()
     }
 
 }

@@ -15,6 +15,9 @@ interface TransactionDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTransaction(transactions: Transaction): Long
 
+    @Query("DELETE FROM `transaction` WHERE id = :id")
+    suspend fun deleteTransaction(id: Int)
+
     @Query("SELECT t.* FROM `transaction` t INNER JOIN (SELECT profile_id, uid FROM `Session` ORDER BY uid DESC LIMIT 1) s ON t.profile_id = s.profile_id WHERE t.id < :lastID AND s.profile_id = t.profile_id ORDER BY t.datetime DESC LIMIT :limit")
     suspend fun getTransactions(lastID: Long, limit: Int): List<Transaction>
 

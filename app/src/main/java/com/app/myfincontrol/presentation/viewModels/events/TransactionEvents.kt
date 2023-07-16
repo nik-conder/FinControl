@@ -11,4 +11,6 @@ sealed class TransactionEvents {
     class GenerateEvents(val type: TransactionType) : TransactionEvents()
 
     object LoadTransactions: TransactionEvents()
+
+    class DeleteTransaction(val id: Int): TransactionEvents()
 }

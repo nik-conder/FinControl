@@ -25,7 +25,7 @@ import com.app.myfincontrol.data.sources.database.TransactionDAO
         Session::class,
         Transaction::class,
         Settings::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(

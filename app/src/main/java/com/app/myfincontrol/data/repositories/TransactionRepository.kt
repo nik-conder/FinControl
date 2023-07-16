@@ -26,4 +26,8 @@ class TransactionRepository @Inject constructor(
         //return transactionDAO.getIncomesForCurrentWeek(startOfWeek = startOfWeek, startOfNextWeek = startOfNextWeek)
     }
 
+    suspend fun deleteTransaction(id: Int) {
+        return transactionDAO.deleteTransaction(id)
+    }
+
 }

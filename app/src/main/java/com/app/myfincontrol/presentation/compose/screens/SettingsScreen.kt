@@ -30,6 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -85,7 +86,7 @@ fun SettingsScreen(
             val (profileBox, settingsBox) = createRefs()
 
             if (state.value.selectedProfile == null) {
-                NotProfileComponent()
+                NotProfileComponent(navController)
             } else {
                 BoxWithConstraints(
                     modifier = Modifier
@@ -95,22 +96,11 @@ fun SettingsScreen(
                             end.linkTo(parent.end)
                         }
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.tertiaryContainer,
-                                shape = RoundedCornerShape(20.dp)
-                            )
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    ) {
-                        ProfileBox(
-                            profile = state.value.selectedProfile!!,
-                            onEvents = onEvents,
-                            navController = navController
-                        )
-                    }
+                    ProfileBox(
+                        profile = state.value.selectedProfile!!,
+                        onEvents = onEvents,
+                        navController = navController
+                    )
                 }
                 BoxWithConstraints(
                     modifier = Modifier
@@ -217,23 +207,43 @@ fun ProfileBox(
         modifier = Modifier
             .padding(16.dp),
     ) {
+        Row() {
+            HeaderComponent(title = stringResource(id = R.string.profile))
+        }
+
         Row (
             verticalAlignment = Alignment.CenterVertically
                 ) {
+            Column {
+                Text(text = "\uD83D\uDC64", style = MaterialTheme.typography.titleLarge)
+            }
             Column(
                 modifier = Modifier
+                    .padding(start = 16.dp)
                     .weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = profile.name, style = MaterialTheme.typography.headlineSmall)
+                Text(
+                    text = profile.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
             Column() {
                 TextButton(onClick = {
                     onEvents.invoke(SettingsEvents.DeleteProfile)
                     navController.navigate(Screen.Login.route)
                 }) {
-                    Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
+                    //Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
                     Text(text = "Удалить")
+                }
+            }
+            Column {
+                TextButton(onClick = {
+                    onEvents.invoke(SettingsEvents.Logout)
+                    navController.navigate(Screen.Login.route)
+                }) {
+                    Text(text = "Выйти")
                 }
             }
 

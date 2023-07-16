@@ -2,6 +2,7 @@ package com.app.myfincontrol.presentation.viewModels
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -60,8 +62,13 @@ class HomeViewModel @Inject constructor(
         println("viewModel created")
     }
 
+    override fun onCleared() {
+        Log.d("MyViewModel", "ViewModel destroyed")
+    }
+
+
     private suspend fun loading() {
-        val session = sessionUseCase.getAllSession()
+        val session = sessionUseCase.getAllSessions()
         session.collect() { item ->
             if (item.isNotEmpty()) {
                 _states.update { it.copy(isLogin = true, isLoading = true, selectedProfile = profileUseCase.getProfile(item.first().profile_id)) }
@@ -100,6 +107,13 @@ class HomeViewModel @Inject constructor(
 
             }
 
+            is TransactionEvents.DeleteTransaction -> {
+                CoroutineScope(Dispatchers.IO).launch {
+                    transactionUseCase.deleteTransaction(event.id)
+                }
+                Toast.makeText(context, "Transaction deleted", Toast.LENGTH_SHORT).show()
+            }
+
             is TransactionEvents.AddTransaction -> {
                 if (states.value.selectedProfile != null) {
                     CoroutineScope(Dispatchers.IO).launch {
@@ -123,6 +137,7 @@ class HomeViewModel @Inject constructor(
                 val count = 10
                 viewModelScope.launch {
                     repeat(count) {
+                        delay(1000)
                         transactionUseCase.addTransaction(
                             Transaction(
                                 type = event.type,

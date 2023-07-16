@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HeaderComponent(
     title: String,
-    textStyle: TextStyle = MaterialTheme.typography.headlineSmall,
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge,
     paddingValues: PaddingValues? = null,
 ) {
     Box(

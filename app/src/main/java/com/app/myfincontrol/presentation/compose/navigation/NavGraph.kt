@@ -1,6 +1,9 @@
 package com.app.myfincontrol.presentation.compose.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,14 +14,13 @@ import com.app.myfincontrol.presentation.compose.screens.LoginScreen
 import com.app.myfincontrol.presentation.compose.screens.SettingsScreen
 import com.app.myfincontrol.presentation.compose.screens.StatisticsScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     store: UserStore,
     navController: NavHostController,
     startDestination: String,
-    modifier: Any
 ) {
-
     NavHost(
         navController = navController,
         startDestination = startDestination

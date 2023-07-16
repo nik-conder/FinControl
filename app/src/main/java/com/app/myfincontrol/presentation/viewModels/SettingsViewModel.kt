@@ -3,12 +3,9 @@ package com.app.myfincontrol.presentation.viewModels
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.entities.Profile
-import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.presentation.viewModels.events.SettingsEvents
@@ -19,8 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,7 +33,7 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val session = sessionUseCase.getLastSession()
-            if (session.profile_id > 0) {
+            if (session != null && session.profile_id > 0) {
                 loading(session.profile_id)
             } else {
                 // todo
@@ -72,6 +67,16 @@ class SettingsViewModel @Inject constructor(
                     }
 
                     Toast.makeText(context, "Profile deleted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Профиль не выбран", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            is SettingsEvents.Logout -> {
+                if (states.value.selectedProfile != null) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        sessionUseCase.deleteSession()
+                    }
                 } else {
                     Toast.makeText(context, "Профиль не выбран", Toast.LENGTH_SHORT).show()
                 }

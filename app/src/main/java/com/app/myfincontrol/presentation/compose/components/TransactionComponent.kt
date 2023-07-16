@@ -28,7 +28,8 @@ enum class TypeEvent {
 @Composable
 fun TransactionComponent(
     transaction: Transaction,
-    hideBalanceState: Boolean
+    hideBalanceState: Boolean,
+    debugModeState: Boolean
 ) {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm")
 
@@ -57,7 +58,8 @@ fun TransactionComponent(
 //                    0xFF1F7601
 //                ), shape = RoundedCornerShape(20.dp)
 //            )
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center
     ) {
         Row(
             modifier = Modifier
@@ -95,13 +97,15 @@ fun TransactionComponent(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            Column() {
-                Text(
-                    text = "# ${transaction.id}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontSize = 12.sp
-                )
+            if (debugModeState) {
+                Column() {
+                    Text(
+                        text = "# ${transaction.id}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontSize = 12.sp
+                    )
+                }
             }
             Column(
                 modifier = Modifier

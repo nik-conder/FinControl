@@ -1,9 +1,11 @@
 package com.app.myfincontrol
 
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -23,6 +25,7 @@ class MainActivity: AppCompatActivity() {
     @Inject
     lateinit var dataStore: UserStore
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val viewModel: LoginViewModel by viewModels()
@@ -43,18 +46,11 @@ class MainActivity: AppCompatActivity() {
             FinControlTheme(
                 useDarkTheme = darkMode.value
             ) {
-                Scaffold(
-                    bottomBar = {
-                        NavigationComponent(navController = navController)
-                    }
-                ) { innerPadding ->
-                    NavGraph(
-                        store = dataStore,
-                        navController = navController,
-                        startDestination = states.value.startDestination,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                NavGraph(
+                    store = dataStore,
+                    navController = navController,
+                    startDestination = states.value.startDestination,
+                )
             }
         }
     }

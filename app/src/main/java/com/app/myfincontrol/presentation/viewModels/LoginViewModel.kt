@@ -74,8 +74,10 @@ class LoginViewModel @Inject constructor(
     private fun autoSelectProfile() {
         viewModelScope.launch {
             val lastSession = sessionUseCase.getLastSession()
-            _states.update {
-                it.copy(selectedProfile = lastSession.profile_id)
+            if (lastSession != null && lastSession.profile_id > 0) {
+                _states.update {
+                    it.copy(selectedProfile = lastSession.profile_id)
+                }
             }
         }
     }

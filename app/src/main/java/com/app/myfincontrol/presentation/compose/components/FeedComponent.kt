@@ -1,24 +1,38 @@
 package com.app.myfincontrol.presentation.compose.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,8 +47,10 @@ import com.app.myfincontrol.R
 import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FeedComponent(
     feedPager: Pager<Int, Transaction>,
@@ -55,17 +71,17 @@ fun FeedComponent(
 
         Row() {
             HeaderComponent(
-                title = stringResource(id = R.string.feed) + " " + feedPagingItems.itemCount,
+                title = stringResource(id = R.string.feed) + " " + if (debugModeState) feedPagingItems.itemCount.toString() else "",
                 paddingValues = PaddingValues(top = 16.dp)
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (debugModeState) {
+        if (debugModeState) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Column() {
                     Text(text = "Generate:")
                 }
@@ -82,36 +98,36 @@ fun FeedComponent(
                         Text(text = "-")
                     }
                 }
+                Column() {
+                    IconButton(onClick = {
+                        scope.launch {
+                            feedPagingItems.refresh()
+                        }
+                    }) {
+                        Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
+                    }
+                }
+
+                Column() {
+                    IconButton(onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(index = 0)
+                        }
+                    }) {
+                        Icon(imageVector = Icons.Outlined.KeyboardArrowUp, contentDescription = "")
+                    }
+                }
+                Column() {
+                    IconButton(onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(index = feedPagingItems.itemCount)
+                        }
+                    }) {
+                        Icon(imageVector = Icons.Outlined.KeyboardArrowDown, contentDescription = "")
+                    }
+                }
             }
 
-            Column() {
-                IconButton(onClick = {
-                    scope.launch {
-                        feedPagingItems.refresh()
-                    }
-                }) {
-                    Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
-                }
-            }
-
-            Column() {
-                IconButton(onClick = {
-                    scope.launch {
-                        listState.animateScrollToItem(index = 0)
-                    }
-                }) {
-                    Icon(imageVector = Icons.Outlined.KeyboardArrowUp, contentDescription = "")
-                }
-            }
-            Column() {
-                IconButton(onClick = {
-                    scope.launch {
-                        listState.animateScrollToItem(index = feedPagingItems.itemCount)
-                    }
-                }) {
-                    Icon(imageVector = Icons.Outlined.KeyboardArrowDown, contentDescription = "")
-                }
-            }
         }
 
         Row() {
@@ -141,10 +157,66 @@ fun FeedComponent(
                     }
                 }
 
-                items(count = feedPagingItems.itemCount) {
-                    val item = feedPagingItems[it]
-                    feedPagingItems.itemKey { item!!.id }
-                    TransactionComponent(transaction = item!!, hideBalanceState = hideBalanceState)
+                items(count = feedPagingItems.itemCount) { item ->
+                    val item = feedPagingItems[item]
+                    var dismissState = rememberDismissState(
+                        initialValue = DismissValue.Default,
+                        confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                onEvens(TransactionEvents.DeleteTransaction(item!!.id))
+                                scope.launch {
+                                    delay(500)
+                                    feedPagingItems.refresh()
+                                }
+                                false
+                            } else {
+                                false
+                            }
+                        }
+                    )
+
+
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        background = {
+                            val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
+                            val color by animateColorAsState(
+                                when (dismissState.targetValue) {
+                                    DismissValue.Default -> MaterialTheme.colorScheme.onSecondary
+                                    DismissValue.DismissedToEnd -> MaterialTheme.colorScheme.primary
+                                    DismissValue.DismissedToStart -> MaterialTheme.colorScheme.error
+                                }
+                            )
+                            val alignment = when (direction) {
+                                DismissDirection.StartToEnd -> Alignment.CenterStart
+                                DismissDirection.EndToStart -> Alignment.CenterEnd
+                            }
+                            val icon = when (direction) {
+                                DismissDirection.StartToEnd -> Icons.Default.Done
+                                DismissDirection.EndToStart -> Icons.Default.Delete
+                            }
+                            Box(
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(color, RoundedCornerShape(20.dp))
+                                    .padding(10.dp),
+                                contentAlignment = alignment
+                            ) {
+                                Icon(
+                                    icon,
+                                    contentDescription = "Localized description",
+                                )
+                            }
+                        },
+                        dismissContent = {
+                            feedPagingItems.itemKey { item!!.id }
+                            TransactionComponent(
+                                transaction = item!!,
+                                hideBalanceState = hideBalanceState,
+                                debugModeState = debugModeState
+                            )
+                        })
                 }
 
                 when (feedPagingItems.loadState.prepend) {
