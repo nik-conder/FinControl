@@ -2,6 +2,7 @@ package com.app.myfincontrol.data.repositories
 
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.sources.database.ProfileDao
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProfileRepository @Inject constructor(
@@ -12,7 +13,7 @@ class ProfileRepository @Inject constructor(
         return profileDao.insertProfile(profile = profile)
     }
 
-    fun getProfiles(): List<Profile> {
+    fun getProfiles(): Flow<List<Profile>> {
         return profileDao.getProfiles()
     }
 

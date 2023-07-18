@@ -16,8 +16,11 @@ import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
 import com.app.myfincontrol.presentation.viewModels.states.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -63,21 +66,17 @@ class LoginViewModel @Inject constructor(
 
     private suspend fun loading() {
         val listProfiles = profileUseCase.getProfiles()
-        if (listProfiles.isNotEmpty()) {
-            _states.update { it.copy(isLoading = true, profilesList = listProfiles) }
-            autoSelectProfile()
-        } else {
-            _states.update { it.copy(isLoading = true, startDestination = Screen.CreateProfile.route) }
+        listProfiles.collect() { list ->
+            _states.update { it.copy(isLoading = true, profilesList = list) }
         }
+        autoSelectProfile()
     }
 
     private fun autoSelectProfile() {
-        viewModelScope.launch {
-            val lastSession = sessionUseCase.getLastSession()
-            if (lastSession != null && lastSession.profile_id > 0) {
-                _states.update {
-                    it.copy(selectedProfile = lastSession.profile_id)
-                }
+        val lastSession = sessionUseCase.getLastSession()
+        if (lastSession != null && lastSession.profile_id > 0) {
+            _states.update {
+                it.copy(selectedProfile = lastSession.profile_id)
             }
         }
     }
@@ -99,8 +98,8 @@ class LoginViewModel @Inject constructor(
     fun onEvents(event: LoginEvents) {
         when (event) {
             is LoginEvents.Login -> {
-                viewModelScope.launch {
-                   setSession(states.value.selectedProfile)
+                CoroutineScope(Dispatchers.IO).launch {
+                    setSession(states.value.selectedProfile)
                 }
             }
 
@@ -121,7 +120,10 @@ class LoginViewModel @Inject constructor(
                             val getProfile = profileUseCase.getLastProfile()
                             val session = setSession(getProfile.uid)
                             if (session > 0) {
-                                _states.update { it.copy(startDestination = Screen.Home.route) }
+                                _states.update { it.copy(
+                                    startDestination = Screen.Home.route,
+                                    selectedProfile = getProfile.uid
+                                ) }
                             }
                         }
                     }

@@ -70,4 +70,6 @@
     <string name="advice_title_5">Build a financial safety net.</string>
     <string name="advice_description_5">Build up enough money for unexpected expenses. This can be the equivalent of three to six months\' worth of living expenses. Such a safety net will help you avoid financial problems in case of job loss, unexpected repair costs, or medical expenses.</string>
     <string name="profile">Profile</string>
+    <string name="incomes">Incomes</string>
+    <string name="expenses">Expenses</string>
 </resources>

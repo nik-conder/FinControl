@@ -37,4 +37,12 @@ interface TransactionDAO {
             "WHERE type = :type AND datetime >= :startOfMonth AND datetime <= :startOfNextMonth")
     fun getIncomesForCurrentMonth(type: TransactionType = TransactionType.INCOME, startOfMonth: Long, startOfNextMonth: Long): List<Transaction>
 
+    @Query("SELECT t.* FROM `transaction` t " +
+            "INNER JOIN (SELECT profile_id, uid FROM `Session` ORDER BY uid DESC LIMIT 1) s ON t.profile_id = s.profile_id " +
+            "WHERE type = :type AND datetime >= :startTime AND datetime <= :endTime")
+    fun getChartTransactions(type: TransactionType = TransactionType.INCOME, startTime: Long, endTime: Long): List<Transaction>
+
 }
+
+// 1688158800
+// 1690837200

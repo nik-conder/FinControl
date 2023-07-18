@@ -10,6 +10,7 @@ import com.app.myfincontrol.presentation.viewModels.states.StatisticsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,21 +23,30 @@ class StatisticsViewModel @Inject constructor(
 
     init {
         onEvents(StatisticsEvents.GetChart(type = TransactionType.INCOME, sort = ChartSort.MONTH))
+        onEvents(StatisticsEvents.GetChart(type = TransactionType.EXPENSE, sort = ChartSort.MONTH))
     }
 
     fun onEvents(event: StatisticsEvents) {
         when (event) {
             is StatisticsEvents.GetChart -> {
-                if (event.type == TransactionType.INCOME) {
-                    if (event.sort == ChartSort.MONTH) {
-                        _states.value = _states.value.copy(chartIncomeCurrentMonth = statisticsUseCase.getChartIncomeMonth())
-                    } else if (event.sort == ChartSort.WEEK) {
-                        _states.value = _states.value.copy(chartIncomeCurrentWeek = statisticsUseCase.getChartIncomeWeek())
+                _states.update {
+                    if (event.type == TransactionType.INCOME) {
+                        it.copy(
+                            chartIncome = statisticsUseCase.getChart(
+                                type = event.type,
+                                sort = event.sort
+                            )
+                        )
+                    } else {
+                        it.copy(
+                            chartExpense = statisticsUseCase.getChart(
+                                type = event.type,
+                                sort = event.sort
+                            )
+                        )
                     }
-                } else {
-                    _states.value = _states.value.copy(chartExpenseCurrentMonth = statisticsUseCase.getChartExpenseMonth())
-                }
 
+                }
             }
         }
     }

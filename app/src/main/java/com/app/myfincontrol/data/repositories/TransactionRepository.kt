@@ -15,19 +15,14 @@ class TransactionRepository @Inject constructor(
     suspend fun addTransaction(transactions: Transaction): Long {
         return transactionDAO.insertTransaction(transactions)
     }
+
     fun getBalance(profile_id: Int): Flow<BigDecimal> = transactionDAO.getBalance(profile_id)
 
-    fun getIncomesForCurrentMonth(type: TransactionType = TransactionType.INCOME, startOfMonth: Long, startOfNextMonth: Long): List<Transaction> {
-        return transactionDAO.getIncomesForCurrentMonth(type, startOfMonth, startOfNextMonth)
-    }
-
-    fun getIncomesForCurrentWeek(startOfWeek: Long, startOfNextWeek: Long): List<Transaction> {
-        TODO()
-        //return transactionDAO.getIncomesForCurrentWeek(startOfWeek = startOfWeek, startOfNextWeek = startOfNextWeek)
+    fun getChartTransactions(type: TransactionType, startTime: Long, endTime: Long): List<Transaction> {
+        return transactionDAO.getChartTransactions(type, startTime, endTime)
     }
 
     suspend fun deleteTransaction(id: Int) {
         return transactionDAO.deleteTransaction(id)
     }
-
 }

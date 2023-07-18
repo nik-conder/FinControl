@@ -24,12 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -40,16 +37,12 @@ import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
-import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.StatisticsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
-import com.patrykandpatrick.vico.compose.style.ChartStyle
-import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.compose.style.currentChartStyle
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,8 +54,8 @@ fun StatisticsScreen(
     val vm = hiltViewModel<StatisticsViewModel>()
     val onEvents = vm::onEvents
     val state = vm.states.collectAsState()
-    val chartIncomeCurrentMonth = state.value.chartIncomeCurrentMonth
-    val chartExpenseCurrentMonth = state.value.chartExpenseCurrentMonth
+    val chartIncome = state.value.chartIncome
+    val chartExpense = state.value.chartExpense
 
     Scaffold(
         modifier = Modifier
@@ -121,7 +114,8 @@ fun StatisticsScreen(
                                 onClick = {
                                     onEvents(StatisticsEvents.GetChart(
                                         type = TransactionType.INCOME,
-                                        sort = ChartSort.MONTH)
+                                        sort = ChartSort.MONTH
+                                    )
                                     )
                                 }) {
                                 Icon(
@@ -142,7 +136,7 @@ fun StatisticsScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
 
-                            if (chartIncomeCurrentMonth.isNotEmpty()) {
+                            if (chartIncome.isNotEmpty()) {
                                 Row {
                                     Column() {
                                         TextButton(onClick = {
@@ -180,7 +174,7 @@ fun StatisticsScreen(
                                     Chart(
                                         chart = columnChart(),
                                         isZoomEnabled = true,
-                                        model = entryModelOf(chartIncomeCurrentMonth),
+                                        model = entryModelOf(chartIncome),
                                         startAxis = startAxis(tickLength = 1.dp, maxLabelCount = 5),
                                         bottomAxis = bottomAxis(tickLength = 1.dp)
                                     )
@@ -224,7 +218,10 @@ fun StatisticsScreen(
                         Column() {
                             IconButton(
                                 onClick = {
-                                     // todo
+                                    onEvents(StatisticsEvents.GetChart(
+                                        type = TransactionType.EXPENSE,
+                                        sort = ChartSort.MONTH)
+                                    )
                                 }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Refresh,
@@ -243,7 +240,7 @@ fun StatisticsScreen(
                                 .fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            if (chartIncomeCurrentMonth.isNotEmpty()) {
+                            if (chartExpense.isNotEmpty()) {
                                 Row {
                                     Column() {
                                         TextButton(onClick = { /*TODO*/ }) {
@@ -271,7 +268,7 @@ fun StatisticsScreen(
                                     Chart(
                                         chart = columnChart(),
                                         isZoomEnabled = true,
-                                        model = entryModelOf(chartExpenseCurrentMonth),
+                                        model = entryModelOf(chartExpense),
                                         startAxis = startAxis(tickLength = 1.dp, maxLabelCount = 5),
                                         bottomAxis = bottomAxis(tickLength = 1.dp)
                                     )
