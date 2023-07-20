@@ -22,8 +22,8 @@ class StatisticsViewModel @Inject constructor(
     val states = _states.asStateFlow()
 
     init {
-        onEvents(StatisticsEvents.GetChart(type = TransactionType.INCOME, sort = ChartSort.MONTH))
-        onEvents(StatisticsEvents.GetChart(type = TransactionType.EXPENSE, sort = ChartSort.MONTH))
+        onEvents(StatisticsEvents.GetChart(type = TransactionType.INCOME, sort = states.value.chartCurrentSortIncome))
+        onEvents(StatisticsEvents.GetChart(type = TransactionType.EXPENSE, sort = states.value.chartCurrentSortExpense))
     }
 
     fun onEvents(event: StatisticsEvents) {
@@ -46,6 +46,17 @@ class StatisticsViewModel @Inject constructor(
                         )
                     }
 
+                }
+                _states.update {
+                    if (event.type == TransactionType.INCOME) {
+                        it.copy(
+                            chartCurrentSortIncome = event.sort
+                        )
+                    } else {
+                        it.copy(
+                            chartCurrentSortExpense = event.sort
+                        )
+                    }
                 }
             }
         }

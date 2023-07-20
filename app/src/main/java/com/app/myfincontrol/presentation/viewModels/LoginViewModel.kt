@@ -18,6 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
@@ -59,25 +60,26 @@ class LoginViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
-            loading()
-        }
-    }
-
-    private suspend fun loading() {
-        val listProfiles = profileUseCase.getProfiles()
-        listProfiles.collect() { list ->
-            _states.update { it.copy(isLoading = true, profilesList = list) }
-        }
+        getProfiles()
         autoSelectProfile()
+    }
+    private fun getProfiles() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val listProfiles = profileUseCase.getProfiles()
+            listProfiles.collect() { list ->
+                _states.update { it.copy(profilesList = list) }
+            }
+        }
     }
 
     private fun autoSelectProfile() {
         val lastSession = sessionUseCase.getLastSession()
-        if (lastSession != null && lastSession.profile_id > 0) {
-            _states.update {
-                it.copy(selectedProfile = lastSession.profile_id)
-            }
+        println("lastSession: $lastSession")
+        if (lastSession != null) {
+            if (lastSession.profile_id > 0) _states.update { it.copy(selectedProfile = lastSession.profile_id) }
+        }
+        _states.update {
+            it.copy(isLoading = true)
         }
     }
 

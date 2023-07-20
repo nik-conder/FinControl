@@ -45,6 +45,9 @@ class StatisticsUseCase @Inject constructor(
         transactionsByDay.forEach {
             list.add(FloatEntry(x = it.key.toFloat(), y = it.value.toFloat()))
         }
+        list.forEach {
+            println("${it.x} ${it.y}")
+        }
         return list
     }
 }

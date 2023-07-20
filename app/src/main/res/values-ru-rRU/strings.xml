@@ -10,11 +10,20 @@
     <string name="amount">Сумма</string>
     <string name="income">Доход</string>
     <string name="expense">Расход</string>
+    <string name="incomes">Доходы</string>
+    <string name="expenses">Расходы</string>
     <string name="total">Итого</string>
     <string name="back">Назад</string>
     <string name="next">Далее</string>
     <string name="done">Готово</string>
     <string name="error">Ошибка</string>
+
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="year">Год</string>
+
+    <string name="limit">Превышен лимит</string>
 
     <string name="salary">Зарплата</string>
     <string name="freelance">Фриланс</string>
@@ -70,5 +79,4 @@
     <string name="advice_description_5">Накопите достаточно денег на случай неожиданных расходов. Это может быть эквивалентом от трех до шести месяцев расходов на жизнь. Такая подушка позволит избежать финансовых проблем в случае увольнения, неожиданных расходов на ремонт или медицинские услуги.</string>
 
     <string name="profile">Профиль</string>
-    <string name="incomes">Incomes</string>
 </resources>

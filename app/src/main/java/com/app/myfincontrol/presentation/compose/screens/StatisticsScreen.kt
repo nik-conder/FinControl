@@ -35,15 +35,11 @@ import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
+import com.app.myfincontrol.presentation.compose.components.ChartsComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.viewModels.StatisticsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
-import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.column.columnChart
-import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +110,7 @@ fun StatisticsScreen(
                                 onClick = {
                                     onEvents(StatisticsEvents.GetChart(
                                         type = TransactionType.INCOME,
-                                        sort = ChartSort.MONTH
+                                        sort = state.value.chartCurrentSortIncome
                                     )
                                     )
                                 }) {
@@ -145,7 +141,7 @@ fun StatisticsScreen(
                                                 sort = ChartSort.WEEK
                                             ))
                                         }) {
-                                            Text(text = "Неделя")
+                                            Text(text = stringResource(id = R.string.week))
                                         }
                                     }
                                     Column() {
@@ -155,29 +151,33 @@ fun StatisticsScreen(
                                                 sort = ChartSort.MONTH
                                             ))
                                         }) {
-                                            Text(text = "Месяц")
+                                            Text(text = stringResource(id = R.string.month))
                                         }
                                     }
                                     Column() {
-                                        TextButton(onClick = { /*TODO*/ }) {
-                                            Text(text = "Год")
+                                        TextButton(onClick = {
+                                            onEvents(StatisticsEvents.GetChart(
+                                                type = TransactionType.INCOME,
+                                                sort = ChartSort.YEAR
+                                            ))
+                                        }) {
+                                            Text(text = stringResource(id = R.string.year))
                                         }
                                     }
                                 }
                                 Row {
-                                    Text(text = "График доходов за {месяц}")
+                                    Text(text = "График доходов" + when (state.value.chartCurrentSortIncome) {
+                                        ChartSort.MONTH -> " за месяц"
+                                        ChartSort.WEEK -> " за неделю"
+                                        ChartSort.YEAR -> " за год"
+                                        else -> ""
+                                    })
                                 }
                                 Row(
                                     modifier = Modifier
                                         .padding(16.dp)
                                 ) {
-                                    Chart(
-                                        chart = columnChart(),
-                                        isZoomEnabled = true,
-                                        model = entryModelOf(chartIncome),
-                                        startAxis = startAxis(tickLength = 1.dp, maxLabelCount = 5),
-                                        bottomAxis = bottomAxis(tickLength = 1.dp)
-                                    )
+                                    ChartsComponent(data = chartIncome)
                                 }
                             } else {
                                 Row(
@@ -220,7 +220,8 @@ fun StatisticsScreen(
                                 onClick = {
                                     onEvents(StatisticsEvents.GetChart(
                                         type = TransactionType.EXPENSE,
-                                        sort = ChartSort.MONTH)
+                                        sort = state.value.chartCurrentSortExpense
+                                    )
                                     )
                                 }) {
                                 Icon(
@@ -243,35 +244,49 @@ fun StatisticsScreen(
                             if (chartExpense.isNotEmpty()) {
                                 Row {
                                     Column() {
-                                        TextButton(onClick = { /*TODO*/ }) {
-                                            Text(text = "Неделя")
+                                        TextButton(onClick = {
+                                            onEvents(StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = ChartSort.WEEK
+                                            ))
+                                        }) {
+                                            Text(text = stringResource(id = R.string.week))
                                         }
                                     }
                                     Column() {
-                                        TextButton(onClick = { /*TODO*/ }) {
-                                            Text(text = "Месяц")
+                                        TextButton(onClick = {
+                                            onEvents(StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = ChartSort.MONTH
+                                            ))
+                                        }) {
+                                            Text(text = stringResource(id = R.string.month))
                                         }
                                     }
                                     Column() {
-                                        TextButton(onClick = { /*TODO*/ }) {
-                                            Text(text = "Год")
+                                        TextButton(onClick = {
+                                            onEvents(StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = ChartSort.YEAR
+                                            ))
+                                        }) {
+                                            Text(text = stringResource(id = R.string.year))
                                         }
                                     }
                                 }
                                 Row {
-                                    Text(text = "График расходов за {месяц}")
+                                    Text(text = "График доходов за" + when (state.value.chartCurrentSortExpense) {
+                                        ChartSort.MONTH -> " за месяц"
+                                        ChartSort.WEEK -> " за неделю"
+                                        ChartSort.YEAR -> " за год"
+                                        else -> ""
+                                    })
                                 }
                                 Row(
                                     modifier = Modifier
                                         .padding(16.dp)
                                 ) {
-                                    Chart(
-                                        chart = columnChart(),
-                                        isZoomEnabled = true,
-                                        model = entryModelOf(chartExpense),
-                                        startAxis = startAxis(tickLength = 1.dp, maxLabelCount = 5),
-                                        bottomAxis = bottomAxis(tickLength = 1.dp)
-                                    )
+                                    ChartsComponent(data = chartExpense)
                                 }
                             } else {
                                 Row(

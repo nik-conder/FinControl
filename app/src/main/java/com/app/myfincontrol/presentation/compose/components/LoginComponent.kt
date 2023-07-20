@@ -40,31 +40,46 @@ fun LoginComponent(
 ) {
 
     Column(
-        modifier = Modifier
+        modifier = Modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Выберите профиль",
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-           ChangeProfileComponent(
-               profilesList = profilesList,
-               onEvents = onEvents,
-               selectedProfile = selectedProfile,
-               navController = navController
-           )
+
+        if (profilesList.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Выберите профиль",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                ChangeProfileComponent(
+                    profilesList = profilesList,
+                    onEvents = onEvents,
+                    selectedProfile = selectedProfile,
+                    navController = navController
+                )
+            }
+        } else {
+            Row  {
+                Text(text = "Нет профилей")
+            }
+            Row {
+                TextButton(onClick = {
+                    navController.navigate(Screen.CreateProfile.route)
+                }) {
+                    Text(text = "Создать")
+                }
+            }
         }
     }
 }
@@ -76,11 +91,6 @@ fun ChangeProfileComponent(
     selectedProfile: Int,
     navController: NavController
 ) {
-
-    LaunchedEffect(true) {
-        println("выбранный профиль $selectedProfile")
-    }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
