@@ -18,14 +18,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.app.myfincontrol.R
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
@@ -52,7 +53,7 @@ fun LoginComponent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Выберите профиль",
+                    text = stringResource(id = R.string.select_profile),
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
@@ -71,13 +72,13 @@ fun LoginComponent(
             }
         } else {
             Row  {
-                Text(text = "Нет профилей")
+                Text(text = stringResource(id = R.string.no_profiles))
             }
             Row {
                 TextButton(onClick = {
                     navController.navigate(Screen.CreateProfile.route)
                 }) {
-                    Text(text = "Создать")
+                    Text(text = stringResource(id = R.string.create_profile))
                 }
             }
         }
@@ -178,7 +179,7 @@ fun ChangeProfileComponent(
                 TextButton(onClick = {
                     navController.navigate(Screen.CreateProfile.route)
                 }) {
-                    Text(text = "Новый профиль")
+                    Text(text = stringResource(id = R.string.new_profile))
                 }
             }
 
@@ -191,7 +192,7 @@ fun ChangeProfileComponent(
                     onClick = {
                         onEvents.invoke(LoginEvents.Login)
                     }) {
-                    Text(text = "Далее")
+                    Text(text = stringResource(id = R.string.done))
                 }
             }
         }

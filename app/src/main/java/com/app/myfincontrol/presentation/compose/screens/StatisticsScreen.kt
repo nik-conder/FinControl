@@ -1,7 +1,6 @@
 package com.app.myfincontrol.presentation.compose.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -94,15 +94,15 @@ fun StatisticsScreen(
                 ) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(
                             modifier = Modifier
                                 .weight(1f)
                         ) {
                             HeaderComponent(
-                                title = stringResource(id = R.string.incomes),
-                                paddingValues = PaddingValues(bottom = 16.dp)
+                                title = stringResource(id = R.string.incomes)
                             )
                         }
                         Column() {
@@ -131,64 +131,78 @@ fun StatisticsScreen(
                                 .fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-
-                            if (chartIncome.isNotEmpty()) {
-                                Row {
-                                    Column() {
-                                        TextButton(onClick = {
-                                            onEvents(StatisticsEvents.GetChart(
-                                                type = TransactionType.INCOME,
-                                                sort = ChartSort.WEEK
-                                            ))
-                                        }) {
-                                            Text(text = stringResource(id = R.string.week))
-                                        }
-                                    }
-                                    Column() {
-                                        TextButton(onClick = {
-                                            onEvents(StatisticsEvents.GetChart(
-                                                type = TransactionType.INCOME,
-                                                sort = ChartSort.MONTH
-                                            ))
-                                        }) {
-                                            Text(text = stringResource(id = R.string.month))
-                                        }
-                                    }
-                                    Column() {
-                                        TextButton(onClick = {
-                                            onEvents(StatisticsEvents.GetChart(
-                                                type = TransactionType.INCOME,
-                                                sort = ChartSort.YEAR
-                                            ))
-                                        }) {
-                                            Text(text = stringResource(id = R.string.year))
-                                        }
+                            Row(
+                                modifier = Modifier
+                                    .padding(top = 16.dp, bottom = 16.dp)
+                            ) {
+                                Text(text = stringResource(id = R.string.chart_incomes_of_the) + " " + when (state.value.chartCurrentSortIncome) {
+                                    ChartSort.WEEK -> stringResource(id = R.string.week)
+                                    ChartSort.MONTH -> stringResource(id = R.string.month)
+                                    ChartSort.QUARTER -> stringResource(id = R.string.quarter)
+                                    ChartSort.YEAR -> stringResource(id = R.string.year)
+                                    else -> stringResource(id = R.string.day)
+                                })
+                            }
+                            Row {
+                                Column() {
+                                    TextButton(
+                                        onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.INCOME,
+                                            sort = ChartSort.DAY
+                                        ))
+                                        },
+                                    ) {
+                                        Text(text = stringResource(id = R.string.day))
                                     }
                                 }
-                                Row {
-                                    Text(text = "График доходов" + when (state.value.chartCurrentSortIncome) {
-                                        ChartSort.MONTH -> " за месяц"
-                                        ChartSort.WEEK -> " за неделю"
-                                        ChartSort.YEAR -> " за год"
-                                        else -> ""
-                                    })
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.INCOME,
+                                            sort = ChartSort.WEEK
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.week))
+                                    }
                                 }
-                                Row(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                ) {
-                                    ChartsComponent(data = chartIncome)
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.INCOME,
+                                            sort = ChartSort.MONTH
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.month))
+                                    }
                                 }
-                            } else {
-                                Row(
-                                    modifier = Modifier
-                                        .padding(32.dp),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Text(text = "Нет данных")
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.INCOME,
+                                            sort = ChartSort.QUARTER
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.quarter))
+                                    }
+                                }
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.INCOME,
+                                            sort = ChartSort.YEAR
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.year))
+                                    }
                                 }
                             }
-
+                            Row(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                            ) {
+                                ChartsComponent(data = chartIncome)
+                            }
                         }
                     }
                 }
@@ -205,14 +219,15 @@ fun StatisticsScreen(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
                 ) {
-                    Row() {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Column(
                             modifier = Modifier
                                 .weight(1f)
                         ) {
                             HeaderComponent(
-                                title = stringResource(id = R.string.expenses),
-                                paddingValues = PaddingValues(bottom = 16.dp)
+                                title = stringResource(id = R.string.expenses)
                             )
                         }
                         Column() {
@@ -241,61 +256,67 @@ fun StatisticsScreen(
                                 .fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            if (chartExpense.isNotEmpty()) {
-                                Row {
-                                    Column() {
-                                        TextButton(onClick = {
-                                            onEvents(StatisticsEvents.GetChart(
-                                                type = TransactionType.EXPENSE,
-                                                sort = ChartSort.WEEK
-                                            ))
-                                        }) {
-                                            Text(text = stringResource(id = R.string.week))
-                                        }
-                                    }
-                                    Column() {
-                                        TextButton(onClick = {
-                                            onEvents(StatisticsEvents.GetChart(
-                                                type = TransactionType.EXPENSE,
-                                                sort = ChartSort.MONTH
-                                            ))
-                                        }) {
-                                            Text(text = stringResource(id = R.string.month))
-                                        }
-                                    }
-                                    Column() {
-                                        TextButton(onClick = {
-                                            onEvents(StatisticsEvents.GetChart(
-                                                type = TransactionType.EXPENSE,
-                                                sort = ChartSort.YEAR
-                                            ))
-                                        }) {
-                                            Text(text = stringResource(id = R.string.year))
-                                        }
+                            Row(
+                                modifier = Modifier
+                                    .padding(top = 16.dp, bottom = 16.dp)
+                            ) {
+                                Text(text = stringResource(id = R.string.chart_expenses_of_the) + " " + when (state.value.chartCurrentSortExpense) {
+                                    ChartSort.WEEK -> stringResource(id = R.string.week)
+                                    ChartSort.MONTH -> stringResource(id = R.string.month)
+                                    ChartSort.QUARTER -> stringResource(id = R.string.quarter)
+                                    ChartSort.YEAR -> stringResource(id = R.string.year)
+                                    else -> stringResource(id = R.string.day)
+                                })
+                            }
+                            
+                            Row {
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.EXPENSE,
+                                            sort = ChartSort.DAY
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.day))
                                     }
                                 }
-                                Row {
-                                    Text(text = "График доходов за" + when (state.value.chartCurrentSortExpense) {
-                                        ChartSort.MONTH -> " за месяц"
-                                        ChartSort.WEEK -> " за неделю"
-                                        ChartSort.YEAR -> " за год"
-                                        else -> ""
-                                    })
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.EXPENSE,
+                                            sort = ChartSort.WEEK
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.week))
+                                    }
                                 }
-                                Row(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                ) {
-                                    ChartsComponent(data = chartExpense)
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.EXPENSE,
+                                            sort = ChartSort.MONTH
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.month))
+                                    }
                                 }
-                            } else {
-                                Row(
-                                    modifier = Modifier
-                                        .padding(32.dp),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Text(text = "Нет данных")
+                                Column() {
+                                    TextButton(onClick = {
+                                        onEvents(StatisticsEvents.GetChart(
+                                            type = TransactionType.EXPENSE,
+                                            sort = ChartSort.YEAR
+                                        ))
+                                    }) {
+                                        Text(text = stringResource(id = R.string.year))
+                                    }
                                 }
+                            }
+
+                            Row(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                            ) {
+                                ChartsComponent(data = chartExpense)
                             }
                         }
                     }

@@ -1,5 +1,6 @@
 package com.app.myfincontrol.presentation.compose.components
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -20,16 +21,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.myfincontrol.R
 import com.app.myfincontrol.data.Configuration
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
+import kotlinx.coroutines.launch
 
 @Composable
 fun CreateProfileComponent(
@@ -39,15 +45,17 @@ fun CreateProfileComponent(
         mutableStateOf(TextFieldValue(""))
     }
 
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val accountNameMaxChar = Configuration.Limits.LIMIT_CHARS_NAME_PROFILE
 
     val selectedCurrency = remember {
         mutableStateOf(Currency.USD)
     }
 
-    LaunchedEffect(true) {
-        accountName.value = TextFieldValue("Счёт #1 ${selectedCurrency.value}")
-    }
+//    LaunchedEffect(true) {
+//        accountName.value = TextFieldValue("Счёт #1 ${selectedCurrency.value}")
+//    }
 
     Column(
         modifier = Modifier
@@ -60,7 +68,7 @@ fun CreateProfileComponent(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Добро пожаловать!",
+                text = stringResource(id = R.string.welcome),
                 style = MaterialTheme.typography.headlineSmall
             )
         }
@@ -76,7 +84,7 @@ fun CreateProfileComponent(
                     .fillMaxWidth(0.8f)
             ) {
                 Text(
-                    text = "Для продолжения необходимо дать название новому профилю и выбрать валюту. Обратите внимание, что после создания счета изменить валюту будет невозможно.",
+                    text = stringResource(id = R.string.create_profile_description),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
@@ -91,7 +99,7 @@ fun CreateProfileComponent(
             OutlinedTextField(
                 value = accountName.value,
                 label = {
-                    Text(text = "Название профиля")
+                    Text(text = stringResource(id = R.string.profile_name))
                 },
                 maxLines = 1,
                 onValueChange = {
@@ -111,8 +119,8 @@ fun CreateProfileComponent(
 
                 supportingText = {
                     Text(
-                        text = "Осталось: ${accountNameMaxChar - accountName.value.text.length} символов",
-                        color = if ((accountNameMaxChar - accountName.value.text.length) <= 3) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onTertiary,
+                        text = stringResource(id = R.string.there_are_n_characters_left, (accountNameMaxChar - accountName.value.text.length)),
+                        color = if ((accountNameMaxChar - accountName.value.text.length) <= 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onTertiary,
                         fontSize = 12.sp
                     )
                 },
@@ -154,8 +162,15 @@ fun CreateProfileComponent(
                 modifier = Modifier
                     .padding(8.dp)
             ) {
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(text = "Other")
+
+                val toastText = stringResource(id = R.string.in_developing)
+
+                TextButton(onClick = {
+                    scope.launch {
+                        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Text(text = stringResource(id = R.string.more))
                 }
             }
         }
@@ -179,7 +194,7 @@ fun CreateProfileComponent(
                     },
                     enabled = accountName.value.text.isNotEmpty()
                 ) {
-                    Text(text = "Продолжить")
+                    Text(text = stringResource(id = R.string.done))
                 }
             }
         }

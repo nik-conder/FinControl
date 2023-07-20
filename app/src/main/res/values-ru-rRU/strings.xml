@@ -2,8 +2,13 @@
 <resources>
     <string name="app_name">FinControl</string>
 
+    <string name="no_data">Нет данных</string>
+
+    <string name="chart_expenses_of_the">График расходов за </string>
+    <string name="chart_incomes_of_the">График доходов за </string>
+
     <string name="feed">Лента</string>
-    <string name="useful_advice">Полезный совет</string>
+    <string name="useful_tips">Полезный совет</string>
     <string name="settings">Настройки</string>
     <string name="statistics">Статистика</string>
     <string name="dark_mode">Тёмный режим</string>
@@ -18,10 +23,11 @@
     <string name="done">Готово</string>
     <string name="error">Ошибка</string>
 
-    <string name="day">День</string>
-    <string name="week">Неделя</string>
-    <string name="month">Месяц</string>
-    <string name="year">Год</string>
+    <string name="day">день</string>
+    <string name="week">неделя</string>
+    <string name="month">месяц</string>
+    <string name="year">год</string>
+    <string name="quarter">квартал</string>
 
     <string name="limit">Превышен лимит</string>
 
@@ -78,5 +84,16 @@
     <string name="advice_title_5">Образуйте финансовую подушку безопасности.</string>
     <string name="advice_description_5">Накопите достаточно денег на случай неожиданных расходов. Это может быть эквивалентом от трех до шести месяцев расходов на жизнь. Такая подушка позволит избежать финансовых проблем в случае увольнения, неожиданных расходов на ремонт или медицинские услуги.</string>
 
+    <string name="in_developing">В разработке..</string>
+
     <string name="profile">Профиль</string>
+    <string name="select_profile">Выберите профиль</string>
+    <string name="no_profiles">Профили не найдены</string>
+    <string name="new_profile">Новый профиль</string>
+    <string name="create_profile">Создать профиль</string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="profile_name">Название профиля</string>
+    <string name="there_are_n_characters_left">Осталось %1$d символов</string>
+    <string name="create_profile_description">Для продолжения необходимо дать название новому профилю и выбрать валюту. Обратите внимание, что после создания счета изменить валюту будет невозможно.</string>
+    <string name="more">Ещё</string>
 </resources>

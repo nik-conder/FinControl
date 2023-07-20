@@ -148,7 +148,7 @@ fun FeedComponent(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Row() {
-                                Text(text = "Вы ещё не добавляли транзакции..", style = MaterialTheme.typography.bodyMedium)
+                                Text(text = stringResource(id = R.string.no_data), style = MaterialTheme.typography.bodyMedium)
                             }
                             Row {
                                 Text(text = "\uD83D\uDE43", fontSize = 48.sp)
@@ -279,7 +279,7 @@ fun FeedComponent(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Row() {
-                                        Text(text = "Дальше только тишина..", style = MaterialTheme.typography.bodyMedium)
+                                        Text(text = stringResource(id = R.string.no_data), style = MaterialTheme.typography.bodyMedium)
                                     }
                                     Row {
                                         Text(text = "\uD83E\uDD2B", fontSize = 48.sp)

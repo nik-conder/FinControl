@@ -7,7 +7,7 @@ data class StatisticsState(
     val isLoading: Boolean = false,
     val chartIncome: List<FloatEntry> = emptyList(),
     val chartExpense: List<FloatEntry> = emptyList(),
-    val chartCurrentSortIncome: ChartSort = ChartSort.WEEK,
-    val chartCurrentSortExpense: ChartSort = ChartSort.WEEK
+    val chartCurrentSortIncome: ChartSort = ChartSort.YEAR,
+    val chartCurrentSortExpense: ChartSort = ChartSort.YEAR
 
 )

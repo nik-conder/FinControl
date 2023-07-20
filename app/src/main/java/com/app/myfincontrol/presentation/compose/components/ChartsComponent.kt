@@ -1,11 +1,14 @@
 package com.app.myfincontrol.presentation.compose.components
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.app.myfincontrol.R
 import com.example.compose.FinControlTheme
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -19,7 +22,7 @@ import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
 fun ChartsComponent(
-    data: List<FloatEntry>
+    data: List<FloatEntry>?
 ) {
 
     val lineComponent = LineComponent(
@@ -47,13 +50,27 @@ fun ChartsComponent(
         elevationOverlayColor = Color.Red
     )
     ) {
-        Chart(
-            chart = columnChart(),
-            isZoomEnabled = true,
-            model = entryModelOf(data),
-            startAxis = startAxis(tickLength = 1.dp, maxLabelCount = 5),
-            bottomAxis = bottomAxis(tickLength = 1.dp)
-        )
+        if (data != null) {
+            if (data.isNotEmpty()) {
+                Chart(
+                    chart = columnChart(),
+                    isZoomEnabled = true,
+                    model = entryModelOf(data),
+                    startAxis = startAxis(tickLength = 1.dp, maxLabelCount = 5),
+                    bottomAxis = bottomAxis(tickLength = 1.dp),
+                )
+            } else {
+                Text(
+                    text = stringResource(id = R.string.no_data),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        } else {
+            Text(
+                text = stringResource(id = R.string.no_data),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }
 

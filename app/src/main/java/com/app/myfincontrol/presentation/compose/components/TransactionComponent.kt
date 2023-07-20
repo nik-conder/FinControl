@@ -14,10 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
 import java.util.Date
 
@@ -31,7 +33,7 @@ fun TransactionComponent(
     hideBalanceState: Boolean,
     debugModeState: Boolean
 ) {
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm")
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
 
     Column(
         modifier = Modifier
@@ -83,8 +85,17 @@ fun TransactionComponent(
                 )
             }
             Column() {
+
                 TagComponent(
-                    text = transaction.category,
+                    text = stringResource(
+                        id = categoriesTranscript(
+                            category =
+                            if (transaction.type == TransactionType.EXPENSE)
+                                TransactionCategories.ExpenseCategories.valueOf(transaction.category)
+                            else
+                                TransactionCategories.IncomeCategories.valueOf(transaction.category)
+                        )
+                    ),
                     colorBackground = if (transaction.type == TransactionType.EXPENSE) Color(0xFFB11D09) else Color(0xFF288B06),
                     colorText = Color.White
                 )
@@ -120,103 +131,3 @@ fun TransactionComponent(
         }
     }
 }
-//
-//@Preview(showBackground = true, showSystemUi = true,
-//    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
-//)
-//@Composable
-//fun TransactionComponentPreview() {
-//    FinControlTheme() {
-//        Column() {
-//            Row() {
-//                TransactionComponent(
-//                    transaction = Transaction(
-//                        id = 1,
-//                        amount = BigDecimal("500.00"),
-//                        type = TransactionType.EXPENSE,
-//                        category = TransactionCategories.ExpenseCategories.CLOTHES.name,
-//                        datetime = System.currentTimeMillis(),
-//                        profileId = 1
-//                    )
-//                )
-//            }
-//            Row() {
-//                TransactionComponent(
-//                    transaction = Transaction(
-//                        id = 2,
-//                        amount = BigDecimal("432432.00"),
-//                        type = TransactionType.EXPENSE,
-//                        category = TransactionCategories.ExpenseCategories.FOOD.name,
-//                        datetime = System.currentTimeMillis(),
-//                        profileId = 1
-//                    )
-//                )
-//            }
-//            Row() {
-//                TransactionComponent(
-//                    transaction = Transaction(
-//                        id = 2,
-//                        amount = BigDecimal("674564.00"),
-//                        type = TransactionType.INCOME,
-//                        category = TransactionCategories.IncomeCategories.INVESTS.name,
-//                        datetime = System.currentTimeMillis(),
-//                        profileId = 1
-//                    )
-//                )
-//            }
-//            Row() {
-//
-//            }
-//        }
-//    }
-//}
-//
-//@Preview(showBackground = true, showSystemUi = true,
-//    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
-//)
-//@Composable
-//fun TransactionComponentPreviewDark() {
-//    FinControlTheme() {
-//        Column() {
-//            Row() {
-//                TransactionComponent(
-//                    transaction = Transaction(
-//                        id = 1,
-//                        amount = BigDecimal("500.00"),
-//                        type = TransactionType.EXPENSE,
-//                        category = TransactionCategories.ExpenseCategories.CLOTHES.name,
-//                        datetime = System.currentTimeMillis(),
-//                        profileId = 1
-//                    )
-//                )
-//            }
-//            Row() {
-//                TransactionComponent(
-//                    transaction = Transaction(
-//                        id = 2,
-//                        amount = BigDecimal("432432.00"),
-//                        type = TransactionType.EXPENSE,
-//                        category = TransactionCategories.ExpenseCategories.FOOD.name,
-//                        datetime = System.currentTimeMillis(),
-//                        profileId = 1
-//                    )
-//                )
-//            }
-//            Row() {
-//                TransactionComponent(
-//                    transaction = Transaction(
-//                        id = 2,
-//                        amount = BigDecimal("674564.00"),
-//                        type = TransactionType.INCOME,
-//                        category = TransactionCategories.IncomeCategories.INVESTS.name,
-//                        datetime = System.currentTimeMillis(),
-//                        profileId = 1
-//                    )
-//                )
-//            }
-//            Row() {
-//
-//            }
-//        }
-//    }
-//}
