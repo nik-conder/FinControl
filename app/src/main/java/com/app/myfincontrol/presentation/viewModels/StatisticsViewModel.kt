@@ -37,6 +37,7 @@ class StatisticsViewModel @Inject constructor(
     fun onEvents(event: StatisticsEvents) {
         when (event) {
             is StatisticsEvents.GetChart -> {
+
                 _states.update {
                     if (event.type == TransactionType.INCOME) {
                         it.copy(
@@ -70,6 +71,7 @@ class StatisticsViewModel @Inject constructor(
 
             is StatisticsEvents.ExportToXlsx -> {
                 dataExchangeUseCase.exportToXlsx(ChartSort.YEAR)
+
                 CoroutineScope(Dispatchers.IO).launch {
                     val result = async { dataExchangeUseCase.exportToCsv(ChartSort.YEAR) }
                     result.await()

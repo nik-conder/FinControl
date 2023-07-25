@@ -5,8 +5,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.graphics.Color
 import androidx.datastore.preferences.core.Preferences
 import com.app.myfincontrol.MainActivity
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 private val LightColors = lightColorScheme(
@@ -80,7 +83,27 @@ fun FinControlTheme(
     content: @Composable() () -> Unit,
 
 ) {
-  val colors = if (!useDarkTheme) {
+    val systemUiController = rememberSystemUiController()
+
+    DisposableEffect(systemUiController, useDarkTheme) {
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent,
+            isNavigationBarContrastEnforced = true,
+            darkIcons = !useDarkTheme
+        )
+
+        systemUiController.setNavigationBarColor(
+            color = Color.Transparent,
+            darkIcons = !useDarkTheme,
+            navigationBarContrastEnforced = true
+        )
+
+        onDispose {
+            //
+        }
+    }
+
+    val colors = if (!useDarkTheme) {
     LightColors
   } else {
     DarkColors

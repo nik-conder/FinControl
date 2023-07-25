@@ -17,7 +17,7 @@ object FormatDateImpl : FormatDate {
                 calendar.set(Calendar.DAY_OF_MONTH, 1) // Set day to the 1st day of the current month
             }
             ChartSort.WEEK -> {
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY) // Set day to the first day (Monday) of the current week
+                calendar.set(Calendar.DAY_OF_WEEK, 1) // Set day to the first day (Monday) of the current week
             }
             ChartSort.YEAR -> {
                 calendar.set(Calendar.DAY_OF_YEAR, 1) // Set day to the 1st day of the current year

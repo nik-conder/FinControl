@@ -13,7 +13,8 @@ class DataExchangeUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository
 ) {
 
-    suspend fun exportToCsv(sort: ChartSort) {
+
+    fun exportToCsv(sort: ChartSort) {
         try {
             val fileName = "my_file.csv" // Имя файла
             val documentsDir =

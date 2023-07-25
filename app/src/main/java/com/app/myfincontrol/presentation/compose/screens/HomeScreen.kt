@@ -54,8 +54,9 @@ import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.compose.components.SnackBarHost
 import com.app.myfincontrol.presentation.compose.components.alerts.DebugModeAlertComponent
-import com.app.myfincontrol.presentation.compose.components.currencySymbolComponent
 import com.app.myfincontrol.presentation.compose.components.sheets.AddTransactionSheet
+import com.app.myfincontrol.presentation.utils.NumberUtils
+import com.app.myfincontrol.presentation.utils.SymbolUtils
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 import com.app.myfincontrol.presentation.viewModels.events.DebugEvents
 import kotlinx.coroutines.launch
@@ -128,11 +129,11 @@ fun HomeScreen(
                                             text = if (hideBalanceState.value)
                                                 "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11"
                                             else
-                                                "${
-                                                    currencySymbolComponent(
-                                                        state.value.selectedProfile!!.currency
+                                                "${SymbolUtils.currencySymbolComponent(state.value.selectedProfile!!.currency)} ${
+                                                    NumberUtils.formatBigDecimalWithSpaces(
+                                                        state.value.balance
                                                     )
-                                                } ${state.value.balance}",
+                                                }",
                                             fontSize = 14.sp
                                         )
                                     }

@@ -2,7 +2,6 @@ package com.app.myfincontrol.presentation.viewModels
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -10,11 +9,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
-import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
@@ -33,9 +32,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,7 +51,6 @@ class HomeViewModel @Inject constructor(
         pagingSourceFactory = { FeedDataSource(transactionDAO) }
     )
 
-
     init {
         viewModelScope.launch {
             loading()
@@ -67,7 +62,7 @@ class HomeViewModel @Inject constructor(
         session.collect() { item ->
             if (item.isNotEmpty()) {
                 _states.update { it.copy(isLogin = true, isLoading = true, selectedProfile = profileUseCase.getProfile(item.first().profile_id)) }
-                getBalance(item.first().profile_id)
+                getBalance(item.first().profile_id, ChartSort.DAY) // todo ChartSort.DAY
             } else {
                 _states.update { it.copy(isLogin = false) }
             }
@@ -75,12 +70,12 @@ class HomeViewModel @Inject constructor(
 
 
         if (states.value.selectedProfile != null) {
-            if (states.value.selectedProfile!!.uid != 0) getBalance(states.value.selectedProfile!!.uid)
+            if (states.value.selectedProfile!!.uid != 0) getBalance(states.value.selectedProfile!!.uid, ChartSort.DAY) // todo ChartSort.DAY
         }
     }
 
-    private suspend fun getBalance(profile_id: Int) {
-        balanceUseCase.getBalance(profile_id).collect() {newValue ->
+    private suspend fun getBalance(profile_id: Int, sort: ChartSort) {
+        balanceUseCase.getBalance(profile_id, sort).collect() {newValue ->
             _states.update { it.copy(balance = newValue) }
         }
     }

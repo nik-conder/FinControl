@@ -28,6 +28,12 @@
     <string name="month">месяц</string>
     <string name="year">год</string>
     <string name="quarter">квартал</string>
+    <string name="for_day">за день</string>
+    <string name="for_week">за неделю</string>
+    <string name="for_month">за месяц</string>
+    <string name="for_quarter">за квартал</string>
+    <string name="for_year">за год</string>
+    <string name="for_all_time">за всё время</string>
 
     <string name="limit">Превышен лимит</string>
 

@@ -12,12 +12,12 @@ kapt {
 
 android {
     namespace = "com.app.myfincontrol"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId ="com.app.myfincontrol"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -84,6 +84,7 @@ android {
 
 dependencies {
     val room_version = "2.5.1"
+    val composeVerison = "1.6.0-alpha01"
 
     // Paging
     implementation("androidx.paging:paging-compose:3.2.0-rc01")
@@ -102,6 +103,7 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
 
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.5-beta")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.6.0")
@@ -147,12 +149,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    implementation("androidx.compose.ui:ui:1.4.3")
-    implementation("androidx.compose.ui:ui-graphics:1.4.3")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
+    implementation("androidx.compose.ui:ui:${composeVerison}")
+    implementation("androidx.compose.ui:ui-graphics:${composeVerison}")
+    implementation("androidx.compose.ui:ui-tooling-preview:${composeVerison}")
 
-    implementation("androidx.compose.material:material:1.4.3")
-    implementation("androidx.compose.material3:material3:1.2.0-alpha02")
+    implementation("androidx.compose.material:material:${composeVerison}")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha03")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

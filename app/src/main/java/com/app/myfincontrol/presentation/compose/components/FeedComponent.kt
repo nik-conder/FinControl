@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -72,6 +73,11 @@ fun FeedComponent(
             )
         }
         Row() {
+            TextButton(onClick = { feedPagingItems.refresh() }) {
+                Text(text = "Refresh")
+            }
+        }
+        Row {
             LazyColumn(
                 modifier = Modifier
                     .height(600.dp)
@@ -102,6 +108,7 @@ fun FeedComponent(
                 }
 
                 items(count = feedPagingItems.itemCount) { item ->
+                    val element = feedPagingItems[item]
                     val dismissState = rememberDismissState(
                         initialValue = DismissValue.Default,
                         confirmStateChange = {
@@ -111,7 +118,7 @@ fun FeedComponent(
                                         message = textDeleteTransaction,
                                         duration = SnackbarDuration.Short
                                     )
-                                    onEvens(TransactionEvents.DeleteTransaction(feedPagingItems[item]!!.id))
+                                    onEvens(TransactionEvents.DeleteTransaction(element!!.id))
                                     delay(500)
                                     feedPagingItems.refresh()
                                 }
@@ -157,9 +164,9 @@ fun FeedComponent(
                             }
                         },
                         dismissContent = {
-                            feedPagingItems.itemKey { feedPagingItems[item]!!.id }
+                            feedPagingItems.itemKey { element!!.id }
                             TransactionComponent(
-                                transaction = feedPagingItems[item]!!,
+                                transaction = element!!,
                                 hideBalanceState = hideBalanceState,
                                 debugModeState = debugModeState
                             )

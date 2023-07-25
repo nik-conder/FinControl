@@ -9,30 +9,42 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltipBox
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberPlainTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.app.myfincontrol.R
 import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.utils.NumberUtils
+import com.app.myfincontrol.presentation.utils.SymbolUtils
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
+import com.example.compose.FinControlTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +58,8 @@ fun HomeMainBoxComponent(
 ) {
     val scope = rememberCoroutineScope()
     val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
+
+    val dropdownAmountSortState = remember { mutableStateOf(false) }
 
     val tooltipState = rememberPlainTooltipState()
     Box(
@@ -75,7 +89,7 @@ fun HomeMainBoxComponent(
                             NumberUtils.formatBigDecimalWithSpaces(
                                 balance
                             )
-                        } ${currencySymbolComponent(currency)}",
+                        } ${SymbolUtils.currencySymbolComponent(currency)}",
                         modifier = Modifier.padding(16.dp),
                         fontSize = 42.sp,
                         color = MaterialTheme.colorScheme.onSecondary,
@@ -86,7 +100,7 @@ fun HomeMainBoxComponent(
                     PlainTooltipBox(
                         tooltip = {
                             Text(text = "Вы можете скрыть баланс")
-                                  },
+                        },
                         tooltipState = tooltipState,
                         shape = RoundedCornerShape(20.dp),
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -106,11 +120,104 @@ fun HomeMainBoxComponent(
                     }
                 }
             }
-            Row {
-                Text(
-                    text = profileName,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSecondary
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column() {
+                    Text(
+                        text = profileName,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSecondary
+                    )
+                }
+                Column {
+
+                    TextButton(onClick = {
+                        dropdownAmountSortState.value = !dropdownAmountSortState.value
+                    }) {
+                        Text(text = stringResource(id = R.string.for_all_time))
+                    }
+
+                    DropdownMenu(
+                        expanded = dropdownAmountSortState.value,
+                        onDismissRequest = {
+                            dropdownAmountSortState.value = !dropdownAmountSortState.value
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = stringResource(id = R.string.for_all_time))
+                            },
+                            onClick = {
+                                dropdownAmountSortState.value = !dropdownAmountSortState.value
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = stringResource(id = R.string.for_year))
+                            },
+                            onClick = {
+                                dropdownAmountSortState.value = !dropdownAmountSortState.value
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = stringResource(id = R.string.for_quarter))
+                            },
+                            onClick = {
+                                dropdownAmountSortState.value = !dropdownAmountSortState.value
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = stringResource(id = R.string.for_month))
+                            },
+                            onClick = {
+                                dropdownAmountSortState.value = !dropdownAmountSortState.value
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = stringResource(id = R.string.for_week))
+                            },
+                            onClick = {
+                                dropdownAmountSortState.value = !dropdownAmountSortState.value
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(text = stringResource(id = R.string.for_day))
+                            },
+                            onClick = {
+                                dropdownAmountSortState.value = !dropdownAmountSortState.value
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun HomeMainBoxComponentPreview() {
+    val context = LocalContext.current
+    FinControlTheme() {
+        Scaffold(
+
+        ) { padding ->
+            ConstraintLayout(
+                modifier = Modifier
+                    .padding(padding)
+            ) {
+
+                HomeMainBoxComponent(
+                    store = UserStore(context),
+                    profileName = "profile name",
+                    balance = BigDecimal("32310.0"),
+                    currency = Currency.EUR,
+                    onEventsTransaction = {}
                 )
             }
         }

@@ -28,6 +28,12 @@
     <string name="month">month</string>
     <string name="quarter">quarter</string>
     <string name="year">year</string>
+    <string name="for_day">for day</string>
+    <string name="for_week">for week</string>
+    <string name="for_month">for month</string>
+    <string name="for_quarter">for quarter</string>
+    <string name="for_year">for year</string>
+    <string name="for_all_time">for all time</string>
 
 
 

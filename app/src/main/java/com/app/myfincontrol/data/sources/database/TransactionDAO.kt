@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.app.myfincontrol.data.entities.Transaction
-import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
@@ -22,8 +21,9 @@ interface TransactionDAO {
     @Query("SELECT t.* FROM `transaction` t INNER JOIN (SELECT profile_id, uid FROM `Session` ORDER BY uid DESC LIMIT 1) s ON t.profile_id = s.profile_id WHERE t.id < :lastID AND s.profile_id = t.profile_id ORDER BY t.datetime DESC LIMIT :limit")
     suspend fun getTransactions(lastID: Long, limit: Int): List<Transaction>
 
-    @Query ("SELECT COALESCE(SUM(CASE WHEN type = 'INCOME' THEN amount ELSE -amount END), 0) as balance FROM `transaction` WHERE profile_id = :profile_id")
-    fun getBalance(profile_id: Int): Flow<BigDecimal>
+    @Query("SELECT COALESCE(SUM(CASE WHEN type = 'INCOME' THEN amount ELSE -amount END), 0) as balance FROM `transaction` WHERE profile_id = :profile_id AND datetime >= :datetime")
+    fun getBalance(profile_id: Int, datetime: Long): Flow<BigDecimal>
+
     @Query("DELETE FROM `transaction`")
     suspend fun deleteAllTransactions()
 
