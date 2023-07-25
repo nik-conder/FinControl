@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
@@ -42,6 +43,8 @@ interface TransactionDAO {
             "WHERE type = :type AND datetime >= :startTime AND datetime <= :endTime")
     fun getChartTransactions(type: TransactionType = TransactionType.INCOME, startTime: Long, endTime: Long): List<Transaction>
 
+    @Query("SELECT * FROM `transaction`")
+    fun getTransactions(): List<Transaction>
 }
 
 // 1688158800

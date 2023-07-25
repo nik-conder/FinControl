@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.app.myfincontrol.R
 import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.enums.Currency
+import com.app.myfincontrol.presentation.utils.NumberUtils
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import kotlinx.coroutines.launch
 
@@ -70,7 +71,11 @@ fun HomeMainBoxComponent(
             ) {
                 Column() {
                     Text(
-                        text = if (hideBalanceState.value) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "$balance ${currencySymbolComponent(currency)}",
+                        text = if (hideBalanceState.value) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "${
+                            NumberUtils.formatBigDecimalWithSpaces(
+                                balance
+                            )
+                        } ${currencySymbolComponent(currency)}",
                         modifier = Modifier.padding(16.dp),
                         fontSize = 42.sp,
                         color = MaterialTheme.colorScheme.onSecondary,

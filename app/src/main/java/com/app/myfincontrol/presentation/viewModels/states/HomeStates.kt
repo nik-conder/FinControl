@@ -8,5 +8,6 @@ data class HomeStates(
     val selectedProfile: Profile? = null,
     val balance: BigDecimal = BigDecimal.ZERO,
     val isLogin: Boolean = false,
-    val hideBalanceState: Boolean = false
+    val hideBalanceState: Boolean = false,
+    val debugModeShow: Boolean = false
 )

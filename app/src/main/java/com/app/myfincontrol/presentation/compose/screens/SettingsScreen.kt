@@ -71,9 +71,7 @@ fun SettingsScreen(
             )
         },
         bottomBar = {
-            BottomAppBar() {
-                NavigationComponent(navController = navController)
-            }
+            NavigationComponent(navController = navController)
         }
     ) { paddingValues ->
         ConstraintLayout(
@@ -141,7 +139,9 @@ fun SettingsBox(
 
     Column() {
         Row() {
-            HeaderComponent(title = stringResource(id = R.string.settings))
+            HeaderComponent(
+                title = stringResource(id = R.string.settings)
+            )
         }
         Row() {
            SwitchComponent(
@@ -194,6 +194,15 @@ fun SettingsBox(
                 onValueChange = { }
             )
         }
+        Row() {
+            SwitchComponent(
+                title = "Подтверждать удаление",
+                description = "Показать окно подтверждение перед удалением каких-либо данных (транзакций, например)",
+                state = false,
+                enabled = false,
+                onValueChange = { }
+            )
+        }
     }
 }
 
@@ -208,7 +217,9 @@ fun ProfileBox(
             .padding(16.dp),
     ) {
         Row() {
-            HeaderComponent(title = stringResource(id = R.string.profile))
+            HeaderComponent(
+                title = stringResource(id = R.string.profile)
+            )
         }
 
         Row (

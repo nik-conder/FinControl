@@ -3,7 +3,6 @@ package com.app.myfincontrol.presentation.compose.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -76,8 +75,7 @@ fun AddTransactionComponent(
                 ) {
                     Row() {
                         HeaderComponent(
-                            title = stringResource(id = R.string.add_transaction),
-                            paddingValues = PaddingValues(bottom = 16.dp)
+                            title = stringResource(id = R.string.add_transaction)
                         )
                     }
                     Row () {
@@ -105,9 +103,7 @@ fun AddTransactionComponent(
                 ) {
                     Row() {
                         HeaderComponent(
-                            title = stringResource(id = R.string.type_transaction),
-                            textStyle = MaterialTheme.typography.titleLarge,
-                            paddingValues = PaddingValues(bottom = 16.dp)
+                            title = stringResource(id = R.string.type_transaction)
                         )
                     }
                     Row () {
@@ -196,9 +192,7 @@ fun AddTransactionComponent(
                 ) {
                     Row() {
                         HeaderComponent(
-                            title = stringResource(id = R.string.category_transaction),
-                            textStyle = MaterialTheme.typography.titleLarge,
-                            paddingValues = PaddingValues(bottom = 16.dp)
+                            title = stringResource(id = R.string.category_transaction)
                         )
                     }
                     Row () {
@@ -291,9 +285,7 @@ fun AddTransactionComponent(
                 ) {
                     Row() {
                         HeaderComponent(
-                            title = stringResource(id = R.string.amount),
-                            textStyle = MaterialTheme.typography.titleLarge,
-                            paddingValues = PaddingValues(bottom = 16.dp)
+                            title = stringResource(id = R.string.amount)
                         )
                     }
                     Row () {
@@ -363,9 +355,7 @@ fun AddTransactionComponent(
                 ) {
                     Row() {
                         HeaderComponent(
-                            title = stringResource(id = R.string.total),
-                            textStyle = MaterialTheme.typography.titleLarge,
-                            paddingValues = PaddingValues(bottom = 16.dp)
+                            title = stringResource(id = R.string.total)
                         )
                     }
                     Row (

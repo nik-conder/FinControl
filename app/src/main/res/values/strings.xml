@@ -89,7 +89,7 @@
     <string name="in_developing">In developing..</string>
     <string name="profile">Profile</string>
     <string name="select_profile">Select a profile</string>
-    <string name="no_profiles">Np profiles</string>
+    <string name="no_profiles">No profiles</string>
     <string name="new_profile">New profile</string>
     <string name="create_profile">Create profile</string>
     <string name="welcome">Welcome!</string>
@@ -97,4 +97,6 @@
     <string name="there_are_n_characters_left">There are %1$d characters left</string>
     <string name="create_profile_description">To continue, you need to give a name to the new profile and select a currency. Please note that it will not be possible to change the currency after creating the account.</string>
     <string name="more">More</string>
+    <string name="delete_transaction">Delete transaction</string>
+    <string name="debug_mode">Debug mode</string>
 </resources>

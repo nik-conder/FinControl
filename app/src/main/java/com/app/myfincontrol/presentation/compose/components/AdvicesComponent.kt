@@ -55,8 +55,7 @@ fun AdvicesComponent() {
     ) {
         Row() {
             HeaderComponent(
-                title = stringResource(id = R.string.useful_tips),
-                paddingValues = PaddingValues(top = 16.dp, bottom = 16.dp)
+                title = stringResource(id = R.string.useful_tips)
             )
         }
         Row {

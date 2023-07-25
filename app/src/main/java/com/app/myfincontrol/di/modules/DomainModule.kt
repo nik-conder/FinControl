@@ -5,6 +5,7 @@ import com.app.myfincontrol.data.repositories.ProfileRepository
 import com.app.myfincontrol.data.repositories.SessionRepository
 import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
+import com.app.myfincontrol.domain.useCases.DataExchangeUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.domain.useCases.StatisticsUseCase
@@ -57,6 +58,14 @@ class DomainModule @Inject constructor() {
     fun providerStatisticsUseCase(
         transactionRepository: TransactionRepository
     ): StatisticsUseCase = StatisticsUseCase(
+        transactionRepository
+    )
+
+    @Singleton
+    @Provides
+    fun providerDataExchangeUseCase(
+        transactionRepository: TransactionRepository
+    ): DataExchangeUseCase = DataExchangeUseCase(
         transactionRepository
     )
 }

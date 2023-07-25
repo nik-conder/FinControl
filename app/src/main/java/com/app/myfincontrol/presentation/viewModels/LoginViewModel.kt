@@ -74,7 +74,6 @@ class LoginViewModel @Inject constructor(
 
     private fun autoSelectProfile() {
         val lastSession = sessionUseCase.getLastSession()
-        println("lastSession: $lastSession")
         if (lastSession != null) {
             if (lastSession.profile_id > 0) _states.update { it.copy(selectedProfile = lastSession.profile_id) }
         }
@@ -82,10 +81,6 @@ class LoginViewModel @Inject constructor(
             it.copy(isLoading = true)
         }
     }
-
-//    private suspend fun checkSessions(): List<Session> {
-//        return sessionUseCase.getAllSession()
-//    }
 
     private suspend fun setSession(profile_id: Int): Long {
         val session = sessionUseCase.setSession(Session(profile_id = profile_id, timestamp = System.currentTimeMillis()))
@@ -106,7 +101,6 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginEvents.SelectProfile -> {
-                Toast.makeText(context, "Select profile ${event.uid}", Toast.LENGTH_SHORT).show()
                 _states.update {
                     it.copy(selectedProfile = event.uid)
                 }

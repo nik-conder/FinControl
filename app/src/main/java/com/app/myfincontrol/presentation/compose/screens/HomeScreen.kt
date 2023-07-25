@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,12 +26,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,10 +52,12 @@ import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
+import com.app.myfincontrol.presentation.compose.components.SnackBarHost
+import com.app.myfincontrol.presentation.compose.components.alerts.DebugModeAlertComponent
 import com.app.myfincontrol.presentation.compose.components.currencySymbolComponent
 import com.app.myfincontrol.presentation.compose.components.sheets.AddTransactionSheet
-import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
+import com.app.myfincontrol.presentation.viewModels.events.DebugEvents
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,10 +65,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    store: UserStore
+    store: UserStore,
+    snackBarHostState: SnackbarHostState
 ) {
     val vm = hiltViewModel<HomeViewModel>()
     val onEventsTransaction = vm::onEventsTransaction
+    val onEventDebugMode = vm::onEventDebugMode
 
     val state = vm.states.collectAsState()
 
@@ -96,55 +99,77 @@ fun HomeScreen(
                 ),
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primary),
-                title =  {
-                 Row(
-                     verticalAlignment = Alignment.CenterVertically
-                 ) {
-                     Column(
-                         modifier = Modifier
-                             .weight(1f)
-                     ) {
-                         Text(text = stringResource(id = R.string.app_name))
-                     }
-                     AnimatedVisibility(
-                         visible = scrollState.value > 100,
-                         enter = fadeIn() + slideInVertically(),
-                         exit = fadeOut() + slideOutVertically(),
-                     ) {
-                         if (state.value.selectedProfile != null) {
-                             Column {
-                                 Box(
-                                     modifier = Modifier
-                                         .background(
-                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                             shape = RoundedCornerShape(20.dp)
-                                         )
-                                         .padding(8.dp)
-                                 ) {
-                                     Text(
-                                         text = if (hideBalanceState.value)
-                                             "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11"
-                                         else
-                                             "${currencySymbolComponent(
-                                         state.value.selectedProfile!!.currency)} ${state.value.balance}",
-                                         fontSize = 14.sp
-                                     )
-                                 }
-                             }
-                         }
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            Text(text = stringResource(id = R.string.app_name))
+                        }
+                        AnimatedVisibility(
+                            visible = scrollState.value > 100,
+                            enter = fadeIn() + slideInVertically(),
+                            exit = fadeOut() + slideOutVertically(),
+                        ) {
+                            if (state.value.selectedProfile != null) {
+                                Column {
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                shape = RoundedCornerShape(20.dp)
+                                            )
+                                            .padding(8.dp)
+                                    ) {
+                                        Text(
+                                            text = if (hideBalanceState.value)
+                                                "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11"
+                                            else
+                                                "${
+                                                    currencySymbolComponent(
+                                                        state.value.selectedProfile!!.currency
+                                                    )
+                                                } ${state.value.balance}",
+                                            fontSize = 14.sp
+                                        )
+                                    }
+                                }
+                            }
 
-                     }
-                 }
+                        }
+                    }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            store.setDarkMode()
+                    Column() {
+                        IconButton(onClick = {
+                            scope.launch {
+                                store.setDarkMode()
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(id = if (darkMode.value) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24),
+                                contentDescription = stringResource(
+                                    id = R.string.dark_mode
+                                )
+                            )
                         }
-                    }) {
-                        Icon(painter = painterResource(id = if (darkMode.value) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24), contentDescription = stringResource(
-                            id = R.string.dark_mode
-                        ))
+                    }
+                    if (debugModeState.value) {
+                        Column() {
+                            IconButton(onClick = {
+                                onEventDebugMode(DebugEvents.ShowAlertDebugMode)
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_settings_suggest_24),
+                                    contentDescription = stringResource(
+                                        id = R.string.debug_mode
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -153,22 +178,30 @@ fun HomeScreen(
             FloatingActionButton(onClick = {
                 showBottomSheet.value = !showBottomSheet.value
             }) {
-                Icon(imageVector = Icons.Outlined.Add, contentDescription = stringResource(id = R.string.add_transaction))
+                Icon(
+                    imageVector = Icons.Outlined.Add,
+                    contentDescription = stringResource(id = R.string.add_transaction)
+                )
             }
         },
         bottomBar = {
-           BottomAppBar() {
-               NavigationComponent(navController = navController)
-           }
+            NavigationComponent(navController = navController)
         }
-        ) { paddingValues ->
+    ) { paddingValues ->
         ConstraintLayout(
             modifier = Modifier
                 //.background(backgroundColorBrush)
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
-                .fillMaxSize(1f),
+                .fillMaxSize(),
         ) {
+
+            DebugModeAlertComponent(
+                state = state.value.debugModeShow,
+                onEvent = onEventDebugMode,
+                snackBarHostState = snackBarHostState
+            )
+
             val (mainBox, adviceBox, feedBox, financeCharts) = createRefs()
             if (showBottomSheet.value) {
                 ModalBottomSheet(
@@ -242,10 +275,12 @@ fun HomeScreen(
                         feedPager = vm.feedPager,
                         hideBalanceState = hideBalanceState.value,
                         debugModeState = debugModeState.value,
-                        onEvens = onEventsTransaction
+                        onEvens = onEventsTransaction,
+                        snackBarHostState = snackBarHostState
                     )
                 }
             }
         }
     }
+    SnackBarHost(snackbarHostState = snackBarHostState)
 }

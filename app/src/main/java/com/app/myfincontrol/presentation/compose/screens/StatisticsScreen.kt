@@ -1,6 +1,9 @@
 package com.app.myfincontrol.presentation.compose.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -38,9 +42,11 @@ import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.compose.components.ChartsComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
+import com.app.myfincontrol.presentation.compose.components.alerts.DataExchangeAlertComponent
 import com.app.myfincontrol.presentation.viewModels.StatisticsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(
@@ -52,6 +58,7 @@ fun StatisticsScreen(
     val state = vm.states.collectAsState()
     val chartIncome = state.value.chartIncome
     val chartExpense = state.value.chartExpense
+    val hScrollState = rememberScrollState()
 
     Scaffold(
         modifier = Modifier
@@ -66,9 +73,7 @@ fun StatisticsScreen(
             )
         },
         bottomBar = {
-            BottomAppBar() {
-                NavigationComponent(navController = navController)
-            }
+            NavigationComponent(navController = navController)
         }
     ) { paddingValues ->
         ConstraintLayout(
@@ -78,6 +83,12 @@ fun StatisticsScreen(
                 .verticalScroll(rememberScrollState())
                 .fillMaxSize(1f),
         ) {
+
+            DataExchangeAlertComponent(
+                state = state.value.dataExchangeAlert,
+                onEvents = onEvents
+            )
+
             val (incomesBox, expensesBox) = createRefs()
 
             BoxWithConstraints(
@@ -108,15 +119,27 @@ fun StatisticsScreen(
                         Column() {
                             IconButton(
                                 onClick = {
-                                    onEvents(StatisticsEvents.GetChart(
-                                        type = TransactionType.INCOME,
-                                        sort = state.value.chartCurrentSortIncome
-                                    )
+                                    onEvents(
+                                        StatisticsEvents.GetChart(
+                                            type = TransactionType.INCOME,
+                                            sort = state.value.chartCurrentSortIncome
+                                        )
                                     )
                                 }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Refresh,
                                     contentDescription = "Refresh"
+                                )
+                            }
+                        }
+                        Column() {
+                            IconButton(
+                                onClick = {
+                                    onEvents(StatisticsEvents.DataExchangeAlert)
+                                }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_download_24),
+                                    contentDescription = "ExportToXlsx"
                                 )
                             }
                         }
@@ -135,22 +158,29 @@ fun StatisticsScreen(
                                 modifier = Modifier
                                     .padding(top = 16.dp, bottom = 16.dp)
                             ) {
-                                Text(text = stringResource(id = R.string.chart_incomes_of_the) + " " + when (state.value.chartCurrentSortIncome) {
-                                    ChartSort.WEEK -> stringResource(id = R.string.week)
-                                    ChartSort.MONTH -> stringResource(id = R.string.month)
-                                    ChartSort.QUARTER -> stringResource(id = R.string.quarter)
-                                    ChartSort.YEAR -> stringResource(id = R.string.year)
-                                    else -> stringResource(id = R.string.day)
-                                })
+                                Text(
+                                    text = stringResource(id = R.string.chart_incomes_of_the) + " " + when (state.value.chartCurrentSortIncome) {
+                                        ChartSort.WEEK -> stringResource(id = R.string.week)
+                                        ChartSort.MONTH -> stringResource(id = R.string.month)
+                                        ChartSort.QUARTER -> stringResource(id = R.string.quarter)
+                                        ChartSort.YEAR -> stringResource(id = R.string.year)
+                                        else -> stringResource(id = R.string.day)
+                                    }
+                                )
                             }
-                            Row {
+                            Row(
+                                modifier = Modifier
+                                    .horizontalScroll(hScrollState),
+                            ) {
                                 Column() {
                                     TextButton(
                                         onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.INCOME,
-                                            sort = ChartSort.DAY
-                                        ))
+                                            onEvents(
+                                                StatisticsEvents.GetChart(
+                                                    type = TransactionType.INCOME,
+                                                    sort = ChartSort.DAY
+                                                )
+                                            )
                                         },
                                     ) {
                                         Text(text = stringResource(id = R.string.day))
@@ -158,40 +188,48 @@ fun StatisticsScreen(
                                 }
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.INCOME,
-                                            sort = ChartSort.WEEK
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.INCOME,
+                                                sort = ChartSort.WEEK
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.week))
                                     }
                                 }
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.INCOME,
-                                            sort = ChartSort.MONTH
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.INCOME,
+                                                sort = ChartSort.MONTH
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.month))
                                     }
                                 }
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.INCOME,
-                                            sort = ChartSort.QUARTER
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.INCOME,
+                                                sort = ChartSort.QUARTER
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.quarter))
                                     }
                                 }
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.INCOME,
-                                            sort = ChartSort.YEAR
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.INCOME,
+                                                sort = ChartSort.YEAR
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.year))
                                     }
@@ -233,10 +271,11 @@ fun StatisticsScreen(
                         Column() {
                             IconButton(
                                 onClick = {
-                                    onEvents(StatisticsEvents.GetChart(
-                                        type = TransactionType.EXPENSE,
-                                        sort = state.value.chartCurrentSortExpense
-                                    )
+                                    onEvents(
+                                        StatisticsEvents.GetChart(
+                                            type = TransactionType.EXPENSE,
+                                            sort = state.value.chartCurrentSortExpense
+                                        )
                                     )
                                 }) {
                                 Icon(
@@ -260,52 +299,65 @@ fun StatisticsScreen(
                                 modifier = Modifier
                                     .padding(top = 16.dp, bottom = 16.dp)
                             ) {
-                                Text(text = stringResource(id = R.string.chart_expenses_of_the) + " " + when (state.value.chartCurrentSortExpense) {
-                                    ChartSort.WEEK -> stringResource(id = R.string.week)
-                                    ChartSort.MONTH -> stringResource(id = R.string.month)
-                                    ChartSort.QUARTER -> stringResource(id = R.string.quarter)
-                                    ChartSort.YEAR -> stringResource(id = R.string.year)
-                                    else -> stringResource(id = R.string.day)
-                                })
+                                Text(
+                                    text = stringResource(id = R.string.chart_expenses_of_the) + " " + when (state.value.chartCurrentSortExpense) {
+                                        ChartSort.WEEK -> stringResource(id = R.string.week)
+                                        ChartSort.MONTH -> stringResource(id = R.string.month)
+                                        ChartSort.QUARTER -> stringResource(id = R.string.quarter)
+                                        ChartSort.YEAR -> stringResource(id = R.string.year)
+                                        else -> stringResource(id = R.string.day)
+                                    }
+                                )
                             }
-                            
-                            Row {
+
+                            Row(
+                                modifier = Modifier
+                                    .horizontalScroll(hScrollState),
+                            ) {
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.EXPENSE,
-                                            sort = ChartSort.DAY
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = ChartSort.DAY
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.day))
                                     }
                                 }
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.EXPENSE,
-                                            sort = ChartSort.WEEK
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = ChartSort.WEEK
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.week))
                                     }
                                 }
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.EXPENSE,
-                                            sort = ChartSort.MONTH
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = ChartSort.MONTH
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.month))
                                     }
                                 }
                                 Column() {
                                     TextButton(onClick = {
-                                        onEvents(StatisticsEvents.GetChart(
-                                            type = TransactionType.EXPENSE,
-                                            sort = ChartSort.YEAR
-                                        ))
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = ChartSort.YEAR
+                                            )
+                                        )
                                     }) {
                                         Text(text = stringResource(id = R.string.year))
                                     }

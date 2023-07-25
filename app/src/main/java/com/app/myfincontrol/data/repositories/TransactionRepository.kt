@@ -1,6 +1,7 @@
 package com.app.myfincontrol.data.repositories
 
 import com.app.myfincontrol.data.entities.Transaction
+import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
@@ -20,6 +21,10 @@ class TransactionRepository @Inject constructor(
 
     fun getChartTransactions(type: TransactionType, startTime: Long, endTime: Long): List<Transaction> {
         return transactionDAO.getChartTransactions(type, startTime, endTime)
+    }
+
+    fun getTransactions(): List<Transaction> {
+        return transactionDAO.getTransactions()
     }
 
     suspend fun deleteTransaction(id: Int) {

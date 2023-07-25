@@ -31,6 +31,7 @@ fun NavigationComponent(
         itemsScreen.forEach { screen ->
             NavigationBarItem(
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                //alwaysShowLabel = false,
                 //enabled = navController.currentDestination?.route != "settingsScreen",
                 onClick = {
                     navController.navigate(screen.route) {

@@ -19,6 +19,7 @@ import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.domain.useCases.TransactionUseCase
+import com.app.myfincontrol.presentation.viewModels.events.DebugEvents
 import com.app.myfincontrol.presentation.viewModels.events.HomeEvents
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import com.app.myfincontrol.presentation.viewModels.states.HomeStates
@@ -59,13 +60,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             loading()
         }
-        println("viewModel created")
     }
-
-    override fun onCleared() {
-        Log.d("MyViewModel", "ViewModel destroyed")
-    }
-
 
     private suspend fun loading() {
         val session = sessionUseCase.getAllSessions()
@@ -134,9 +129,19 @@ class HomeViewModel @Inject constructor(
             }
 
             is TransactionEvents.GenerateEvents -> {
-                val count = 10
+
+            }
+        }
+    }
+
+    fun onEventDebugMode(event: DebugEvents) {
+        when (event) {
+            is DebugEvents.ShowAlertDebugMode -> {
+                _states.update { it.copy(debugModeShow = !states.value.debugModeShow) }
+            }
+            is DebugEvents.GenerateTransactions -> {
                 viewModelScope.launch {
-                    repeat(count) {
+                    repeat(event.count) {
                         delay(1000)
                         transactionUseCase.addTransaction(
                             Transaction(
@@ -154,7 +159,6 @@ class HomeViewModel @Inject constructor(
                         println(it)
                     }
                 }
-                Toast.makeText(context, "Сгенерированно $count транзакции", Toast.LENGTH_SHORT).show()
             }
         }
     }

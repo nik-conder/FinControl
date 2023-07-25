@@ -2,8 +2,8 @@ package com.app.myfincontrol.presentation.compose.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +20,7 @@ fun NavGraph(
     store: UserStore,
     navController: NavHostController,
     startDestination: String,
+    snackBarHostState: SnackbarHostState,
 ) {
     NavHost(
         navController = navController,
@@ -27,7 +28,7 @@ fun NavGraph(
     ) {
 
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController, store = store)
+            HomeScreen(navController = navController, store = store, snackBarHostState = snackBarHostState)
         }
 
         composable(route = Screen.Settings.route) {

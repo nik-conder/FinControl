@@ -96,4 +96,6 @@
     <string name="there_are_n_characters_left">Осталось %1$d символов</string>
     <string name="create_profile_description">Для продолжения необходимо дать название новому профилю и выбрать валюту. Обратите внимание, что после создания счета изменить валюту будет невозможно.</string>
     <string name="more">Ещё</string>
+    <string name="delete_transaction">Транзакция удалена</string>
+    <string name="debug_mode">Debug mode</string>
 </resources>

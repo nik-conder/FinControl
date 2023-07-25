@@ -21,16 +21,12 @@ import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.KeyboardArrowUp
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.rememberDismissState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -45,25 +41,26 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.entities.Transaction
-import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FeedComponent(
     feedPager: Pager<Int, Transaction>,
     hideBalanceState: Boolean,
     debugModeState: Boolean,
-    onEvens: (TransactionEvents) -> Unit
+    onEvens: (TransactionEvents) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
 
     val scope = rememberCoroutineScope()
     val feedPagingItems = feedPager.flow.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
+    val textDeleteTransaction = stringResource(id = R.string.delete_transaction)
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp)
@@ -71,65 +68,9 @@ fun FeedComponent(
 
         Row() {
             HeaderComponent(
-                title = stringResource(id = R.string.feed) + " " + if (debugModeState) feedPagingItems.itemCount.toString() else "",
-                paddingValues = PaddingValues(top = 16.dp)
+                title = stringResource(id = R.string.feed) + " " + if (debugModeState) feedPagingItems.itemCount.toString() else ""
             )
         }
-        if (debugModeState) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column() {
-                    Text(text = "Generate:")
-                }
-                Column() {
-                    TextButton(onClick = { onEvens(TransactionEvents.GenerateEvents(TransactionType.INCOME)) }) {
-                        Text(text = "+")
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    TextButton(onClick = { onEvens(TransactionEvents.GenerateEvents(TransactionType.EXPENSE)) }) {
-                        Text(text = "-")
-                    }
-                }
-                Column() {
-                    IconButton(onClick = {
-                        scope.launch {
-                            feedPagingItems.refresh()
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "")
-                    }
-                }
-
-                Column() {
-                    IconButton(onClick = {
-                        scope.launch {
-                            listState.animateScrollToItem(index = 0)
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Outlined.KeyboardArrowUp, contentDescription = "")
-                    }
-                }
-                Column() {
-                    IconButton(onClick = {
-                        scope.launch {
-                            listState.animateScrollToItem(index = feedPagingItems.itemCount)
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Outlined.KeyboardArrowDown, contentDescription = "")
-                    }
-                }
-            }
-
-        }
-
         Row() {
             LazyColumn(
                 modifier = Modifier
@@ -147,8 +88,11 @@ fun FeedComponent(
                                 .padding(top = 32.dp, bottom = 32.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Row() {
-                                Text(text = stringResource(id = R.string.no_data), style = MaterialTheme.typography.bodyMedium)
+                            Row {
+                                Text(
+                                    text = stringResource(id = R.string.no_data),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
                             }
                             Row {
                                 Text(text = "\uD83D\uDE43", fontSize = 48.sp)
@@ -158,13 +102,16 @@ fun FeedComponent(
                 }
 
                 items(count = feedPagingItems.itemCount) { item ->
-                    val item = feedPagingItems[item]
-                    var dismissState = rememberDismissState(
+                    val dismissState = rememberDismissState(
                         initialValue = DismissValue.Default,
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
-                                onEvens(TransactionEvents.DeleteTransaction(item!!.id))
                                 scope.launch {
+                                    snackBarHostState.showSnackbar(
+                                        message = textDeleteTransaction,
+                                        duration = SnackbarDuration.Short
+                                    )
+                                    onEvens(TransactionEvents.DeleteTransaction(feedPagingItems[item]!!.id))
                                     delay(500)
                                     feedPagingItems.refresh()
                                 }
@@ -210,9 +157,9 @@ fun FeedComponent(
                             }
                         },
                         dismissContent = {
-                            feedPagingItems.itemKey { item!!.id }
+                            feedPagingItems.itemKey { feedPagingItems[item]!!.id }
                             TransactionComponent(
-                                transaction = item!!,
+                                transaction = feedPagingItems[item]!!,
                                 hideBalanceState = hideBalanceState,
                                 debugModeState = debugModeState
                             )
@@ -223,6 +170,7 @@ fun FeedComponent(
                     is LoadState.Loading -> {
                         item { CircularProgressComponent() }
                     }
+
                     is LoadState.Error -> {
                         item {
                             Row(
@@ -234,6 +182,7 @@ fun FeedComponent(
                             }
                         }
                     }
+
                     is LoadState.NotLoading -> {}
                 }
 
@@ -241,6 +190,7 @@ fun FeedComponent(
                     is LoadState.Loading -> {
                         item { CircularProgressComponent() }
                     }
+
                     is LoadState.Error -> {
                         item {
                             Row(
@@ -252,12 +202,14 @@ fun FeedComponent(
                             }
                         }
                     }
+
                     is LoadState.NotLoading -> {}
                 }
                 when (feedPagingItems.loadState.append) {
                     is LoadState.Loading -> {
                         item { CircularProgressComponent() }
                     }
+
                     is LoadState.Error -> {
                         item {
                             Row(
@@ -269,6 +221,7 @@ fun FeedComponent(
                             }
                         }
                     }
+
                     is LoadState.NotLoading -> {
                         if (feedPagingItems.itemCount > 0) {
                             item {
@@ -279,7 +232,10 @@ fun FeedComponent(
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     Row() {
-                                        Text(text = stringResource(id = R.string.no_data), style = MaterialTheme.typography.bodyMedium)
+                                        Text(
+                                            text = stringResource(id = R.string.no_data),
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
                                     }
                                     Row {
                                         Text(text = "\uD83E\uDD2B", fontSize = 48.sp)

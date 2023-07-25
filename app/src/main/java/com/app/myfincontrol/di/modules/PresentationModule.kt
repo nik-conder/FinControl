@@ -4,9 +4,9 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
-import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
+import com.app.myfincontrol.domain.useCases.DataExchangeUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.domain.useCases.StatisticsUseCase
@@ -73,9 +73,10 @@ class PresentationModule @Inject constructor() {
     @Singleton
     @Provides
     fun providerStatisticsViewModel(
-        statisticsUseCase: StatisticsUseCase
+        statisticsUseCase: StatisticsUseCase,
+        dataExchangeUseCase: DataExchangeUseCase
     ): StatisticsViewModel = StatisticsViewModel(
-        statisticsUseCase
+        statisticsUseCase, dataExchangeUseCase
     )
 
 }
