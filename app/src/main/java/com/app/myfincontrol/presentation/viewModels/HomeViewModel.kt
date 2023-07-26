@@ -11,7 +11,6 @@ import androidx.paging.PagingConfig
 import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionCategories
-import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.sources.FeedDataSource
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
@@ -26,12 +25,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,7 +61,7 @@ class HomeViewModel @Inject constructor(
         session.collect() { item ->
             if (item.isNotEmpty()) {
                 _states.update { it.copy(isLogin = true, isLoading = true, selectedProfile = profileUseCase.getProfile(item.first().profile_id)) }
-                getBalance(item.first().profile_id, ChartSort.DAY) // todo ChartSort.DAY
+                getBalance(item.first().profile_id, ChartSort.YEAR) // todo ChartSort.DAY
             } else {
                 _states.update { it.copy(isLogin = false) }
             }
@@ -70,7 +69,7 @@ class HomeViewModel @Inject constructor(
 
 
         if (states.value.selectedProfile != null) {
-            if (states.value.selectedProfile!!.uid != 0) getBalance(states.value.selectedProfile!!.uid, ChartSort.DAY) // todo ChartSort.DAY
+            if (states.value.selectedProfile!!.uid != 0) getBalance(states.value.selectedProfile!!.uid, ChartSort.YEAR) // todo ChartSort.DAY
         }
     }
 
@@ -92,10 +91,6 @@ class HomeViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun onEventsTransaction(event: TransactionEvents) {
         when (event) {
-
-            is TransactionEvents.LoadTransactions -> {
-
-            }
 
             is TransactionEvents.DeleteTransaction -> {
                 CoroutineScope(Dispatchers.IO).launch {
@@ -122,39 +117,40 @@ class HomeViewModel @Inject constructor(
                     Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                 }
             }
-
-            is TransactionEvents.GenerateEvents -> {
-
-            }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onEventDebugMode(event: DebugEvents) {
         when (event) {
             is DebugEvents.ShowAlertDebugMode -> {
                 _states.update { it.copy(debugModeShow = !states.value.debugModeShow) }
             }
             is DebugEvents.GenerateTransactions -> {
-                viewModelScope.launch {
-                    repeat(event.count) {
-                        delay(1000)
-                        transactionUseCase.addTransaction(
-                            Transaction(
-                                type = event.type,
-                                amount = BigDecimal.valueOf((0..100).random().toDouble()),
-                                datetime = System.currentTimeMillis() / 1000,
-                                profileId = states.value.selectedProfile!!.uid,
-                                category = if (event.type == TransactionType.EXPENSE) {
-                                    TransactionCategories.ExpenseCategories.HEALTH.name
-                                } else {
-                                    TransactionCategories.IncomeCategories.INVESTMENTS.name
-                                }
-                            )
-                        )
-                        println(it)
+                var startDate = LocalDateTime.of(2023, 1, 1, 0, 0, 0).toLocalDate()
+
+                repeat(206) {
+                    val date = startDate.plusDays(1)
+                    startDate = date
+                    val unixTimestamp = date.atStartOfDay(ZoneOffset.UTC).toEpochSecond()
+                    val transaction = Transaction(
+                        profileId = states.value.selectedProfile!!.uid,
+                        type = event.type,
+                        amount = (10..1000).random().toBigDecimal(),
+                        datetime = unixTimestamp,
+                        category = TransactionCategories.IncomeCategories.BUSINESS.name
+                    )
+                    println("==============")
+                    println(transaction)
+                    println(date)
+
+                    viewModelScope.launch {
+                        transactionUseCase.addTransaction(transaction)
                     }
+
                 }
             }
+
         }
     }
 }

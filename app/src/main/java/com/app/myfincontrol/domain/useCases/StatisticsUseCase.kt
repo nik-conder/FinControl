@@ -3,25 +3,152 @@ package com.app.myfincontrol.domain.useCases
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.app.myfincontrol.data.FormatDateImpl
+import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.patrykandpatrick.vico.core.entry.FloatEntry
-import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.temporal.ChronoUnit
+import java.time.temporal.WeekFields
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 import javax.inject.Inject
 
 class StatisticsUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository
 ) {
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    interface ChartSorter {
+        fun sortData(data: List<Transaction>, startTime: Long, endTime: Long): List<FloatEntry>
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    class DaySorter : ChartSorter {
+        val list = mutableListOf<FloatEntry>()
+        @RequiresApi(Build.VERSION_CODES.O)
+        override fun sortData(data: List<Transaction>, startTime: Long, endTime: Long): List<FloatEntry> {
+            val transactionsByPeriod = data.filter { transaction ->
+                val date = Date(transaction.datetime * 1000)
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+
+                val currentDate = LocalDate.ofEpochDay(transaction.datetime / (24 * 60 * 60))
+                val currentDay = currentDate.dayOfMonth
+
+                currentDay == calendar.get(Calendar.DAY_OF_MONTH)
+
+            }.groupBy { transaction ->
+                // Группируем данные по часам
+                val date = Date(transaction.datetime * 1000)
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+                calendar.get(Calendar.HOUR_OF_DAY)
+            }.mapValues { entry ->
+                entry.value.sumOf { transaction -> transaction.amount.toDouble() }
+            }
+            transactionsByPeriod.forEach {
+                list.add(FloatEntry(x = it.key.toFloat(), y = it.value.toFloat()))
+            }
+
+            return list
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    class WeekSorter : ChartSorter {
+        val list = mutableListOf<FloatEntry>()
+        @RequiresApi(Build.VERSION_CODES.O)
+        override fun sortData(data: List<Transaction>, startTime: Long, endTime: Long): List<FloatEntry> {
+            val transactionsByPeriod = data.filter { transaction ->
+                val date = Date(transaction.datetime * 1000)
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+
+                val currentDate = LocalDate.ofEpochDay(transaction.datetime / (24 * 60 * 60))
+                val currentWeek =
+                    currentDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear())
+
+                // Фильтруем данные, чтобы в результате остались только те, которые относятся к текущей неделе
+                currentWeek == calendar.get(Calendar.WEEK_OF_YEAR)
+
+            }.groupBy { transaction ->
+                // группируем данные по дням
+                val date = Date(transaction.datetime * 1000)
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+                calendar.get(Calendar.DAY_OF_MONTH)
+            }.mapValues { entry ->
+                entry.value.sumOf { transaction -> transaction.amount.toDouble() }
+            }
+
+            transactionsByPeriod.forEach {
+                list.add(FloatEntry(x = it.key.toFloat(), y = it.value.toFloat()))
+            }
+
+            return list
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    class MonthSorter : ChartSorter {
+        val list = mutableListOf<FloatEntry>()
+        override fun sortData(
+            data: List<Transaction>,
+            startTime: Long,
+            endTime: Long
+        ): List<FloatEntry> {
+            val transactionsByPeriod = data.filter { transaction ->
+                val date = Date(transaction.datetime * 1000)
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+
+                val currentDate = LocalDate.ofEpochDay(transaction.datetime / (24 * 60 * 60))
+                val currentMonth = currentDate.monthValue
+
+                 currentMonth == calendar.get(Calendar.WEEK_OF_MONTH)
+
+            }.groupBy { transaction ->
+                // Группируем данные по дням месяца
+                val date = Date(transaction.datetime * 1000)
+                val calendar = Calendar.getInstance()
+                calendar.time = date
+                calendar.get(Calendar.DAY_OF_MONTH)
+            }.mapValues { entry ->
+                entry.value.sumOf { transaction -> transaction.amount.toDouble() }
+            }
+            transactionsByPeriod.forEach {
+                list.add(FloatEntry(x = it.key.toFloat(), y = it.value.toFloat()))
+            }
+
+            return list
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    class QuartetSorter : ChartSorter {
+        override fun sortData(
+            data: List<Transaction>,
+            startTime: Long,
+            endTime: Long
+        ): List<FloatEntry> {
+            return emptyList()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    class YearSorter : ChartSorter {
+        override fun sortData(
+            data: List<Transaction>,
+            startTime: Long,
+            endTime: Long
+        ): List<FloatEntry> {
+            return emptyList()
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getChart(
         type: TransactionType,
@@ -30,120 +157,21 @@ class StatisticsUseCase @Inject constructor(
 
         val startTime: Long = FormatDateImpl.getStartPeriod(sort)
         val endTime = FormatDateImpl.getEndPeriod(sort)
+
         val dataTransactions = transactionRepository.getChartTransactions(
             type = type,
             startTime = startTime,
             endTime = endTime
         )
-        val list = mutableListOf<FloatEntry>()
 
-        val transactionsByPeriod = dataTransactions.filter { transaction ->
-            val date = Date(transaction.datetime * 1000)
-            val test = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() // todo
-            val calendar = Calendar.getInstance()
-            calendar.time = date
-            val currentMonth = calendar.get(Calendar.MONTH)
-            val currentYear = calendar.get(Calendar.YEAR)
-            val currentDay = calendar.get(Calendar.DAY_OF_WEEK)
-            val currentWeek = calendar.get(Calendar.WEEK_OF_MONTH)
-
-            calendar.get(Calendar.MONTH) == currentMonth
-                    && calendar.get(Calendar.YEAR) == currentYear
-                    && calendar.get(Calendar.DAY_OF_WEEK) == currentDay
-                    && calendar.get(Calendar.WEEK_OF_MONTH) == currentWeek
-
-        }.groupBy { transaction ->
-            val date = Date(transaction.datetime * 1000)
-
-            println(transaction)
-            when (sort) {
-                ChartSort.MONTH -> {
-                    getCurrentMonth(transaction.datetime)
-                }
-
-                ChartSort.WEEK -> {
-                    getCurrentWeek(transaction.datetime)
-                }
-
-                ChartSort.YEAR -> {
-                    getCurrentYear(transaction.datetime)
-                }
-
-                ChartSort.QUARTER -> {
-                    getCurrentQuarter(transaction.datetime)
-                }
-
-                else -> {
-                    getCurrentDay(transaction.datetime)
-                }
-
-            }
-
-        }.mapValues { entry ->
-            entry.value.sumOf { transaction -> transaction.amount.toDouble() }
-        }
-        transactionsByPeriod.forEach {
-            list.add(FloatEntry(x = it.key.toFloat(), y = it.value.toFloat()))
+        val list = when (sort) {
+            ChartSort.DAY -> DaySorter()
+            ChartSort.WEEK -> WeekSorter()
+            ChartSort.MONTH -> MonthSorter()
+            ChartSort.QUARTER -> QuartetSorter()
+            ChartSort.YEAR -> YearSorter()
         }
 
-        println("transactionsByPeriod:")
-        println(transactionsByPeriod)
-
-        list.forEach {
-            println("${it.x} ${it.y}")
-        }
-
-        println(list)
-        return list
+        return list.sortData(dataTransactions, startTime, endTime)
     }
-
-    // Вспомогательная функция для получения часа из Unix-времени
-    fun getCurrentDay(timeUnix: Long): Int {
-        val date = Date(timeUnix * 1000)
-        return SimpleDateFormat("HH").format(date).toInt()
-    }
-
-    private fun getCurrentYear(timeUnix: Long): Int {
-        val date = Date(timeUnix * 1000)
-        val calendar = Calendar.getInstance().apply {
-            time = date
-        }
-        return calendar.get(Calendar.YEAR)
-    }
-
-    private fun getCurrentQuarter(timeUnix: Long): Int {
-        val date = Date(timeUnix * 1000)
-        val calendar = Calendar.getInstance().apply {
-            time = date
-        }
-        val currentMonth = calendar.get(Calendar.MONTH) // Month value is zero-based (0 to 11)
-
-        // Calculate the quarter based on the current month
-        return (currentMonth / 3) + 1
-    }
-
-
-    private fun getCurrentMonth(timeUnix: Long): Int {
-        val date = Date(timeUnix * 1000)
-        val calendar = Calendar.getInstance().apply {
-            time = date
-        }
-        return calendar.get(Calendar.MONTH) + 1 // Adding 1 to get month number from 1 to 12
-    }
-
-
-    private fun getCurrentWeek(timeUnix: Long): Int {
-        val date = Date(timeUnix * 1000)
-        val calendar = Calendar.getInstance().apply {
-            time = date
-        }
-        var dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY + 1
-        if (dayOfWeek <= 0) {
-            dayOfWeek += 7 // Коррекция для воскресенья (Calendar.SUNDAY = 1)
-        }
-        return dayOfWeek
-    }
-
-
-
 }

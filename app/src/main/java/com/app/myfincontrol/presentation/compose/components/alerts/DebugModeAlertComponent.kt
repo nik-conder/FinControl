@@ -31,6 +31,7 @@ fun DebugModeAlertComponent(
     onEvent: (DebugEvents) -> Unit,
     snackBarHostState: SnackbarHostState
 ) {
+    val countTransactions = 1000
     if (state) {
         val scope = rememberCoroutineScope()
 
@@ -62,19 +63,9 @@ fun DebugModeAlertComponent(
                     item {
                         TextButton(onClick = {
                             scope.launch {
-                                snackBarHostState.showSnackbar("Будет сгенерировано 10 транзакций")
+                                snackBarHostState.showSnackbar("Будет сгенерировано ${countTransactions} транзакций")
                             }
-                            onEvent(DebugEvents.GenerateTransactions(TransactionType.INCOME, 10))
-                        }) {
-                            Text("Сгенерировать транзакции -")
-                        }
-                    }
-                    item {
-                        TextButton(onClick = {
-                            scope.launch {
-                                snackBarHostState.showSnackbar("Будет сгенерировано 10 транзакций")
-                            }
-                            onEvent(DebugEvents.GenerateTransactions(TransactionType.EXPENSE, 10))
+                            onEvent(DebugEvents.GenerateTransactions(TransactionType.INCOME, countTransactions))
                         }) {
                             Text("Сгенерировать транзакции +")
                         }

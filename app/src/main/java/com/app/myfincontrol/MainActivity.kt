@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
-import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.app.myfincontrol.presentation.compose.navigation.NavGraph
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
