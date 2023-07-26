@@ -1,7 +1,9 @@
 package com.app.myfincontrol.presentation.compose.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
@@ -19,10 +21,11 @@ fun SnackBarHost(
 ){
     ConstraintLayout(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .fillMaxHeight(0.9f)
     ) {
 
-        val(snackbarhostref) = createRefs()
+        val(snackBarHostRef) = createRefs()
 
         SnackbarHost(
             modifier = Modifier
@@ -32,7 +35,7 @@ fun SnackBarHost(
                     bottom = 16.dp,
                     top = 26.dp
                 )
-                .constrainAs(snackbarhostref) {
+                .constrainAs(snackBarHostRef) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)

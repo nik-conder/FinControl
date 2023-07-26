@@ -44,7 +44,7 @@ fun NavGraph(
         }
 
         composable(route = Screen.Statistics.route) {
-            StatisticsScreen(navController = navController)
+            StatisticsScreen(navController = navController, snackBarHostState = snackBarHostState)
         }
 
     }

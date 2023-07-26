@@ -1,6 +1,5 @@
 package com.app.myfincontrol.presentation.compose.components
 
-import java.math.BigDecimal
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +32,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +44,7 @@ import com.app.myfincontrol.presentation.utils.SymbolUtils
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import com.example.compose.FinControlTheme
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +61,7 @@ fun HomeMainBoxComponent(
     val dropdownAmountSortState = remember { mutableStateOf(false) }
 
     val tooltipState = rememberPlainTooltipState()
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -97,20 +97,14 @@ fun HomeMainBoxComponent(
                     )
                 }
                 Column() {
-                    PlainTooltipBox(
-                        tooltip = {
-                            Text(text = "Вы можете скрыть баланс")
-                        },
+                    PlainTooltipComponent(
+                        tooltip = { Text(text = stringResource(id = R.string.add_transaction)) },
                         tooltipState = tooltipState,
-                        shape = RoundedCornerShape(20.dp),
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
-                        IconButton(onClick = {
-                            scope.launch {
-                                store.sethideBalanceState()
-                            }
-                        }) {
+                        IconButton(
+                            modifier = Modifier.tooltipTrigger(),
+                            onClick = { scope.launch { store.sethideBalanceState() } }
+                        ) {
                             Icon(
                                 painter = painterResource(id = if (hideBalanceState.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
                                 contentDescription = stringResource(id = R.string.visibility_content_description),

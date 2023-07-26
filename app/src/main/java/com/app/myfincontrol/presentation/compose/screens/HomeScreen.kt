@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,12 +27,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberPlainTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -49,9 +54,11 @@ import com.app.myfincontrol.R
 import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
+import com.app.myfincontrol.presentation.compose.components.ChartsComponent
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
+import com.app.myfincontrol.presentation.compose.components.PlainTooltipComponent
 import com.app.myfincontrol.presentation.compose.components.SnackBarHost
 import com.app.myfincontrol.presentation.compose.components.alerts.DebugModeAlertComponent
 import com.app.myfincontrol.presentation.compose.components.sheets.AddTransactionSheet
@@ -86,6 +93,13 @@ fun HomeScreen(
     val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
     val adviceBoxState = store.adviceBox.collectAsState(initial = false)
     val debugModeState = store.debugModeState.collectAsState(initial = false)
+
+    val tooltipState = rememberPlainTooltipState()
+
+    val configuration = LocalConfiguration.current
+    val isWideScreen =
+        configuration.screenWidthDp > 600 // Здесь определяем условие для широкого экрана (600 dp)
+
 
     Scaffold(
         modifier = Modifier
@@ -123,7 +137,12 @@ fun HomeScreen(
                                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 shape = RoundedCornerShape(20.dp)
                                             )
-                                            .padding(8.dp)
+                                            .padding(
+                                                top = 4.dp,
+                                                start = 16.dp,
+                                                end = 16.dp,
+                                                bottom = 4.dp
+                                            )
                                     ) {
                                         Text(
                                             text = if (hideBalanceState.value)
@@ -176,13 +195,20 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                showBottomSheet.value = !showBottomSheet.value
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = stringResource(id = R.string.add_transaction)
-                )
+            PlainTooltipComponent(
+                tooltip = { Text(text = stringResource(id = R.string.add_transaction)) },
+                tooltipState = tooltipState,
+            ) {
+                FloatingActionButton(
+                    modifier = Modifier
+                        .tooltipTrigger(),
+                    onClick = { showBottomSheet.value = !showBottomSheet.value }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Add,
+                        contentDescription = stringResource(id = R.string.add_transaction)
+                    )
+                }
             }
         },
         bottomBar = {
@@ -247,6 +273,7 @@ fun HomeScreen(
                     .constrainAs(financeCharts) {
                         top.linkTo(adviceBox.bottom)
                         start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
             ) {
 //                Column(
@@ -260,7 +287,7 @@ fun HomeScreen(
 //                        .heightIn(min = 200.dp, max = 300.dp),
 //                    horizontalAlignment = Alignment.CenterHorizontally
 //                ) {
-//                    ChartsComponent(data = barDataList)
+//                    ChartsComponent(data = emptyList())
 //                }
             }
 

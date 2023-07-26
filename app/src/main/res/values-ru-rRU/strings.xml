@@ -104,4 +104,5 @@
     <string name="more">Ещё</string>
     <string name="delete_transaction">Транзакция удалена</string>
     <string name="debug_mode">Debug mode</string>
+    <string name="hide_balance_tooltip">You can hide the balance</string>
 </resources>

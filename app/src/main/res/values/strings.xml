@@ -105,4 +105,7 @@
     <string name="more">More</string>
     <string name="delete_transaction">Delete transaction</string>
     <string name="debug_mode">Debug mode</string>
+
+    <!-- Tooltips -->
+    <string name="hide_balance_tooltip">You can hide the balance</string>
 </resources>
