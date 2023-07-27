@@ -135,9 +135,10 @@ fun ChangeProfileComponent(
                                 horizontalAlignment = Alignment.Start
                             ) {
                                 Text(
-                                    modifier = Modifier.padding(8.dp),
+                                    modifier = Modifier
+                                        .padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp),
                                     text =  it.currency.name,
-                                    style = MaterialTheme.typography.bodySmall,
+                                    style = MaterialTheme.typography.labelLarge,
                                     color = if (selectedProfile == it.uid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
                                 )
                             }
@@ -191,6 +192,7 @@ fun ChangeProfileComponent(
                     enabled = selectedProfile != 0,
                     onClick = {
                         onEvents.invoke(LoginEvents.Login)
+                        navController.navigate(Screen.Home.route)
                     }) {
                     Text(text = stringResource(id = R.string.done))
                 }

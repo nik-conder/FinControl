@@ -9,15 +9,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+
+/**
+ * Header component.
+ *
+ * @param title Platform specific [String] parameters.
+ * @param textStyle Platform specific [TextStyle] parameters.
+ * @param paddingValues Platform specific [PaddingValues] parameters.
+ *
+ */
 
 @Composable
 fun HeaderComponent(
     title: String,
     textStyle: TextStyle = MaterialTheme.typography.headlineSmall,
     paddingValues: PaddingValues =
-        PaddingValues(16.dp),
+        PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
 ) {
     Box(
         modifier = Modifier

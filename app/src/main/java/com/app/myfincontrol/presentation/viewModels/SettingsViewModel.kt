@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.myfincontrol.data.entities.Profile
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.presentation.viewModels.events.SettingsEvents
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val sessionUseCase: SessionUseCase,
-    private val profileUseCase: ProfileUseCase
+    private val profileUseCase: ProfileUseCase,
+    private val dataStore: UserStore
 ): ViewModel() {
 
     private val _states = MutableStateFlow(SettingsStates())

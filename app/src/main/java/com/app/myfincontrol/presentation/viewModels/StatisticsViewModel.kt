@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.domain.useCases.DataExchangeUseCase
 import com.app.myfincontrol.domain.useCases.StatisticsUseCase
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
@@ -23,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val statisticsUseCase: StatisticsUseCase,
-    private val dataExchangeUseCase: DataExchangeUseCase
+    private val dataExchangeUseCase: DataExchangeUseCase,
+    private val dataStore: UserStore
 ): ViewModel() {
 
     private val _states = MutableStateFlow(StatisticsState())

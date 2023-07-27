@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -12,7 +14,9 @@ import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.sources.FeedDataSource
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.sources.database.TransactionDAO
+import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
@@ -25,10 +29,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.Closeable
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import javax.inject.Inject
@@ -40,7 +50,8 @@ class HomeViewModel @Inject constructor(
     private val profileUseCase: ProfileUseCase,
     private val balanceUseCase: BalanceUseCase,
     private val transactionUseCase: TransactionUseCase,
-    private val transactionDAO: TransactionDAO
+    private val transactionDAO: TransactionDAO,
+    private val dataStore: UserStore
 ): ViewModel() {
     private val _states = MutableStateFlow(HomeStates())
     val states = _states.asStateFlow()
@@ -67,14 +78,13 @@ class HomeViewModel @Inject constructor(
             }
         }
 
-
         if (states.value.selectedProfile != null) {
-            if (states.value.selectedProfile!!.uid != 0) getBalance(states.value.selectedProfile!!.uid, ChartSort.YEAR) // todo ChartSort.DAY
+            if (states.value.selectedProfile!!.uid != 0) getBalance(dataStore.getSessionId(), ChartSort.YEAR) // todo ChartSort.DAY
         }
     }
 
     private suspend fun getBalance(profile_id: Int, sort: ChartSort) {
-        balanceUseCase.getBalance(profile_id, sort).collect() {newValue ->
+        balanceUseCase.getBalance(profile_id, sort).collect() { newValue ->
             _states.update { it.copy(balance = newValue) }
         }
     }

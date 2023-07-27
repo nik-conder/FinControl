@@ -1,6 +1,7 @@
 package com.app.myfincontrol.presentation.compose.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,9 +74,11 @@ fun FeedComponent(
                 title = stringResource(id = R.string.feed) + " " + if (debugModeState) feedPagingItems.itemCount.toString() else ""
             )
         }
-        Row() {
-            TextButton(onClick = { feedPagingItems.refresh() }) {
-                Text(text = "Refresh")
+        if (debugModeState) {
+            Row() {
+                TextButton(onClick = { feedPagingItems.refresh() }) {
+                    Text(text = "Refresh")
+                }
             }
         }
         Row {

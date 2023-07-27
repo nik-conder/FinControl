@@ -1,7 +1,7 @@
 package com.app.myfincontrol.di.modules
 
 import android.content.Context
-import com.app.myfincontrol.UserStore
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.repositories.BalanceRepository
 import com.app.myfincontrol.data.repositories.ProfileRepository
 import com.app.myfincontrol.data.repositories.SessionRepository

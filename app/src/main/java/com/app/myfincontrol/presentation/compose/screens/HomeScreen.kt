@@ -47,7 +47,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
-import com.app.myfincontrol.UserStore
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
@@ -300,5 +300,5 @@ fun HomeScreen(
             }
         }
     }
-    SnackBarHost(snackbarHostState = snackBarHostState)
+    SnackBarHost(snackBarHostState = snackBarHostState)
 }

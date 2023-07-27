@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -32,11 +32,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.app.myfincontrol.R
-import com.app.myfincontrol.UserStore
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.utils.NumberUtils
 import com.app.myfincontrol.presentation.utils.SymbolUtils
@@ -56,22 +57,21 @@ fun HomeMainBoxComponent(
 ) {
     val scope = rememberCoroutineScope()
     val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
-
     val dropdownAmountSortState = remember { mutableStateOf(false) }
-
     val tooltipState = rememberPlainTooltipState()
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 150.dp)
+            //.heightIn(min = 150.dp)
+            .wrapContentHeight()
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(MaterialTheme.colorScheme.primary, Color(0xFF0D4E42)),
                     startY = 0f,
                     endY = 400f
                 ),
-                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                shape = RoundedCornerShape(bottomStart = 50.dp, bottomEnd = 50.dp)
             )
     ) {
         Column(
@@ -80,24 +80,25 @@ fun HomeMainBoxComponent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
+                modifier = Modifier
+                    .padding(top = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column() {
+                Column {
                     Text(
                         text = if (hideBalanceState.value) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "${
                             NumberUtils.formatBigDecimalWithSpaces(
                                 balance
                             )
                         } ${SymbolUtils.currencySymbolComponent(currency)}",
-                        modifier = Modifier.padding(16.dp),
                         fontSize = 42.sp,
                         color = MaterialTheme.colorScheme.onSecondary,
                         fontWeight = FontWeight(500)
                     )
                 }
-                Column() {
+                Column {
                     PlainTooltipComponent(
-                        tooltip = { Text(text = stringResource(id = R.string.add_transaction)) },
+                        tooltip = { Text(text = stringResource(id = R.string.hide_balance_tooltip)) },
                         tooltipState = tooltipState,
                     ) {
                         IconButton(
@@ -113,10 +114,11 @@ fun HomeMainBoxComponent(
                     }
                 }
             }
-            Row(
+            Row( modifier = Modifier
+                .padding(top = 8.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column() {
+                Column {
                     Text(
                         text = profileName,
                         fontSize = 16.sp,
@@ -192,7 +194,9 @@ fun HomeMainBoxComponent(
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
+@PreviewLightDark
+//@PreviewScreenSizes
+@Preview
 @Composable
 fun HomeMainBoxComponentPreview() {
     val context = LocalContext.current

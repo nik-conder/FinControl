@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.DataExchangeUseCase
@@ -39,9 +40,18 @@ class PresentationModule @Inject constructor() {
         profileUseCase: ProfileUseCase,
         balanceUseCase: BalanceUseCase,
         transactionUseCase: TransactionUseCase,
-        transactionDAO: TransactionDAO
+        transactionDAO: TransactionDAO,
+        dataStore: UserStore
     ): HomeViewModel {
-        return HomeViewModel(context, sessionUseCase, profileUseCase, balanceUseCase, transactionUseCase, transactionDAO)
+        return HomeViewModel(
+            context,
+            sessionUseCase,
+            profileUseCase,
+            balanceUseCase,
+            transactionUseCase,
+            transactionDAO,
+            dataStore
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -50,9 +60,10 @@ class PresentationModule @Inject constructor() {
     fun providerLoginViewModel(
         @ApplicationContext context: Context,
         sessionUseCase: SessionUseCase,
-        profileUseCase: ProfileUseCase
+        profileUseCase: ProfileUseCase,
+        dataStore: UserStore
     ): LoginViewModel {
-        return LoginViewModel(context, sessionUseCase, profileUseCase)
+        return LoginViewModel(context, sessionUseCase, profileUseCase, dataStore)
     }
 
     @Singleton
@@ -60,12 +71,14 @@ class PresentationModule @Inject constructor() {
     fun providerSettingsViewModel(
         @ApplicationContext context: Context,
         sessionUseCase: SessionUseCase,
-        profileUseCase: ProfileUseCase
+        profileUseCase: ProfileUseCase,
+        dataStore: UserStore
     ): SettingsViewModel {
         return SettingsViewModel(
             context,
             sessionUseCase,
-            profileUseCase
+            profileUseCase,
+            dataStore
         )
     }
 
@@ -74,9 +87,11 @@ class PresentationModule @Inject constructor() {
     @Provides
     fun providerStatisticsViewModel(
         statisticsUseCase: StatisticsUseCase,
-        dataExchangeUseCase: DataExchangeUseCase
+        dataExchangeUseCase: DataExchangeUseCase,
+        dataStore: UserStore
     ): StatisticsViewModel = StatisticsViewModel(
-        statisticsUseCase, dataExchangeUseCase
+        statisticsUseCase, dataExchangeUseCase,
+        dataStore
     )
 
 }

@@ -9,6 +9,7 @@ import com.app.myfincontrol.data.Configuration
 import com.app.myfincontrol.data.ErrorCode
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.entities.Session
+import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.presentation.compose.navigation.Screen
@@ -18,10 +19,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,6 +30,7 @@ class LoginViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val sessionUseCase: SessionUseCase,
     private val profileUseCase: ProfileUseCase,
+    private val dataStore: UserStore
 ): ViewModel() {
 
     private val _states = MutableStateFlow(LoginState())
@@ -82,14 +82,13 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun setSession(profile_id: Int): Long {
-        val session = sessionUseCase.setSession(Session(profile_id = profile_id, timestamp = System.currentTimeMillis()))
-        if (session > 0) {
-            _states.update {
-                it.copy(startDestination = Screen.Home.route)
-            }
-        }
-        return session
+    private suspend fun setSession(profileId: Int): Long {
+        return sessionUseCase.setSession(
+            Session(
+                profile_id = profileId,
+                timestamp = System.currentTimeMillis()
+            )
+        )
     }
 
     fun onEvents(event: LoginEvents) {
@@ -104,6 +103,11 @@ class LoginViewModel @Inject constructor(
                 _states.update {
                     it.copy(selectedProfile = event.uid)
                 }
+
+                viewModelScope.launch {
+                    dataStore.setSessionId(event.uid)
+                    println("a: ${dataStore.sessionId}")
+                }
             }
 
             is LoginEvents.CreateAccount -> {
@@ -111,7 +115,7 @@ class LoginViewModel @Inject constructor(
                 if (states.value.profilesList.size <= Configuration.Limits.LIMIT_PROFILES) {
                     val validationResult  = Validator.Profile.validation(event.profile)
                     if (validationResult is ValidationResult.Success) {
-                        viewModelScope.launch {
+                        CoroutineScope(Dispatchers.IO).launch {
                             profileUseCase.createProfile(Profile(name = event.profile.name, currency = event.profile.currency))
                             val getProfile = profileUseCase.getLastProfile()
                             val session = setSession(getProfile.uid)

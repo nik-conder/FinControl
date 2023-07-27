@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,7 @@ import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
+import com.app.myfincontrol.presentation.compose.components.BoxComponent
 import com.app.myfincontrol.presentation.compose.components.ChartsComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
@@ -147,15 +149,7 @@ fun StatisticsScreen(
                         }
                     }
                     Row {
-                        Column(
-                            modifier = Modifier
-                                .background(
-                                    color = MaterialTheme.colorScheme.tertiaryContainer,
-                                    shape = RoundedCornerShape(20.dp)
-                                )
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+                        BoxComponent {
                             Row(
                                 modifier = Modifier
                                     .padding(top = 16.dp, bottom = 16.dp)
@@ -288,18 +282,12 @@ fun StatisticsScreen(
                         }
                     }
                     Row {
-                        Column(
-                            modifier = Modifier
-                                .background(
-                                    color = MaterialTheme.colorScheme.tertiaryContainer,
-                                    shape = RoundedCornerShape(20.dp)
-                                )
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+                        BoxComponent {
                             Row(
                                 modifier = Modifier
                                     .padding(top = 16.dp, bottom = 16.dp)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.chart_expenses_of_the) + " " + when (state.value.chartCurrentSortExpense) {
@@ -378,5 +366,5 @@ fun StatisticsScreen(
             }
         }
     }
-    SnackBarHost(snackbarHostState = snackBarHostState)
+    SnackBarHost(snackBarHostState = snackBarHostState)
 }

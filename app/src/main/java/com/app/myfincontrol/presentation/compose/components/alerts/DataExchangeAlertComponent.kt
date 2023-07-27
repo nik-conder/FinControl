@@ -1,6 +1,5 @@
 package com.app.myfincontrol.presentation.compose.components.alerts
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.enums.ChartSort
@@ -213,21 +213,11 @@ fun DataExchangeAlertComponent(
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-    showSystemUi = false, showBackground = true
+@PreviewLightDark
+@Preview(showSystemUi = false, showBackground = true
 )
 @Composable
 fun DataExchangeAlertPreview() {
-    FinControlTheme() {
-        DataExchangeAlertComponent(state = true, onEvents = {}, sort = ChartSort.DAY, snackBarHostState = SnackbarHostState())
-    }
-}
-
-@Preview(locale = "ru-rRU",
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-fun DataExchangeAlertPreview2() {
     FinControlTheme() {
         DataExchangeAlertComponent(state = true, onEvents = {}, sort = ChartSort.DAY, snackBarHostState = SnackbarHostState())
     }

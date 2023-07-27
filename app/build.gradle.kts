@@ -71,6 +71,10 @@ android {
         kotlinCompilerExtensionVersion = "1.4.7"
     }
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
 //    packagingOptions {
 //        resources {
 //            excludes += '/META-INF/{AL2.0,LGPL2.1}'

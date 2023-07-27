@@ -20,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,8 +28,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
-import com.app.myfincontrol.UserStore
 import com.app.myfincontrol.data.entities.Profile
+import com.app.myfincontrol.data.sources.UserStore
+import com.app.myfincontrol.presentation.compose.components.BoxComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.compose.components.NotProfileComponent
@@ -55,13 +55,7 @@ fun SettingsScreen(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.settings),
-                    )
-                }
-            )
+            TopAppBar(title = { Text(text = stringResource(id = R.string.settings)) })
         },
         bottomBar = {
             NavigationComponent(navController = navController)
@@ -123,82 +117,89 @@ fun SettingsBox(
     val adviceBoxState = store.adviceBox.collectAsState(initial = false)
     val debugModeState = store.debugModeState.collectAsState(initial = false)
 
-    val configuration = LocalConfiguration.current
-    val isWideScreen =
-        configuration.screenWidthDp > 600 // Здесь определяем условие для широкого экрана (600 dp)
-
-    val paddingValues = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp)
+    val paddingValues = PaddingValues(top = 8.dp, start = 16.dp, end = 16.dp)
 
     Column {
         Row {
             HeaderComponent(
-                title = stringResource(id = R.string.settings)
+                title = stringResource(id = R.string.settings),
             )
         }
         Row(
             modifier = Modifier
-                .padding(paddingValues)
+                .padding(paddingValues),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            SwitchComponent(
-                title = stringResource(id = R.string.dark_mode),
-                state = darkModeState.value,
-                onValueChange = {
-                    scope.launch {
-                        store.setDarkMode()
-                    }
+            BoxComponent {
+                Row(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                ) {
+                    SwitchComponent(
+                        title = stringResource(id = R.string.dark_mode),
+                        state = darkModeState.value,
+                        onValueChange = {
+                            scope.launch {
+                                store.setDarkMode()
+                            }
+                        }
+                    )
                 }
-            )
-        }
-        Row(
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            SwitchComponent(
-                title = "Блок \"Полезные советы\"",
-                state = adviceBoxState.value,
-                onValueChange = {
-                    scope.launch {
-                        store.setAdviceBox()
-                    }
+                Row(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                ) {
+                    SwitchComponent(
+                        title = "Блок \"Полезные советы\"",
+                        state = adviceBoxState.value,
+                        onValueChange = {
+                            scope.launch {
+                                store.setAdviceBox()
+                            }
+                        }
+                    )
                 }
-            )
-        }
-        Row(
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            SwitchComponent(
-                title = "Баланс скрыт по умолчанию",
-                description = "Опция позволит скрыть баланс при открытии приложения",
-                state = hideBalanceState.value,
-                onValueChange = {
-                    scope.launch {
-                        store.sethideBalanceState()
-                    }
+                Row(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                ) {
+                    SwitchComponent(
+                        title = "Баланс скрыт по умолчанию",
+                        description = "Опция позволит скрыть баланс при открытии приложения",
+                        state = hideBalanceState.value,
+                        onValueChange = {
+                            scope.launch {
+                                store.sethideBalanceState()
+                            }
+                        }
+                    )
                 }
-            )
-        }
-        Row(
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            SwitchComponent(title = "Debug mode", state = debugModeState.value, onValueChange = {
-                scope.launch {
-                    store.setDebugMode()
+                Row(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                ) {
+                    SwitchComponent(
+                        title = "Debug mode",
+                        state = debugModeState.value,
+                        onValueChange = {
+                            scope.launch {
+                                store.setDebugMode()
+                            }
+                        })
                 }
-            })
-        }
-        Row(
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            SwitchComponent(
-                title = "Автоматический вход",
-                description = "...",
-                state = false,
-                enabled = false,
-                onValueChange = { }
-            )
+                Row(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                ) {
+                    SwitchComponent(
+                        title = "Автоматический вход",
+                        description = "...",
+                        state = false,
+                        enabled = false,
+                        onValueChange = { }
+                    )
+                }
+            }
         }
     }
 }
@@ -210,9 +211,8 @@ fun ProfileBox(
     navController: NavHostController,
 ) {
     val paddingValues = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp)
-    Column(
-        modifier = Modifier,
-    ) {
+
+    Column {
         Row {
             HeaderComponent(
                 title = stringResource(id = R.string.profile)
@@ -224,41 +224,48 @@ fun ProfileBox(
                 .padding(paddingValues),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(text = "\uD83D\uDC64", fontSize = 32.sp)
-            }
-            Column(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .weight(1f),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = profile.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(paddingValues),
-        ) {
-            Column() {
-                TextButton(onClick = {
-                    onEvents.invoke(SettingsEvents.DeleteProfile)
-                    navController.navigate(Screen.Login.route)
-                }) {
-                    //Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
-                    Text(text = "Удалить")
+            BoxComponent {
+                Row(
+                    modifier = Modifier
+                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                ) {
+                    Column {
+                        Text(text = "\uD83D\uDC64", fontSize = 32.sp)
+                    }
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .weight(1f),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = profile.name,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
-            }
-            Column {
-                TextButton(onClick = {
-                    onEvents.invoke(SettingsEvents.Logout)
-                    navController.navigate(Screen.Login.route)
-                }) {
-                    Text(text = "Выйти")
+                Row(
+                    modifier = Modifier
+                        .padding(paddingValues),
+                ) {
+                    Column() {
+                        TextButton(onClick = {
+                            onEvents.invoke(SettingsEvents.DeleteProfile)
+                            navController.navigate(Screen.Login.route)
+                        }) {
+                            //Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
+                            Text(text = "Удалить")
+                        }
+                    }
+                    Column {
+                        TextButton(onClick = {
+                            onEvents.invoke(SettingsEvents.Logout)
+                            navController.navigate(Screen.Login.route)
+                        }) {
+                            Text(text = "Выйти")
+                        }
+                    }
                 }
             }
         }

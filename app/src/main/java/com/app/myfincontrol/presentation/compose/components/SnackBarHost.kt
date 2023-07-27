@@ -2,7 +2,6 @@ package com.app.myfincontrol.presentation.compose.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -15,9 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 
+/**
+ * SnackBarHost component to display snackbar
+ *
+ * @param snackBarHostState : [SnackbarHostState] to display snackbar
+ *
+ * @return Snackbar displayed
+ *
+ */
 @Composable
 fun SnackBarHost(
-    snackbarHostState : SnackbarHostState,
+    snackBarHostState : SnackbarHostState,
 ){
     ConstraintLayout(
         modifier = Modifier
@@ -40,23 +47,23 @@ fun SnackBarHost(
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 },
-            hostState = snackbarHostState,
+            hostState = snackBarHostState,
             snackbar = {
                 Snackbar (
                     containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     action = {
                         Text(
-                            text = snackbarHostState.currentSnackbarData?.visuals?.actionLabel?:"",
+                            text = snackBarHostState.currentSnackbarData?.visuals?.actionLabel?:"",
                             modifier = Modifier
                                 .padding(16.dp)
                                 .clickable {
-                                    snackbarHostState.currentSnackbarData?.dismiss()
+                                    snackBarHostState.currentSnackbarData?.dismiss()
                                 },
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 ){
-                    Text(text = snackbarHostState.currentSnackbarData?.visuals?.message?:"")
+                    Text(text = snackBarHostState.currentSnackbarData?.visuals?.message?:"")
                 }
             }
         )
