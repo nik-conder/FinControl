@@ -12,10 +12,10 @@ import javax.inject.Inject
 class BalanceUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository
 ) {
-    suspend fun getBalance(profile_id: Int, sort: ChartSort): Flow<BigDecimal> {
+    fun getBalance(sort: ChartSort): Flow<BigDecimal> {
         val datetime: Long = FormatDateImpl.getStartPeriod(sort)
         return try {
-            transactionRepository.getBalance(profile_id, datetime)
+            transactionRepository.getBalance(datetime)
         } catch (e: Exception) {
             Log.d("BalanceUseCase", e.toString())
             flow { BigDecimal.ZERO }

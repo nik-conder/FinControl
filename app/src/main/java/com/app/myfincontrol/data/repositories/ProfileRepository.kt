@@ -17,7 +17,7 @@ class ProfileRepository @Inject constructor(
         return profileDao.getProfiles()
     }
 
-    fun getProfile(uid: Int): Profile {
+    fun getProfile(uid: Int): Flow<Profile> {
         return profileDao.getProfile(uid = uid)
     }
 
@@ -27,6 +27,10 @@ class ProfileRepository @Inject constructor(
 
     fun getLastProfile(): Profile {
         return profileDao.getLastProfile()
+    }
+
+    fun getAuthProfile(): Flow<Profile> {
+        return profileDao.getAuthProfile()
     }
 
 }

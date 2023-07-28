@@ -16,7 +16,7 @@ class TransactionRepository @Inject constructor(
         return transactionDAO.insertTransaction(transactions)
     }
 
-    fun getBalance(profile_id: Int, datetime: Long): Flow<BigDecimal> = transactionDAO.getBalance(profile_id, datetime)
+    fun getBalance(datetime: Long): Flow<BigDecimal> = transactionDAO.getBalance(datetime)
 
     fun getChartTransactions(type: TransactionType, startTime: Long, endTime: Long): List<Transaction> {
         return transactionDAO.getChartTransactions(type, startTime, endTime)

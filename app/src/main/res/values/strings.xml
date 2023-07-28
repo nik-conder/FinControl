@@ -108,4 +108,7 @@
 
     <!-- Tooltips -->
     <string name="hide_balance_tooltip">You can hide the balance</string>
+    <string name="not_profile_description">You have not created or selected a profile</string>
+    <string name="loading">Loading</string>
+    <string name="wait">Please, wait..</string>
 </resources>

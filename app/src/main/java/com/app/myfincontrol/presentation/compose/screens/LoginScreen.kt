@@ -25,8 +25,10 @@ import androidx.navigation.NavController
 import com.app.myfincontrol.MainActivity
 import com.app.myfincontrol.dataStore
 import com.app.myfincontrol.presentation.compose.components.CreateProfileComponent
+import com.app.myfincontrol.presentation.compose.components.InfoPageComponent
 import com.app.myfincontrol.presentation.compose.components.LoginComponent
 import com.app.myfincontrol.presentation.compose.navigation.Screen
+import com.app.myfincontrol.presentation.utils.InfoPageType
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
 
@@ -70,22 +72,7 @@ fun LoginScreen(
                         navController = navController
                     )
                 } else {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Row {
-                            CircularProgressIndicator()
-                        }
-                        Row(
-                            modifier = Modifier
-                                .padding(top = 32.dp)
-                        ) {
-                            Text(text = "Loading...")
-                        }
-                    }
+                    InfoPageComponent(type = InfoPageType.LOADING)
                 }
             }
         }

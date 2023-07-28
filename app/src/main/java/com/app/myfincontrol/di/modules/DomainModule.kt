@@ -1,6 +1,5 @@
 package com.app.myfincontrol.di.modules
 
-import com.app.myfincontrol.data.repositories.BalanceRepository
 import com.app.myfincontrol.data.repositories.ProfileRepository
 import com.app.myfincontrol.data.repositories.SessionRepository
 import com.app.myfincontrol.data.repositories.TransactionRepository
@@ -10,6 +9,7 @@ import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.domain.useCases.StatisticsUseCase
 import com.app.myfincontrol.domain.useCases.TransactionUseCase
+import com.app.myfincontrol.domain.useCases.ValidatorUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,4 +68,8 @@ class DomainModule @Inject constructor() {
     ): DataExchangeUseCase = DataExchangeUseCase(
         transactionRepository
     )
+
+    @Singleton
+    @Provides
+    fun providerValidatorUseCase(): ValidatorUseCase = ValidatorUseCase()
 }

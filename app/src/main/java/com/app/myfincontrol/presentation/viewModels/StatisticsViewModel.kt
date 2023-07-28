@@ -24,8 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val statisticsUseCase: StatisticsUseCase,
-    private val dataExchangeUseCase: DataExchangeUseCase,
-    private val dataStore: UserStore
+    private val dataExchangeUseCase: DataExchangeUseCase
 ): ViewModel() {
 
     private val _states = MutableStateFlow(StatisticsState())

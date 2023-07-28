@@ -22,9 +22,11 @@ interface ProfileDao {
     fun getLastProfile(): Profile
 
     @Query("SELECT * FROM profile WHERE uid = :uid")
-    fun getProfile(uid: Int): Profile
+    fun getProfile(uid: Int): Flow<Profile>
 
     @Delete
     suspend fun deleteProfile(profile: Profile)
 
+    @Query("SELECT p.* FROM `profile` p INNER JOIN (SELECT profile_id, uid FROM `Session` ORDER BY uid DESC LIMIT 1) s ON p.uid = s.profile_id")
+    fun getAuthProfile(): Flow<Profile>
 }

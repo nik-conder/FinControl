@@ -104,5 +104,8 @@
     <string name="more">Ещё</string>
     <string name="delete_transaction">Транзакция удалена</string>
     <string name="debug_mode">Debug mode</string>
-    <string name="hide_balance_tooltip">You can hide the balance</string>
+    <string name="hide_balance_tooltip">Вы можете скрыть баланс</string>
+    <string name="not_profile_description">Вы не создали или не выбрали профиль</string>
+    <string name="loading">Loading</string>
+    <string name="wait">Please, wait..</string>
 </resources>

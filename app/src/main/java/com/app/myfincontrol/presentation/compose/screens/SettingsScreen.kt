@@ -33,9 +33,10 @@ import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.presentation.compose.components.BoxComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
-import com.app.myfincontrol.presentation.compose.components.NotProfileComponent
+import com.app.myfincontrol.presentation.compose.components.InfoPageComponent
 import com.app.myfincontrol.presentation.compose.components.SwitchComponent
 import com.app.myfincontrol.presentation.compose.navigation.Screen
+import com.app.myfincontrol.presentation.utils.InfoPageType
 import com.app.myfincontrol.presentation.viewModels.SettingsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.SettingsEvents
 import kotlinx.coroutines.launch
@@ -71,7 +72,7 @@ fun SettingsScreen(
             val (profileBox, settingsBox) = createRefs()
 
             if (state.value.selectedProfile == null) {
-                NotProfileComponent(navController)
+                InfoPageComponent(InfoPageType.NOT_PROFILE, navController)
             } else {
                 BoxWithConstraints(
                     modifier = Modifier
@@ -117,7 +118,7 @@ fun SettingsBox(
     val adviceBoxState = store.adviceBox.collectAsState(initial = false)
     val debugModeState = store.debugModeState.collectAsState(initial = false)
 
-    val paddingValues = PaddingValues(top = 8.dp, start = 16.dp, end = 16.dp)
+    val paddingValues = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
 
     Column {
         Row {

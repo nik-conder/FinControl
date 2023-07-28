@@ -14,7 +14,7 @@ class ProfileUseCase @Inject constructor(
         return profileRepository.getProfiles()
     }
 
-    fun getProfile(uid: Int): Profile {
+    fun getProfile(uid: Int): Flow<Profile> {
         return profileRepository.getProfile(uid = uid)
     }
     suspend fun deleteProfile(profile: Profile) {
@@ -23,6 +23,10 @@ class ProfileUseCase @Inject constructor(
 
     fun getLastProfile(): Profile {
         return profileRepository.getLastProfile()
+    }
+
+    fun getAuthProfile(): Flow<Profile> {
+        return profileRepository.getAuthProfile()
     }
 
     suspend fun createProfile(profile: Profile): Long {

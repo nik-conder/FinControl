@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.presentation.compose.navigation.Screen
+import com.app.myfincontrol.presentation.utils.InfoPageType
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
 
 
@@ -72,14 +73,7 @@ fun LoginComponent(
             }
         } else {
             Row  {
-                Text(text = stringResource(id = R.string.no_profiles))
-            }
-            Row {
-                TextButton(onClick = {
-                    navController.navigate(Screen.CreateProfile.route)
-                }) {
-                    Text(text = stringResource(id = R.string.create_profile))
-                }
+                InfoPageComponent(InfoPageType.NOT_PROFILE, navController)
             }
         }
     }

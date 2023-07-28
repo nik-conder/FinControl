@@ -9,7 +9,7 @@ class SessionUseCase @Inject constructor(
     private val sessionRepository: SessionRepository
 ) {
 
-    suspend fun setSession(session: Session) = sessionRepository.setSession(session)
+    suspend fun setSession(session: Session): Long = sessionRepository.setSession(session)
 
     suspend fun getAllSessions(): Flow<List<Session>> = sessionRepository.getAllSessions()
     fun getLastSession(): Session = sessionRepository.getLastSession()

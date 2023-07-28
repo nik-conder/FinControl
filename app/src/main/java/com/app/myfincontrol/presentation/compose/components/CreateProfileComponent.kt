@@ -53,9 +53,6 @@ fun CreateProfileComponent(
         mutableStateOf(Currency.USD)
     }
 
-//    LaunchedEffect(true) {
-//        accountName.value = TextFieldValue("Счёт #1 ${selectedCurrency.value}")
-//    }
 
     Column(
         modifier = Modifier
