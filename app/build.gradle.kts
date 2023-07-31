@@ -15,15 +15,20 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId ="com.app.myfincontrol"
+        applicationId = "com.app.myfincontrol"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.app.myfincontrol.TestRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    testOptions {
+        unitTests.all {
+            unitTests.isReturnDefaultValues = true
         }
     }
 
@@ -67,6 +72,15 @@ android {
         compose = true
     }
 
+    packaging {
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
+            )
+        )
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.7"
     }
@@ -87,8 +101,11 @@ android {
 }
 
 dependencies {
-    val room_version = "2.5.1"
-    val composeVerison = "1.6.0-alpha01"
+
+    val roomVersion = "2.5.1"
+    val composeVersion = "1.6.0-alpha01"
+    val junit5Version = "5.10.0"
+    val mockkVersion = "1.13.5"
 
     // Paging
     implementation("androidx.paging:paging-compose:3.2.0-rc01")
@@ -99,13 +116,13 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Room
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
     // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$roomVersion")
 
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-ktx:$roomVersion")
 
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.5-beta")
 
@@ -113,10 +130,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.6.0")
 
     // Dagger Hilt
-    implementation ("com.google.dagger:hilt-android:2.46.1")
+    implementation("com.google.dagger:hilt-android:2.46.1")
     kapt("com.google.dagger:hilt-compiler:2.46.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    annotationProcessor ("com.google.dagger:hilt-compiler:2.46.1")
+    annotationProcessor("com.google.dagger:hilt-compiler:2.46.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Charts
@@ -124,47 +141,64 @@ dependencies {
     implementation("com.patrykandpatrick.vico:compose:1.6.5")
     implementation("com.patrykandpatrick.vico:compose-m3:1.6.5")
 
+    // Tests
+    testImplementation("org.junit.jupiter:junit-jupiter:${junit5Version}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junit5Version}")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${junit5Version}")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
+    implementation("androidx.test:runner:1.5.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
+
+
+    // MockK
+    testImplementation("io.mockk:mockk:${mockkVersion}")
+
+    testImplementation("io.mockk:mockk-android:${mockkVersion}")
+    testImplementation("io.mockk:mockk-agent:${mockkVersion}")
+
+    androidTestImplementation("io.mockk:mockk-android:${mockkVersion}")
+    androidTestImplementation("io.mockk:mockk-agent:${mockkVersion}")
+
+
+    /*    testImplementation("junit:junit:4.13.2")
+        androidTestImplementation("androidx.test.ext:junit:1.1.5")
+        androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+        androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
+        androidTestImplementation("androidx.compose.ui:ui-test-junit4")*/
+
+    // Hilt: local unit tests
+    testImplementation("com.google.dagger:hilt-android-testing:2.46.1")
+    testAnnotationProcessor("com.google.dagger:hilt-compiler:2.46.1")
+
+    // Hilt: instrumentation tests
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.46.1")
+    androidTestAnnotationProcessor("com.google.dagger:hilt-compiler:2.46.1")
 
     //implementation("com.himanshoe:charty:1.0.1")
 
-//    // optional - Test helpers
-//    testImplementation("androidx.room:room-testing:$room_version")
-//
-//    // optional - Paging 3 Integration
-//    implementation("androidx.room:room-paging:$room_version")
+    // optional - Test helpers
+    testImplementation("androidx.room:room-testing:$roomVersion")
+
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:$roomVersion")
 
 //    // alternatively - without Android dependencies for tests
 //    testImplementation("androidx.paging:paging-common:$paging_version")
 
-    // For instrumentation tests
-//    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.46.1'
-//    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.46.1'
-
-    // For local unit tests
-//    testImplementation 'com.google.dagger:hilt-android-testing:2.46.1'
-//    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.46.1'
 
     // Compose
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-
-
-
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    implementation("androidx.compose.ui:ui:${composeVerison}")
-    implementation("androidx.compose.ui:ui-graphics:${composeVerison}")
-    implementation("androidx.compose.ui:ui-tooling-preview:${composeVerison}")
+    implementation("androidx.compose.ui:ui:${composeVersion}")
+    implementation("androidx.compose.ui:ui-graphics:${composeVersion}")
+    implementation("androidx.compose.ui:ui-tooling-preview:${composeVersion}")
 
-    implementation("androidx.compose.material:material:${composeVerison}")
+    implementation("androidx.compose.material:material:${composeVersion}")
     implementation("androidx.compose.material3:material3:1.2.0-alpha03")
-
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

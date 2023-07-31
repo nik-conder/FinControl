@@ -14,7 +14,7 @@ class TransactionUseCase @Inject constructor(
     suspend fun addTransaction(transactions: Transaction): Long {
         return transactionRepository.addTransaction(transactions)
     }
-    suspend fun deleteTransaction(id: Int) {
+    suspend fun deleteTransaction(id: Int): Int {
         return transactionRepository.deleteTransaction(id)
     }
 }

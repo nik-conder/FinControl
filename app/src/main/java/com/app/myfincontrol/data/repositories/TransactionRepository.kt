@@ -26,7 +26,7 @@ class TransactionRepository @Inject constructor(
         return transactionDAO.getTransactions()
     }
 
-    suspend fun deleteTransaction(id: Int) {
+    suspend fun deleteTransaction(id: Int): Int {
         return transactionDAO.deleteTransaction(id)
     }
 }
