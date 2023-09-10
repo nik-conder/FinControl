@@ -2,7 +2,6 @@ package com.app.myfincontrol.presentation.compose.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -12,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -120,7 +117,7 @@ fun StatisticsScreen(
                                 title = stringResource(id = R.string.incomes)
                             )
                         }
-                        Column() {
+                        Column {
                             IconButton(
                                 onClick = {
                                     onEvents(
@@ -136,7 +133,7 @@ fun StatisticsScreen(
                                 )
                             }
                         }
-                        Column() {
+                        Column {
                             IconButton(
                                 onClick = {
                                     onEvents(StatisticsEvents.DataExchangeAlert)
@@ -168,7 +165,7 @@ fun StatisticsScreen(
                                 modifier = Modifier
                                     .horizontalScroll(hScrollState),
                             ) {
-                                Column() {
+                                Column {
                                     TextButton(
                                         onClick = {
                                             onEvents(
@@ -182,7 +179,7 @@ fun StatisticsScreen(
                                         Text(text = stringResource(id = R.string.day))
                                     }
                                 }
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(
@@ -194,7 +191,7 @@ fun StatisticsScreen(
                                         Text(text = stringResource(id = R.string.week))
                                     }
                                 }
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(
@@ -206,7 +203,7 @@ fun StatisticsScreen(
                                         Text(text = stringResource(id = R.string.month))
                                     }
                                 }
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(
@@ -218,7 +215,7 @@ fun StatisticsScreen(
                                         Text(text = stringResource(id = R.string.quarter))
                                     }
                                 }
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(
@@ -264,7 +261,7 @@ fun StatisticsScreen(
                                 title = stringResource(id = R.string.expenses)
                             )
                         }
-                        Column() {
+                        Column {
                             IconButton(
                                 onClick = {
                                     onEvents(
@@ -304,7 +301,7 @@ fun StatisticsScreen(
                                 modifier = Modifier
                                     .horizontalScroll(hScrollState),
                             ) {
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(
@@ -316,7 +313,7 @@ fun StatisticsScreen(
                                         Text(text = stringResource(id = R.string.day))
                                     }
                                 }
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(
@@ -328,7 +325,7 @@ fun StatisticsScreen(
                                         Text(text = stringResource(id = R.string.week))
                                     }
                                 }
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(
@@ -340,7 +337,7 @@ fun StatisticsScreen(
                                         Text(text = stringResource(id = R.string.month))
                                     }
                                 }
-                                Column() {
+                                Column {
                                     TextButton(onClick = {
                                         onEvents(
                                             StatisticsEvents.GetChart(

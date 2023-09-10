@@ -34,8 +34,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberPlainTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,8 +45,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
-import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.enums.Currency
+import com.app.myfincontrol.data.sources.UserStore
+import com.app.myfincontrol.presentation.compose.components.AddTransactionComponent
 import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
@@ -56,7 +55,6 @@ import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.compose.components.PlainTooltipComponent
 import com.app.myfincontrol.presentation.compose.components.SnackBarHost
 import com.app.myfincontrol.presentation.compose.components.alerts.DebugModeAlertComponent
-import com.app.myfincontrol.presentation.compose.components.sheets.AddTransactionSheet
 import com.app.myfincontrol.presentation.utils.NumberUtils
 import com.app.myfincontrol.presentation.utils.SymbolUtils
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
@@ -77,7 +75,6 @@ fun HomeScreen(
 
     val state = vm.states.collectAsState()
 
-    val showBottomSheet = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
     val scrollState = rememberScrollState()
@@ -96,7 +93,7 @@ fun HomeScreen(
             .fillMaxSize(),
         topBar = {
             TopAppBar(
-                colors = TopAppBarDefaults.smallTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -153,7 +150,7 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-                    Column() {
+                    Column {
                         IconButton(onClick = {
                             scope.launch {
                                 store.setDarkMode()
@@ -168,7 +165,7 @@ fun HomeScreen(
                         }
                     }
                     if (debugModeState.value) {
-                        Column() {
+                        Column {
                             IconButton(onClick = {
                                 onEventDebugMode(DebugEvents.ShowAlertDebugMode)
                             }) {
@@ -192,7 +189,7 @@ fun HomeScreen(
                 FloatingActionButton(
                     modifier = Modifier
                         .tooltipTrigger(),
-                    onClick = { showBottomSheet.value = !showBottomSheet.value }
+                    onClick = { scope.launch { sheetState.show() } }
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Add,
@@ -220,16 +217,22 @@ fun HomeScreen(
             )
 
             val (mainBox, adviceBox, feedBox, financeCharts) = createRefs()
-            if (showBottomSheet.value) {
+
+            if (sheetState.isVisible) {
                 ModalBottomSheet(
                     onDismissRequest = {
-                        showBottomSheet.value = false
+                        scope.launch { sheetState.hide() }
                     },
                     sheetState = sheetState,
                 ) {
-                    AddTransactionSheet(onEvents = onEventsTransaction)
+
+                    AddTransactionComponent(
+                        sheetState = sheetState,
+                        onEvents = onEventsTransaction
+                    )
                 }
             }
+
             BoxWithConstraints(
                 modifier = Modifier
                     .constrainAs(mainBox) {
@@ -288,7 +291,7 @@ fun HomeScreen(
                         start.linkTo(parent.start)
                     }
             ) {
-                Row() {
+                Row {
                     FeedComponent(
                         feedPager = vm.feedPager,
                         hideBalanceState = hideBalanceState.value,

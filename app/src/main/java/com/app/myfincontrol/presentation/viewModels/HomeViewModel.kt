@@ -134,6 +134,7 @@ class HomeViewModel @Inject constructor(
                     )
                 )
             }
+
             Log.i("Transaction", " added")
         } else {
             Log.i("Transaction", " Error")
@@ -165,5 +166,4 @@ class HomeViewModel @Inject constructor(
 
         }
     }
-
 }

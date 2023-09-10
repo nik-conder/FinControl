@@ -29,7 +29,7 @@ fun SwitchComponent(
     Row(
         modifier = Modifier
             .wrapContentHeight()
-            .padding(top = 16.dp),
+            .padding(top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
@@ -43,18 +43,19 @@ fun SwitchComponent(
                 )
             }
             if (!description.isNullOrEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                ) {
+                Row {
                     Text(
                         text = description,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
         }
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp)
+        ) {
             Switch(
                 checked = state,
                 onCheckedChange = onValueChange,

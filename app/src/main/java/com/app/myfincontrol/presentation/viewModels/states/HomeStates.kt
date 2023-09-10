@@ -9,5 +9,6 @@ data class HomeStates(
     val balance: BigDecimal = BigDecimal.ZERO,
     val isLogin: Boolean = false,
     val hideBalanceState: Boolean = false,
-    val debugModeShow: Boolean = false
+    val debugModeShow: Boolean = false,
+    val showBottomSheet: Boolean = false
 )

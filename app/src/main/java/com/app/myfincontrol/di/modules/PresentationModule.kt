@@ -3,7 +3,6 @@ package com.app.myfincontrol.di.modules
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
-import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.sources.database.TransactionDAO
 import com.app.myfincontrol.domain.useCases.BalanceUseCase
 import com.app.myfincontrol.domain.useCases.DataExchangeUseCase
@@ -81,5 +80,4 @@ class PresentationModule @Inject constructor() {
         statisticsUseCase,
         dataExchangeUseCase,
     )
-
 }

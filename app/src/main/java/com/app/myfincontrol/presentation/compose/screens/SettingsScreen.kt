@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -32,8 +33,8 @@ import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.presentation.compose.components.BoxComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
-import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.compose.components.InfoPageComponent
+import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.compose.components.SwitchComponent
 import com.app.myfincontrol.presentation.compose.navigation.Screen
 import com.app.myfincontrol.presentation.utils.InfoPageType
@@ -94,12 +95,10 @@ fun SettingsScreen(
                             top.linkTo(profileBox.bottom)
                             bottom.linkTo(parent.bottom)
                             start.linkTo(parent.start)
-                            end.linkTo(parent.end)
                         }
                 ) {
                     SettingsBox(
-                        store = store,
-                        onEvents = onEvents
+                        store = store
                     )
                 }
             }
@@ -109,8 +108,7 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsBox(
-    store: UserStore,
-    onEvents: (SettingsEvents) -> Unit
+    store: UserStore
 ) {
     val scope = rememberCoroutineScope()
     val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
@@ -118,24 +116,25 @@ fun SettingsBox(
     val adviceBoxState = store.adviceBox.collectAsState(initial = false)
     val debugModeState = store.debugModeState.collectAsState(initial = false)
 
-    val paddingValues = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp)
+    val paddingValues = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 8.dp)
 
-    Column {
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+    ) {
         Row {
             HeaderComponent(
                 title = stringResource(id = R.string.settings),
             )
         }
+
         Row(
             modifier = Modifier
                 .padding(paddingValues),
             verticalAlignment = Alignment.CenterVertically
         ) {
             BoxComponent {
-                Row(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                ) {
+                Row {
                     SwitchComponent(
                         title = stringResource(id = R.string.dark_mode),
                         state = darkModeState.value,
@@ -146,12 +145,13 @@ fun SettingsBox(
                         }
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                ) {
+                Row {
+                    Divider()
+                }
+                Row {
                     SwitchComponent(
-                        title = "Блок \"Полезные советы\"",
+                        title = stringResource(R.string.block_useful_tips_setting),
+                        description = stringResource(R.string.block_useful_tips_setting_description),
                         state = adviceBoxState.value,
                         onValueChange = {
                             scope.launch {
@@ -160,13 +160,13 @@ fun SettingsBox(
                         }
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                ) {
+                Row {
+                    Divider()
+                }
+                Row {
                     SwitchComponent(
-                        title = "Баланс скрыт по умолчанию",
-                        description = "Опция позволит скрыть баланс при открытии приложения",
+                        title = stringResource(R.string.hide_balance_setting),
+                        description = stringResource(R.string.hide_balance_setting_description),
                         state = hideBalanceState.value,
                         onValueChange = {
                             scope.launch {
@@ -175,12 +175,12 @@ fun SettingsBox(
                         }
                     )
                 }
-                Row(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                ) {
+                Row {
+                    Divider()
+                }
+                Row {
                     SwitchComponent(
-                        title = "Debug mode",
+                        title = stringResource(R.string.debug_mode),
                         state = debugModeState.value,
                         onValueChange = {
                             scope.launch {
@@ -188,13 +188,13 @@ fun SettingsBox(
                             }
                         })
                 }
-                Row(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                ) {
+                Row {
+                    Divider()
+                }
+                Row {
                     SwitchComponent(
-                        title = "Автоматический вход",
-                        description = "...",
+                        title = stringResource(R.string.automatic_login),
+                        description = stringResource(R.string.automatic_login_description),
                         state = false,
                         enabled = false,
                         onValueChange = { }
@@ -227,11 +227,10 @@ fun ProfileBox(
         ) {
             BoxComponent {
                 Row(
-                    modifier = Modifier
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text(text = "\uD83D\uDC64", fontSize = 32.sp)
+                        Text(text = "\uD83D\uDC64", fontSize = 24.sp)
                     }
                     Column(
                         modifier = Modifier
@@ -241,22 +240,19 @@ fun ProfileBox(
                     ) {
                         Text(
                             text = profile.name,
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
-                Row(
-                    modifier = Modifier
-                        .padding(paddingValues),
-                ) {
-                    Column() {
+                Row {
+                    Column {
                         TextButton(onClick = {
                             onEvents.invoke(SettingsEvents.DeleteProfile)
                             navController.navigate(Screen.Login.route)
                         }) {
                             //Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
-                            Text(text = "Удалить")
+                            Text(text = stringResource(R.string.delete))
                         }
                     }
                     Column {
@@ -264,7 +260,7 @@ fun ProfileBox(
                             onEvents.invoke(SettingsEvents.Logout)
                             navController.navigate(Screen.Login.route)
                         }) {
-                            Text(text = "Выйти")
+                            Text(text = stringResource(R.string.logout))
                         }
                     }
                 }

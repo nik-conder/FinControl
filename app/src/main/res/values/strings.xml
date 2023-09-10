@@ -70,11 +70,11 @@
     <string name="charity">Charity</string>
     <string name="technology_and_electronics">Technology and electronics</string>
 
-    <string name="add_transaction">Add transaction</string>
+    <string name="add_transaction">New transaction</string>
     <string name="add_transaction_description">Add a new transaction. Specify the type, category and amount</string>
-    <string name="type_transaction">Type of transaction</string>
+    <string name="type_transaction">Type</string>
     <string name="type_transaction_description">Specify the transaction type</string>
-    <string name="category_transaction">Category of transaction</string>
+    <string name="category_transaction">Category</string>
     <string name="category_transaction_description">Specify the transaction category</string>
     <string name="amount_description">Specify the transaction amount</string>
     <string name="add_transaction_total">%1$s in the %2$s category in the amount of %3$s</string>
@@ -111,4 +111,15 @@
     <string name="not_profile_description">You have not created or selected a profile</string>
     <string name="loading">Loading</string>
     <string name="wait">Please, wait..</string>
+
+    <string name="delete">Delete</string>
+    <string name="logout">Logout</string>
+    
+    <string name="block_useful_tips_setting">"Useful tips" block</string>
+    <string name="block_useful_tips_setting_description">Will not be displayed in the Feed</string>
+    <string name="dark_mode_setting">Dark mode</string>
+    <string name="hide_balance_setting">Hide Balance</string>
+    <string name="hide_balance_setting_description">Hide the balance from prying eyes</string>
+    <string name="automatic_login">Automatic login</string>
+    <string name="automatic_login_description">The login to the selected profile will be automatic. To change it, exit the current one or disable this option</string>
 </resources>

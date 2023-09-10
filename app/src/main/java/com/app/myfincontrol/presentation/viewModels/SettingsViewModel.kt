@@ -39,7 +39,6 @@ class SettingsViewModel @Inject constructor(
         _states.update { it.copy(selectedProfile = profile) }
     }
 
-
     fun onEvents(event: SettingsEvents) {
         when (event) {
             is SettingsEvents.DarkMode -> {

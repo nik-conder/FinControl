@@ -68,11 +68,11 @@
     <string name="charity">Благотворительность</string>
     <string name="technology_and_electronics">Техника и электроника</string>
 
-    <string name="add_transaction">Добавить транзакцию</string>
+    <string name="add_transaction">Новая транзакция</string>
     <string name="add_transaction_description">Добавить новую транзакцию. Укажите тип, категорию и сумму</string>
-    <string name="type_transaction">Тип транзакции</string>
+    <string name="type_transaction">Тип</string>
     <string name="type_transaction_description">Укажите тип транзакции</string>
-    <string name="category_transaction">Категория транзакции</string>
+    <string name="category_transaction">Категория</string>
     <string name="category_transaction_description">Укажите категорию транзакции</string>
     <string name="amount_description">Укажите сумму транзакции</string>
     <string name="add_transaction_total">%1$s в категории %2$s на сумму %3$s</string>
@@ -106,6 +106,17 @@
     <string name="debug_mode">Debug mode</string>
     <string name="hide_balance_tooltip">Вы можете скрыть баланс</string>
     <string name="not_profile_description">Вы не создали или не выбрали профиль</string>
-    <string name="loading">Loading</string>
-    <string name="wait">Please, wait..</string>
+    <string name="loading">Загрузка</string>
+    <string name="wait">Пожалуйста, подождите..</string>
+
+    <string name="delete">Удалить</string>
+    <string name="logout">Выйти</string>
+
+    <string name="block_useful_tips_setting">Блок «Полезные советы»</string>
+    <string name="block_useful_tips_setting_description">Блок «Полезные советы»</string>
+    <string name="dark_mode_setting">Dark mode</string>
+    <string name="hide_balance_setting">Баланс скрыт</string>
+    <string name="hide_balance_setting_description">Скройте баланс от посторонних глаз</string>
+    <string name="automatic_login">Автоматический вход</string>
+    <string name="automatic_login_description">Вход в выбранный профиль будет автоматическим. Чтобы изменить его, выйдите из текущего или отключите эту опцию</string>
 </resources>
