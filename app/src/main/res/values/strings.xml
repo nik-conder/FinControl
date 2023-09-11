@@ -98,6 +98,7 @@
     <string name="no_profiles">No profiles</string>
     <string name="new_profile">New profile</string>
     <string name="create_profile">Create profile</string>
+    <string name="create_new_profile">Create a new profile</string>
     <string name="welcome">Welcome!</string>
     <string name="profile_name">Profile name</string>
     <string name="there_are_n_characters_left">There are %1$d characters left</string>
@@ -122,4 +123,5 @@
     <string name="hide_balance_setting_description">Hide the balance from prying eyes</string>
     <string name="automatic_login">Automatic login</string>
     <string name="automatic_login_description">The login to the selected profile will be automatic. To change it, exit the current one or disable this option</string>
+    <string name="note">Note</string>
 </resources>

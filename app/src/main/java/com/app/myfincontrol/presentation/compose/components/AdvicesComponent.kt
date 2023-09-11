@@ -54,70 +54,60 @@ fun AdvicesComponent() {
         randomIndexAdvice.intValue = (0..4).random()
     }
 
-    Column(
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)
-
-    ) {
-        Row() {
+    BoxComponent(
+        header = {
             HeaderComponent(
                 title = stringResource(id = R.string.useful_tips)
             )
         }
-        Row {
-            BoxComponent {
-                Row(
-                    modifier = Modifier,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column() {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_baseline_tips_and_updates_24),
-                            contentDescription = "Advice"
-                        )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 8.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = adviceList[randomIndexAdvice.intValue].title),
-                            color = MaterialTheme.colorScheme.onTertiaryContainer,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                    Column() {
-                        IconButton(onClick = {
-                            showAdvice.value = !showAdvice.value
-                        }) {
-                            Icon(
-                                painter = painterResource(
-                                    id = if (showAdvice.value) R.drawable.ic_baseline_expand_less_24 else R.drawable.ic_baseline_expand_more_24
-                                ),
-                                contentDescription = "Advice"
-                            )
-                        }
-                    }
+    ) {
+        Row(
+            modifier = Modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_tips_and_updates_24),
+                    contentDescription = "Advice"
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+            ) {
+                Text(
+                    text = stringResource(id = adviceList[randomIndexAdvice.intValue].title),
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Column {
+                IconButton(onClick = {
+                    showAdvice.value = !showAdvice.value
+                }) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (showAdvice.value) R.drawable.ic_baseline_expand_less_24 else R.drawable.ic_baseline_expand_more_24
+                        ),
+                        contentDescription = "Advice"
+                    )
                 }
-                AnimatedVisibility(visible = showAdvice.value) {
-                    Row(
-                        modifier = Modifier
-                            .padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = adviceList[randomIndexAdvice.intValue].description),
-                            color = MaterialTheme.colorScheme.onTertiaryContainer,
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
-                }
+            }
+        }
+        AnimatedVisibility(visible = showAdvice.value) {
+            Row {
+                Text(
+                    text = stringResource(id = adviceList[randomIndexAdvice.intValue].description),
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
             }
         }
     }
 }
 
-@Preview()
+@Preview
 @Composable
 fun AdvicesComponentPreview() {
     AdvicesComponent()

@@ -24,13 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.enums.ChartSort
+import com.app.myfincontrol.presentation.utils.UtilsCompose
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
-import com.example.compose.FinControlTheme
+import com.patrykandpatrick.vico.core.entry.FloatEntry
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +82,7 @@ fun DataExchangeAlertComponent(
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
-                        Column() {
+                        Column {
                             TextButton(onClick = {
                                 dropdownMenuFileState.value = !dropdownMenuFileState.value
                             }) {
@@ -116,7 +115,7 @@ fun DataExchangeAlertComponent(
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
-                        Column() {
+                        Column {
                             TextButton(onClick = {
                                 dropdownMenuSortState.value = !dropdownMenuSortState.value
                             }) {
@@ -185,7 +184,11 @@ fun DataExchangeAlertComponent(
                             .padding(top = 16.dp)
                     ) {
                         Text(
-                            text = "Данные будут экспортированы в CSV файл в папку Documents за всё время ${stringResource(id = R.string.for_all_time)}",
+                            text = "Данные будут экспортированы в CSV файл в папку Documents ${
+                                stringResource(
+                                    id = R.string.for_all_time
+                                )
+                            }",
                             style = MaterialTheme.typography.bodyMedium,
                             softWrap = true
                         )
@@ -198,8 +201,14 @@ fun DataExchangeAlertComponent(
                     ) {
                         TextButton(onClick = {
                             scope.launch {
+                                onEvents(
+                                    StatisticsEvents.ExportToXlsx(
+                                        sort = sort,
+                                        fileName = UtilsCompose.Files.fileNameExport()
+                                    )
+                                )
                                 snackBarHostState.showSnackbar(
-                                    message = "Сохранено в Documents"
+                                    message = "Сохранено в Documents \n Filename: ${UtilsCompose.Files.fileNameExport()}",
                                 )
                             }
                         }) {
@@ -210,15 +219,5 @@ fun DataExchangeAlertComponent(
             }
 
         }
-    }
-}
-
-@PreviewLightDark
-@Preview(showSystemUi = false, showBackground = true
-)
-@Composable
-fun DataExchangeAlertPreview() {
-    FinControlTheme() {
-        DataExchangeAlertComponent(state = true, onEvents = {}, sort = ChartSort.DAY, snackBarHostState = SnackbarHostState())
     }
 }

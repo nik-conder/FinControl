@@ -6,7 +6,7 @@ import java.math.BigDecimal
 
 
 sealed class TransactionEvents {
-    class AddTransaction(val type: TransactionType, val category: TransactionCategories, val amount: BigDecimal) : TransactionEvents()
+    class AddTransaction(val type: TransactionType, val category: TransactionCategories, val amount: BigDecimal, val note: String) : TransactionEvents()
 
     class DeleteTransaction(val id: Int): TransactionEvents()
 }

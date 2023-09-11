@@ -5,11 +5,11 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
-import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.domain.useCases.DataExchangeUseCase
 import com.app.myfincontrol.domain.useCases.StatisticsUseCase
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
 import com.app.myfincontrol.presentation.viewModels.states.StatisticsState
+import com.patrykandpatrick.vico.core.entry.FloatEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +25,24 @@ import javax.inject.Inject
 class StatisticsViewModel @Inject constructor(
     private val statisticsUseCase: StatisticsUseCase,
     private val dataExchangeUseCase: DataExchangeUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _states = MutableStateFlow(StatisticsState())
     val states = _states.asStateFlow()
 
     init {
-        onEvents(StatisticsEvents.GetChart(type = TransactionType.INCOME, sort = states.value.chartCurrentSortIncome))
-        onEvents(StatisticsEvents.GetChart(type = TransactionType.EXPENSE, sort = states.value.chartCurrentSortExpense))
+        onEvents(
+            StatisticsEvents.GetChart(
+                type = TransactionType.INCOME,
+                sort = states.value.chartCurrentSortIncome
+            )
+        )
+        onEvents(
+            StatisticsEvents.GetChart(
+                type = TransactionType.EXPENSE,
+                sort = states.value.chartCurrentSortExpense
+            )
+        )
     }
 
     fun onEvents(event: StatisticsEvents) {
@@ -73,8 +83,16 @@ class StatisticsViewModel @Inject constructor(
             is StatisticsEvents.ExportToXlsx -> {
                 dataExchangeUseCase.exportToXlsx(ChartSort.YEAR)
 
+                val data = states.value.chartIncome // todo
+
                 CoroutineScope(Dispatchers.IO).launch {
-                    val result = async { dataExchangeUseCase.exportToCsv(ChartSort.YEAR) }
+                    val result = async {
+                        dataExchangeUseCase.exportToCsv(
+                            sort = event.sort,
+                            fileName = event.fileName,
+                            data = data
+                        )
+                    }
                     result.await()
                 }
             }

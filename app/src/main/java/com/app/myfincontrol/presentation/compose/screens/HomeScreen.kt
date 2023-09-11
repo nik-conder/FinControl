@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.data.sources.UserStore
@@ -53,10 +55,8 @@ import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.compose.components.PlainTooltipComponent
-import com.app.myfincontrol.presentation.compose.components.SnackBarHost
 import com.app.myfincontrol.presentation.compose.components.alerts.DebugModeAlertComponent
-import com.app.myfincontrol.presentation.utils.NumberUtils
-import com.app.myfincontrol.presentation.utils.SymbolUtils
+import com.app.myfincontrol.presentation.utils.UtilsCompose
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel
 import com.app.myfincontrol.presentation.viewModels.events.DebugEvents
 import kotlinx.coroutines.launch
@@ -87,6 +87,8 @@ fun HomeScreen(
     val debugModeState = store.debugModeState.collectAsState(initial = false)
 
     val tooltipState = rememberPlainTooltipState()
+
+    val feedPager = vm.feedPager.flow.collectAsLazyPagingItems()
 
     Scaffold(
         modifier = Modifier
@@ -135,8 +137,12 @@ fun HomeScreen(
                                             text = if (hideBalanceState.value)
                                                 "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11"
                                             else
-                                                "${SymbolUtils.currencySymbolComponent(state.value.selectedProfile!!.currency)} ${
-                                                    NumberUtils.formatBigDecimalWithSpaces(
+                                                "${
+                                                    UtilsCompose.Symbols.currencySymbolComponent(
+                                                        state.value.selectedProfile!!.currency
+                                                    )
+                                                } ${
+                                                    UtilsCompose.Numbers.formatBigDecimalWithSpaces(
                                                         state.value.balance
                                                     )
                                                 }",
@@ -220,14 +226,16 @@ fun HomeScreen(
 
             if (sheetState.isVisible) {
                 ModalBottomSheet(
+                    modifier = Modifier
+                        .wrapContentHeight(),
                     onDismissRequest = {
                         scope.launch { sheetState.hide() }
                     },
                     sheetState = sheetState,
                 ) {
-
                     AddTransactionComponent(
                         sheetState = sheetState,
+                        feedPager = feedPager,
                         onEvents = onEventsTransaction
                     )
                 }
@@ -245,6 +253,7 @@ fun HomeScreen(
                     balance = state.value.balance,
                     store = store,
                     currency = state.value.selectedProfile?.currency ?: Currency.USD,
+                    snackBarHostState = snackBarHostState,
                     onEventsTransaction = onEventsTransaction,
                 )
             }
@@ -293,7 +302,7 @@ fun HomeScreen(
             ) {
                 Row {
                     FeedComponent(
-                        feedPager = vm.feedPager,
+                        feedPager = feedPager,
                         hideBalanceState = hideBalanceState.value,
                         debugModeState = debugModeState.value,
                         onEvens = onEventsTransaction,
@@ -303,5 +312,4 @@ fun HomeScreen(
             }
         }
     }
-    SnackBarHost(snackBarHostState = snackBarHostState)
 }

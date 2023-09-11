@@ -1,6 +1,8 @@
 package com.app.myfincontrol.presentation.compose.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -8,16 +10,21 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
@@ -37,9 +44,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.paging.compose.LazyPagingItems
 import com.app.myfincontrol.R
+import com.app.myfincontrol.data.Configuration
+import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
@@ -51,6 +65,7 @@ import java.math.BigDecimal
 @Composable
 fun AddTransactionComponent(
     sheetState: SheetState,
+    feedPager: LazyPagingItems<Transaction>,
     onEvents: (TransactionEvents) -> Unit
 ) {
 
@@ -62,11 +77,16 @@ fun AddTransactionComponent(
     val selectedCategory =
         remember { mutableStateOf<TransactionCategories>(TransactionCategories.IncomeCategories.INVESTMENTS) }
     var amount by rememberSaveable { mutableStateOf(BigDecimal.ZERO) }
+    var note = remember {
+        mutableStateOf(TextFieldValue(""))
+    }
     val categoriesIncome: List<TransactionCategories> = remember {
         mutableListOf<TransactionCategories>().apply {
             addAll(TransactionCategories.IncomeCategories.values())
         }
     }
+
+    val limitCharsNote = Configuration.Limits.LIMIT_CHARS_NOTE
 
     val categoriesExpense: List<TransactionCategories> = remember {
         mutableListOf<TransactionCategories>().apply {
@@ -85,7 +105,7 @@ fun AddTransactionComponent(
             //.padding(paddingValues)
             .verticalScroll(scrollState)
     ) {
-        val (mainBox, typeBox, categoriesBox, amountBox, buttonsBox) = createRefs()
+        val (mainBox, typeBox, categoriesBox, amountBox, buttonsBox, noteBox) = createRefs()
 
         BoxWithConstraints(
             modifier = Modifier
@@ -366,11 +386,54 @@ fun AddTransactionComponent(
                 }
             }
         }
-
+        BoxWithConstraints(
+            modifier = Modifier
+                .constrainAs(noteBox) {
+                    top.linkTo(amountBox.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .wrapContentHeight(),
+                value = note.value,
+                onValueChange = {
+                    if (it.text.length <= limitCharsNote) note.value = it
+                },
+                trailingIcon = {
+                    AnimatedVisibility(visible = note.value.text.isNotEmpty()) {
+                        Icon(
+                            modifier = Modifier.clickable {
+                                note.value = TextFieldValue("")
+                            },
+                            imageVector = Icons.Rounded.Clear,
+                            contentDescription = "Clear"
+                        )
+                    }
+                },
+                supportingText = {
+                    Text(
+                        text = stringResource(id = R.string.there_are_n_characters_left, (limitCharsNote - note.value.text.length)),
+                        color = if ((limitCharsNote - note.value.text.length) <= 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary,
+                        fontSize = 12.sp
+                    )
+                },
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.note)
+                    )
+                },
+                keyboardOptions = KeyboardOptions.Default,
+                isError = note.value.text.length >= limitCharsNote,
+                shape = RoundedCornerShape(10.dp)
+            )
+        }
         BoxWithConstraints(
             modifier = Modifier
                 .constrainAs(buttonsBox) {
-                    top.linkTo(amountBox.bottom, margin = marginBoxTop)
+                    top.linkTo(noteBox.bottom, margin = marginBoxTop)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom, margin = 48.dp)
@@ -389,10 +452,14 @@ fun AddTransactionComponent(
                                 TransactionEvents.AddTransaction(
                                     type = selectedType.value,
                                     category = selectedCategory.value,
-                                    amount = amount
+                                    amount = amount,
+                                    note = note.value.text
                                 )
                             )
-                            scope.launch { sheetState.hide() }
+                            scope.launch {
+                                sheetState.hide()
+                                feedPager.refresh()
+                            }
                         }) {
                         Text(text = stringResource(id = R.string.done))
                     }
@@ -400,4 +467,47 @@ fun AddTransactionComponent(
             }
         }
     }
+}
+
+@PreviewLightDark
+@Composable
+fun AddTransactionComponentPreview() {
+    var note by rememberSaveable { mutableStateOf("") }
+
+    OutlinedTextField(
+        value = note,
+        onValueChange = { newValue ->
+            note = try {
+                newValue
+            } catch (e: NumberFormatException) {
+                ""
+            }
+        },
+        label = {
+            Text(
+                text = stringResource(id = R.string.note)
+            )
+        },
+        shape = RoundedCornerShape(10.dp)
+    )
+
+    /*
+    OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(0.5f), // use fillMaxWidth() modifier to fill the available width
+                            value = amount.toPlainString(), // use toPlainString() to display the decimal point even if it's .00
+
+                            onValueChange = { newValue ->
+                                amount = try {
+                                    newValue.toBigDecimal()
+                                } catch (e: NumberFormatException) {
+                                    BigDecimal.ZERO
+                                }
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }), // add keyboard actions if needed
+                            singleLine = true, // set singleLine to true to prevent line breaks
+                            maxLines = 1, // set maxLines to 1 to prevent line breaks,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+     */
 }

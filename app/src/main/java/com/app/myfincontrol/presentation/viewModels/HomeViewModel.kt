@@ -49,7 +49,9 @@ class HomeViewModel @Inject constructor(
         pagingSourceFactory = { FeedDataSource(transactionDAO) }
     )
 
+
     init {
+
         viewModelScope.launch {
             loading()
         }
@@ -74,7 +76,7 @@ class HomeViewModel @Inject constructor(
             }
 
             is TransactionEvents.AddTransaction -> {
-                addTransaction(event.type, event.amount, event.category)
+                addTransaction(event.type, event.amount, event.note, event.category)
             }
         }
     }
@@ -100,7 +102,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun getAuthProfile() {
-        profileUseCase.getAuthProfile().collect() { profile ->
+        profileUseCase.getAuthProfile().collect { profile ->
             _states.update {
                 it.copy(
                     selectedProfile = profile,
@@ -111,7 +113,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun getBalance(sort: ChartSort = ChartSort.YEAR) {
-        balanceUseCase.getBalance(sort).collect() { balance ->
+        balanceUseCase.getBalance(sort).collect { balance ->
             println("Balance: $balance")
             _states.update { it.copy(balance = balance) }
         }
@@ -120,6 +122,7 @@ class HomeViewModel @Inject constructor(
     private fun addTransaction(
         type: TransactionType,
         amount: BigDecimal,
+        note: String? = null,
         category: TransactionCategories
     ) {
         if (states.value.selectedProfile != null) {
@@ -130,7 +133,8 @@ class HomeViewModel @Inject constructor(
                         type = type,
                         amount = amount,
                         datetime = System.currentTimeMillis() / 1000L,
-                        category = category.toString()
+                        category = category.toString(),
+                        note = if (!note.isNullOrEmpty()) note else null
                     )
                 )
             }

@@ -3,7 +3,6 @@ package com.app.myfincontrol.presentation.compose.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +23,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,7 +37,6 @@ import com.app.myfincontrol.presentation.compose.components.BoxComponent
 import com.app.myfincontrol.presentation.compose.components.ChartsComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
-import com.app.myfincontrol.presentation.compose.components.SnackBarHost
 import com.app.myfincontrol.presentation.compose.components.alerts.DataExchangeAlertComponent
 import com.app.myfincontrol.presentation.viewModels.StatisticsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.StatisticsEvents
@@ -57,7 +54,8 @@ fun StatisticsScreen(
     val state = vm.states.collectAsState()
     val chartIncome = state.value.chartIncome
     val chartExpense = state.value.chartExpense
-    val hScrollState = rememberScrollState()
+    val horizontalScrollState = rememberScrollState()
+    val verticalScrollState = rememberScrollState()
 
     Scaffold(
         modifier = Modifier
@@ -79,7 +77,7 @@ fun StatisticsScreen(
             modifier = Modifier
                 //.background(backgroundColorBrush)
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(verticalScrollState)
                 .fillMaxSize(1f),
         ) {
 
@@ -87,7 +85,7 @@ fun StatisticsScreen(
                 state = state.value.dataExchangeAlert,
                 onEvents = onEvents,
                 sort = ChartSort.DAY,
-                snackBarHostState = snackBarHostState
+                snackBarHostState = snackBarHostState,
             )
 
             val (incomesBox, expensesBox) = createRefs()
@@ -95,146 +93,139 @@ fun StatisticsScreen(
             BoxWithConstraints(
                 modifier = Modifier
                     .constrainAs(incomesBox) {
-                        top.linkTo(parent.top, 16.dp)
-                        start.linkTo(parent.start, 16.dp)
-                        end.linkTo(parent.end, 16.dp)
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp),
+
+                BoxComponent(
+                    header = {
+                        Row {
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                            ) {
+                                HeaderComponent(
+                                    title = stringResource(id = R.string.incomes)
+                                )
+                            }
+                            Column {
+                                IconButton(
+                                    onClick = {
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.INCOME,
+                                                sort = state.value.chartCurrentSortIncome
+                                            )
+                                        )
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Refresh,
+                                        contentDescription = "Refresh"
+                                    )
+                                }
+                            }
+                            Column {
+                                IconButton(
+                                    onClick = {
+                                        onEvents(StatisticsEvents.DataExchangeAlert)
+                                    }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_download_24),
+                                        contentDescription = "" // todo
+                                    )
+                                }
+                            }
+                        }
+                    }
                 ) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(top = 8.dp, bottom = 8.dp)
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                        ) {
-                            HeaderComponent(
-                                title = stringResource(id = R.string.incomes)
-                            )
-                        }
+                        Text(
+                            text = stringResource(id = R.string.chart_incomes_of_the) + " " + when (state.value.chartCurrentSortIncome) {
+                                ChartSort.WEEK -> stringResource(id = R.string.week)
+                                ChartSort.MONTH -> stringResource(id = R.string.month)
+                                ChartSort.QUARTER -> stringResource(id = R.string.quarter)
+                                ChartSort.YEAR -> stringResource(id = R.string.year)
+                                else -> stringResource(id = R.string.day)
+                            }
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .horizontalScroll(horizontalScrollState),
+                    ) {
                         Column {
-                            IconButton(
+                            TextButton(
                                 onClick = {
                                     onEvents(
                                         StatisticsEvents.GetChart(
                                             type = TransactionType.INCOME,
-                                            sort = state.value.chartCurrentSortIncome
+                                            sort = ChartSort.DAY
                                         )
                                     )
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Refresh,
-                                    contentDescription = "Refresh"
-                                )
+                                },
+                            ) {
+                                Text(text = stringResource(id = R.string.day))
                             }
                         }
                         Column {
-                            IconButton(
-                                onClick = {
-                                    onEvents(StatisticsEvents.DataExchangeAlert)
-                                }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_download_24),
-                                    contentDescription = "" // todo
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.INCOME,
+                                        sort = ChartSort.WEEK
+                                    )
                                 )
+                            }) {
+                                Text(text = stringResource(id = R.string.week))
+                            }
+                        }
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.INCOME,
+                                        sort = ChartSort.MONTH
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.month))
+                            }
+                        }
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.INCOME,
+                                        sort = ChartSort.QUARTER
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.quarter))
+                            }
+                        }
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.INCOME,
+                                        sort = ChartSort.YEAR
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.year))
                             }
                         }
                     }
-                    Row {
-                        BoxComponent {
-                            Row(
-                                modifier = Modifier
-                                    .padding(top = 16.dp, bottom = 16.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.chart_incomes_of_the) + " " + when (state.value.chartCurrentSortIncome) {
-                                        ChartSort.WEEK -> stringResource(id = R.string.week)
-                                        ChartSort.MONTH -> stringResource(id = R.string.month)
-                                        ChartSort.QUARTER -> stringResource(id = R.string.quarter)
-                                        ChartSort.YEAR -> stringResource(id = R.string.year)
-                                        else -> stringResource(id = R.string.day)
-                                    }
-                                )
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .horizontalScroll(hScrollState),
-                            ) {
-                                Column {
-                                    TextButton(
-                                        onClick = {
-                                            onEvents(
-                                                StatisticsEvents.GetChart(
-                                                    type = TransactionType.INCOME,
-                                                    sort = ChartSort.DAY
-                                                )
-                                            )
-                                        },
-                                    ) {
-                                        Text(text = stringResource(id = R.string.day))
-                                    }
-                                }
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.INCOME,
-                                                sort = ChartSort.WEEK
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.week))
-                                    }
-                                }
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.INCOME,
-                                                sort = ChartSort.MONTH
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.month))
-                                    }
-                                }
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.INCOME,
-                                                sort = ChartSort.QUARTER
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.quarter))
-                                    }
-                                }
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.INCOME,
-                                                sort = ChartSort.YEAR
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.year))
-                                    }
-                                }
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            ) {
-                                ChartsComponent(data = chartIncome)
-                            }
-                        }
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        ChartsComponent(data = chartIncome)
                     }
                 }
             }
@@ -246,122 +237,114 @@ fun StatisticsScreen(
                         end.linkTo(parent.end, 16.dp)
                     }
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                        ) {
-                            HeaderComponent(
-                                title = stringResource(id = R.string.expenses)
-                            )
-                        }
-                        Column {
-                            IconButton(
-                                onClick = {
-                                    onEvents(
-                                        StatisticsEvents.GetChart(
-                                            type = TransactionType.EXPENSE,
-                                            sort = state.value.chartCurrentSortExpense
-                                        )
-                                    )
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Refresh,
-                                    contentDescription = "Refresh"
+                BoxComponent(
+                    header = {
+                        Row {
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                            ) {
+                                HeaderComponent(
+                                    title = stringResource(id = R.string.expenses)
                                 )
+                            }
+                            Column {
+                                IconButton(
+                                    onClick = {
+                                        onEvents(
+                                            StatisticsEvents.GetChart(
+                                                type = TransactionType.EXPENSE,
+                                                sort = state.value.chartCurrentSortExpense
+                                            )
+                                        )
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Refresh,
+                                        contentDescription = "Refresh"
+                                    )
+                                }
                             }
                         }
                     }
-                    Row {
-                        BoxComponent {
-                            Row(
-                                modifier = Modifier
-                                    .padding(top = 16.dp, bottom = 16.dp)
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.chart_expenses_of_the) + " " + when (state.value.chartCurrentSortExpense) {
-                                        ChartSort.WEEK -> stringResource(id = R.string.week)
-                                        ChartSort.MONTH -> stringResource(id = R.string.month)
-                                        ChartSort.QUARTER -> stringResource(id = R.string.quarter)
-                                        ChartSort.YEAR -> stringResource(id = R.string.year)
-                                        else -> stringResource(id = R.string.day)
-                                    }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 8.dp, bottom = 8.dp)
+                            .fillMaxWidth(),
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.chart_expenses_of_the) + " " + when (state.value.chartCurrentSortExpense) {
+                                ChartSort.WEEK -> stringResource(id = R.string.week)
+                                ChartSort.MONTH -> stringResource(id = R.string.month)
+                                ChartSort.QUARTER -> stringResource(id = R.string.quarter)
+                                ChartSort.YEAR -> stringResource(id = R.string.year)
+                                else -> stringResource(id = R.string.day)
+                            },
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .horizontalScroll(horizontalScrollState),
+                    ) {
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.EXPENSE,
+                                        sort = ChartSort.DAY
+                                    )
                                 )
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .horizontalScroll(hScrollState),
-                            ) {
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.EXPENSE,
-                                                sort = ChartSort.DAY
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.day))
-                                    }
-                                }
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.EXPENSE,
-                                                sort = ChartSort.WEEK
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.week))
-                                    }
-                                }
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.EXPENSE,
-                                                sort = ChartSort.MONTH
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.month))
-                                    }
-                                }
-                                Column {
-                                    TextButton(onClick = {
-                                        onEvents(
-                                            StatisticsEvents.GetChart(
-                                                type = TransactionType.EXPENSE,
-                                                sort = ChartSort.YEAR
-                                            )
-                                        )
-                                    }) {
-                                        Text(text = stringResource(id = R.string.year))
-                                    }
-                                }
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            ) {
-                                ChartsComponent(data = chartExpense)
+                            }) {
+                                Text(text = stringResource(id = R.string.day))
                             }
                         }
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.EXPENSE,
+                                        sort = ChartSort.WEEK
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.week))
+                            }
+                        }
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.EXPENSE,
+                                        sort = ChartSort.MONTH
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.month))
+                            }
+                        }
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.EXPENSE,
+                                        sort = ChartSort.YEAR
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.year))
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        ChartsComponent(data = chartIncome)
                     }
                 }
             }
         }
     }
-    SnackBarHost(snackBarHostState = snackBarHostState)
 }

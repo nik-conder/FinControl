@@ -3,6 +3,7 @@ package com.app.myfincontrol.domain.useCases
 import android.os.Environment
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.repositories.TransactionRepository
+import com.patrykandpatrick.vico.core.entry.FloatEntry
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -13,10 +14,11 @@ class DataExchangeUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository
 ) {
 
+    private val format = ".csv"
 
-    fun exportToCsv(sort: ChartSort) {
+    fun exportToCsv(sort: ChartSort, fileName: String, data: List<FloatEntry>) {
         try {
-            val fileName = "my_file.csv" // Имя файла
+            val fileName = "${fileName}${format}" // Имя файла
             val documentsDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             val file = File(documentsDir, fileName)
@@ -25,12 +27,16 @@ class DataExchangeUseCase @Inject constructor(
             val writer = FileWriter(file)
 
             // Записываем данные (пример записи в CSV)
-            writer.append("Header 1,")
-            writer.append("Header 2")
+            writer.append("Месяц,")
+            writer.append("Сумма")
             writer.append("\n")
-            writer.append("Data 1,")
-            writer.append("Data 2")
+            data.forEach {
+                writer.append(it.x.toString() + ",")
+                writer.append(it.y.toString() + "\n")
+            }
+
             writer.append("\n")
+
             // Добавьте другие строки с данными по необходимости
 
             // Закрываем файл

@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.app.myfincontrol.R
+import com.app.myfincontrol.data.entities.InfoPageType
 import com.app.myfincontrol.presentation.compose.navigation.Screen
-import com.app.myfincontrol.presentation.utils.InfoPageType
 import com.example.compose.FinControlTheme
 import kotlinx.coroutines.delay
 
@@ -39,13 +39,20 @@ fun InfoPageComponent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
-            Text(
-                text = when (type) {
-                    InfoPageType.NOT_PROFILE -> stringResource(id = R.string.no_profiles)
-                    InfoPageType.LOADING -> stringResource(id = R.string.loading)
-                },
-                style = MaterialTheme.typography.headlineMedium
-            )
+            when (type) {
+                InfoPageType.NOT_PROFILE -> Text(
+                    stringResource(id = R.string.no_profiles),
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+                InfoPageType.LOADING -> Text(
+                    stringResource(id = R.string.loading),
+                    style = MaterialTheme.typography.headlineMedium
+                )
+                InfoPageType.NO_DATA -> {
+
+                }
+            }
         }
 
         Row(
@@ -54,8 +61,9 @@ fun InfoPageComponent(
         ) {
             Text(
                 text = when (type) {
-                    InfoPageType.NOT_PROFILE -> stringResource(id = R.string.create_profile)
+                    InfoPageType.NOT_PROFILE -> stringResource(id = R.string.create_new_profile)
                     InfoPageType.LOADING -> stringResource(id = R.string.wait)
+                    InfoPageType.NO_DATA -> stringResource(id = R.string.no_data)
                 },
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -71,8 +79,16 @@ fun InfoPageComponent(
                         fontSize = 48.sp
                     )
                 }
+
                 InfoPageType.LOADING -> {
                     ClockEmojiAnimation()
+                }
+
+                InfoPageType.NO_DATA -> {
+                    Text(
+                        text = "\uD83E\uDEE5",
+                        fontSize = 48.sp
+                    )
                 }
             }
         }
@@ -80,18 +96,18 @@ fun InfoPageComponent(
             modifier = Modifier
                 .padding(top = 24.dp)
         ) {
-           when (type) {
-               InfoPageType.NOT_PROFILE -> {
-                   Button(onClick = {
-                       navController!!.navigate(Screen.CreateProfile.route)
-                   }) {
-                       Text(text = stringResource(id = R.string.create_profile))
-                   }
-               }
-               InfoPageType.LOADING -> {
+            when (type) {
+                InfoPageType.NOT_PROFILE -> {
+                    Button(onClick = {
+                        navController!!.navigate(Screen.CreateProfile.route)
+                    }) {
+                        Text(text = stringResource(id = R.string.create_profile))
+                    }
+                }
 
-               }
-           }
+                InfoPageType.LOADING -> {}
+                InfoPageType.NO_DATA -> {}
+            }
         }
     }
 }
@@ -127,6 +143,6 @@ fun ClockEmojiAnimation() {
 @Composable
 fun InfoPageComponentPreview() {
     FinControlTheme {
-        InfoPageComponent(type = InfoPageType.LOADING)
+        InfoPageComponent(type = InfoPageType.NO_DATA)
     }
 }

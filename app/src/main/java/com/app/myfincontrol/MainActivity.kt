@@ -11,6 +11,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.rememberNavController
 import com.app.myfincontrol.data.sources.UserStore
+import com.app.myfincontrol.presentation.compose.components.SnackBarHost
 import com.app.myfincontrol.presentation.compose.navigation.NavGraph
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
 import com.example.compose.FinControlTheme
@@ -52,6 +53,7 @@ class MainActivity: AppCompatActivity() {
                     startDestination = states.value.startDestination,
                     snackBarHostState = snackBarHostState
                 )
+                SnackBarHost(snackBarHostState = snackBarHostState)
             }
         }
     }

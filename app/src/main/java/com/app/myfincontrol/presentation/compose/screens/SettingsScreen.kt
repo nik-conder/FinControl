@@ -21,23 +21,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
+import com.app.myfincontrol.data.entities.InfoPageType
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.presentation.compose.components.BoxComponent
 import com.app.myfincontrol.presentation.compose.components.HeaderComponent
+import com.app.myfincontrol.presentation.compose.components.InfoBlockComponent
 import com.app.myfincontrol.presentation.compose.components.InfoPageComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
 import com.app.myfincontrol.presentation.compose.components.SwitchComponent
 import com.app.myfincontrol.presentation.compose.navigation.Screen
-import com.app.myfincontrol.presentation.utils.InfoPageType
 import com.app.myfincontrol.presentation.viewModels.SettingsViewModel
 import com.app.myfincontrol.presentation.viewModels.events.SettingsEvents
 import kotlinx.coroutines.launch
@@ -118,22 +121,14 @@ fun SettingsBox(
 
     val paddingValues = PaddingValues(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 8.dp)
 
-    Column(
-        modifier = Modifier
-            .padding(paddingValues)
-    ) {
-        Row {
+    BoxComponent(
+        header = {
             HeaderComponent(
                 title = stringResource(id = R.string.settings),
             )
-        }
-
-        Row(
-            modifier = Modifier
-                .padding(paddingValues),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BoxComponent {
+        },
+        content = {
+            Column {
                 Row {
                     SwitchComponent(
                         title = stringResource(id = R.string.dark_mode),
@@ -202,7 +197,7 @@ fun SettingsBox(
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -214,18 +209,13 @@ fun ProfileBox(
     val paddingValues = PaddingValues(top = 16.dp, start = 16.dp, end = 16.dp)
 
     Column {
-        Row {
-            HeaderComponent(
-                title = stringResource(id = R.string.profile)
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .padding(paddingValues),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BoxComponent {
+        BoxComponent(
+            header = {
+                HeaderComponent(
+                    title = stringResource(id = R.string.profile),
+                )
+            },
+            content = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -242,6 +232,11 @@ fun ProfileBox(
                             text = profile.name,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Column {
+                        InfoBlockComponent(
+                            text = profile.currency.name
                         )
                     }
                 }
@@ -265,6 +260,15 @@ fun ProfileBox(
                     }
                 }
             }
-        }
+        )
     }
+}
+
+@Preview
+@Composable
+fun PreviewSettingsScreen() {
+
+    val context = LocalContext.current
+    val userStore = UserStore(context)
+    SettingsBox(store = userStore)
 }

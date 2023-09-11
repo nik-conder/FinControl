@@ -18,7 +18,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,7 +51,6 @@ fun CreateProfileComponent(
     val selectedCurrency = remember {
         mutableStateOf(Currency.USD)
     }
-
 
     Column(
         modifier = Modifier
@@ -116,8 +114,11 @@ fun CreateProfileComponent(
 
                 supportingText = {
                     Text(
-                        text = stringResource(id = R.string.there_are_n_characters_left, (accountNameMaxChar - accountName.value.text.length)),
-                        color = if ((accountNameMaxChar - accountName.value.text.length) <= 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onTertiary,
+                        text = stringResource(
+                            id = R.string.there_are_n_characters_left,
+                            (accountNameMaxChar - accountName.value.text.length)
+                        ),
+                        color = if ((accountNameMaxChar - accountName.value.text.length) <= 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary,
                         fontSize = 12.sp
                     )
                 },
@@ -181,12 +182,13 @@ fun CreateProfileComponent(
             ) {
                 TextButton(
                     onClick = {
-                        onEvents.invoke(LoginEvents.CreateAccount(
-                            profile = Profile(
-                                name = accountName.value.text,
-                                currency = selectedCurrency.value
+                        onEvents.invoke(
+                            LoginEvents.CreateAccount(
+                                profile = Profile(
+                                    name = accountName.value.text,
+                                    currency = selectedCurrency.value
+                                )
                             )
-                        )
                         )
                     },
                     enabled = accountName.value.text.isNotEmpty()

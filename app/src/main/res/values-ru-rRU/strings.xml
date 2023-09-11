@@ -97,6 +97,7 @@
     <string name="no_profiles">Профили не найдены</string>
     <string name="new_profile">Новый профиль</string>
     <string name="create_profile">Создать профиль</string>
+    <string name="create_new_profile">Создайте новый профиль</string>
     <string name="welcome">Добро пожаловать!</string>
     <string name="profile_name">Название профиля</string>
     <string name="there_are_n_characters_left">Осталось %1$d символов</string>
@@ -113,10 +114,11 @@
     <string name="logout">Выйти</string>
 
     <string name="block_useful_tips_setting">Блок «Полезные советы»</string>
-    <string name="block_useful_tips_setting_description">Блок «Полезные советы»</string>
+    <string name="block_useful_tips_setting_description">Не будет отображаться в Ленте</string>
     <string name="dark_mode_setting">Dark mode</string>
     <string name="hide_balance_setting">Баланс скрыт</string>
     <string name="hide_balance_setting_description">Скройте баланс от посторонних глаз</string>
     <string name="automatic_login">Автоматический вход</string>
     <string name="automatic_login_description">Вход в выбранный профиль будет автоматическим. Чтобы изменить его, выйдите из текущего или отключите эту опцию</string>
+    <string name="note">Note</string>
 </resources>

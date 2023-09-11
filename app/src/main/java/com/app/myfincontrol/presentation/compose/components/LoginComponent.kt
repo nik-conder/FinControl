@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.app.myfincontrol.R
+import com.app.myfincontrol.data.entities.InfoPageType
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.presentation.compose.navigation.Screen
-import com.app.myfincontrol.presentation.utils.InfoPageType
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
 
 
@@ -72,7 +72,7 @@ fun LoginComponent(
                 )
             }
         } else {
-            Row  {
+            Row {
                 InfoPageComponent(InfoPageType.NOT_PROFILE, navController)
             }
         }
@@ -89,7 +89,7 @@ fun ChangeProfileComponent(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row() {
+        Row {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxHeight(0.5f),
@@ -119,23 +119,11 @@ fun ChangeProfileComponent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
-                            Column (
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .background(
-                                        color = if (selectedProfile == it.uid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(20.dp)
-                                    ),
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                Text(
-                                    modifier = Modifier
-                                        .padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp),
-                                    text =  it.currency.name,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = if (selectedProfile == it.uid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
+                            InfoBlockComponent(
+                                text = it.currency.name,
+                                backgroundColor = if (selectedProfile == it.uid) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                                textColor = if (selectedProfile == it.uid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
+                            )
 
                             Column(
                                 modifier = Modifier
@@ -166,7 +154,7 @@ fun ChangeProfileComponent(
             }
         }
 
-        Row() {
+        Row {
             Column(
                 modifier = Modifier
                     .padding(end = 8.dp)

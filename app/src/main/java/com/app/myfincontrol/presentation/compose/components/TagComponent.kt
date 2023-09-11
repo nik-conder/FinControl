@@ -23,7 +23,7 @@ fun TagComponent(
             .background(
                 color = colorBackground,
                 shape = RoundedCornerShape(20.dp))
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+            .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 4.dp),
     ) {
         Text(
             text = text,

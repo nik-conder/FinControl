@@ -14,7 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberPlainTooltipState
@@ -27,22 +27,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.app.myfincontrol.R
-import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.data.enums.Currency
-import com.app.myfincontrol.presentation.utils.NumberUtils
-import com.app.myfincontrol.presentation.utils.SymbolUtils
+import com.app.myfincontrol.data.sources.UserStore
+import com.app.myfincontrol.presentation.utils.UtilsCompose
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
-import com.example.compose.FinControlTheme
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
@@ -53,6 +47,7 @@ fun HomeMainBoxComponent(
     profileName: String,
     balance: BigDecimal,
     currency: Currency,
+    snackBarHostState: SnackbarHostState,
     onEventsTransaction: (TransactionEvents) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -87,10 +82,8 @@ fun HomeMainBoxComponent(
                 Column {
                     Text(
                         text = if (hideBalanceState.value) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "${
-                            NumberUtils.formatBigDecimalWithSpaces(
-                                balance
-                            )
-                        } ${SymbolUtils.currencySymbolComponent(currency)}",
+                            UtilsCompose.Numbers.formatBigDecimalWithSpaces(balance)
+                        } ${UtilsCompose.Symbols.currencySymbolComponent(currency)}",
                         fontSize = 42.sp,
                         color = MaterialTheme.colorScheme.onSecondary,
                         fontWeight = FontWeight(500)
@@ -114,8 +107,9 @@ fun HomeMainBoxComponent(
                     }
                 }
             }
-            Row( modifier = Modifier
-                .padding(top = 8.dp, bottom = 16.dp),
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
@@ -145,6 +139,9 @@ fun HomeMainBoxComponent(
                             },
                             onClick = {
                                 dropdownAmountSortState.value = !dropdownAmountSortState.value
+                                scope.launch {
+                                    snackBarHostState.showSnackbar(message = "Выбрано")
+                                }
                             }
                         )
                         DropdownMenuItem(
@@ -189,33 +186,6 @@ fun HomeMainBoxComponent(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@PreviewLightDark
-//@PreviewScreenSizes
-@Preview
-@Composable
-fun HomeMainBoxComponentPreview() {
-    val context = LocalContext.current
-    FinControlTheme() {
-        Scaffold(
-
-        ) { padding ->
-            ConstraintLayout(
-                modifier = Modifier
-                    .padding(padding)
-            ) {
-
-                HomeMainBoxComponent(
-                    store = UserStore(context),
-                    profileName = "profile name",
-                    balance = BigDecimal("32310.0"),
-                    currency = Currency.EUR,
-                    onEventsTransaction = {}
-                )
             }
         }
     }

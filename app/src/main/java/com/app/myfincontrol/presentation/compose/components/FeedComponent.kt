@@ -1,7 +1,6 @@
 package com.app.myfincontrol.presentation.compose.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,15 +33,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import com.app.myfincontrol.R
+import com.app.myfincontrol.data.entities.InfoPageType
 import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import kotlinx.coroutines.delay
@@ -51,7 +48,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FeedComponent(
-    feedPager: Pager<Int, Transaction>,
+    feedPager: LazyPagingItems<Transaction>,
     hideBalanceState: Boolean,
     debugModeState: Boolean,
     onEvens: (TransactionEvents) -> Unit,
@@ -59,7 +56,6 @@ fun FeedComponent(
 ) {
 
     val scope = rememberCoroutineScope()
-    val feedPagingItems = feedPager.flow.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
     val textDeleteTransaction = stringResource(id = R.string.delete_transaction)
 
@@ -69,14 +65,14 @@ fun FeedComponent(
             .padding(start = 16.dp, end = 16.dp)
     ) {
 
-        Row() {
+        Row {
             HeaderComponent(
-                title = stringResource(id = R.string.feed) + " " + if (debugModeState) feedPagingItems.itemCount.toString() else ""
+                title = stringResource(id = R.string.feed) + " " + if (debugModeState) feedPager.itemCount.toString() else ""
             )
         }
         if (debugModeState) {
-            Row() {
-                TextButton(onClick = { feedPagingItems.refresh() }) {
+            Row {
+                TextButton(onClick = { feedPager.refresh() }) {
                     Text(text = "Refresh")
                 }
             }
@@ -90,29 +86,20 @@ fun FeedComponent(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 state = listState
             ) {
-                if (feedPagingItems.itemCount == 0) {
+                if (feedPager.itemCount == 0) {
                     item {
-                        Column(
+                        Row (
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 32.dp, bottom = 32.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Row {
-                                Text(
-                                    text = stringResource(id = R.string.no_data),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                            Row {
-                                Text(text = "\uD83D\uDE43", fontSize = 48.sp)
-                            }
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ){
+                            InfoPageComponent(InfoPageType.NO_DATA)
                         }
                     }
                 }
 
-                items(count = feedPagingItems.itemCount) { item ->
-                    val element = feedPagingItems[item]
+                items(count = feedPager.itemCount) { item ->
+                    val element = feedPager[item]
                     val dismissState = rememberDismissState(
                         initialValue = DismissValue.Default,
                         confirmStateChange = {
@@ -124,7 +111,7 @@ fun FeedComponent(
                                     )
                                     onEvens(TransactionEvents.DeleteTransaction(element!!.id))
                                     delay(500)
-                                    feedPagingItems.refresh()
+                                    feedPager.refresh()
                                 }
                                 false
                             } else {
@@ -144,7 +131,7 @@ fun FeedComponent(
                                     DismissValue.Default -> MaterialTheme.colorScheme.onSecondary
                                     DismissValue.DismissedToEnd -> MaterialTheme.colorScheme.primary
                                     DismissValue.DismissedToStart -> MaterialTheme.colorScheme.error
-                                }
+                                }, label = ""
                             )
                             val alignment = when (direction) {
                                 DismissDirection.StartToEnd -> Alignment.CenterStart
@@ -168,7 +155,7 @@ fun FeedComponent(
                             }
                         },
                         dismissContent = {
-                            feedPagingItems.itemKey { element!!.id }
+                            feedPager.itemKey { element!!.id }
                             TransactionComponent(
                                 transaction = element!!,
                                 hideBalanceState = hideBalanceState,
@@ -177,7 +164,7 @@ fun FeedComponent(
                         })
                 }
 
-                when (feedPagingItems.loadState.prepend) {
+                when (feedPager.loadState.prepend) {
                     is LoadState.Loading -> {
                         item { CircularProgressComponent() }
                     }
@@ -189,7 +176,7 @@ fun FeedComponent(
                                     .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(text = " ${(feedPagingItems.loadState.append as LoadState.Error).error.localizedMessage}")
+                                Text(text = " ${(feedPager.loadState.append as LoadState.Error).error.localizedMessage}")
                             }
                         }
                     }
@@ -197,9 +184,17 @@ fun FeedComponent(
                     is LoadState.NotLoading -> {}
                 }
 
-                when (feedPagingItems.loadState.refresh) {
+                when (feedPager.loadState.refresh) {
                     is LoadState.Loading -> {
-                        item { CircularProgressComponent() }
+                        item {
+                            Row (
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ){
+                                InfoPageComponent(InfoPageType.LOADING)
+                            }
+                        }
                     }
 
                     is LoadState.Error -> {
@@ -209,16 +204,24 @@ fun FeedComponent(
                                     .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(text = " ${(feedPagingItems.loadState.append as LoadState.Error).error.localizedMessage}")
+                                Text(text = " ${(feedPager.loadState.append as LoadState.Error).error.localizedMessage}")
                             }
                         }
                     }
 
                     is LoadState.NotLoading -> {}
                 }
-                when (feedPagingItems.loadState.append) {
+                when (feedPager.loadState.append) {
                     is LoadState.Loading -> {
-                        item { CircularProgressComponent() }
+                        item {
+                            Row (
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ){
+                                InfoPageComponent(InfoPageType.LOADING)
+                            }
+                        }
                     }
 
                     is LoadState.Error -> {
@@ -228,33 +231,12 @@ fun FeedComponent(
                                     .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
-                                Text(text = " ${(feedPagingItems.loadState.append as LoadState.Error).error.localizedMessage}")
+                                Text(text = " ${(feedPager.loadState.append as LoadState.Error).error.localizedMessage}")
                             }
                         }
                     }
 
-                    is LoadState.NotLoading -> {
-                        if (feedPagingItems.itemCount > 0) {
-                            item {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 32.dp, bottom = 32.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Row() {
-                                        Text(
-                                            text = stringResource(id = R.string.no_data),
-                                            style = MaterialTheme.typography.bodyMedium
-                                        )
-                                    }
-                                    Row {
-                                        Text(text = "\uD83E\uDD2B", fontSize = 48.sp)
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    is LoadState.NotLoading -> {}
                 }
             }
         }
