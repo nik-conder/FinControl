@@ -21,9 +21,6 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
 
-    - name: Build SampleApplication
-      run: ./gradlew --no-daemon build
-
     - uses: actions/checkout@v3
       with:
         distribution: 'oracle' # See 'Supported distributions' for available options
