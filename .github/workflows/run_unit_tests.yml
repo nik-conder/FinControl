@@ -1,28 +1,32 @@
 name: Unit tests
 
 on:
-    push:
-        branches: [ master ]
-    pull_request:
-        branches: [ master ]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3.12.0
+      with:
+        # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+        java-version: 17
+        # Java distribution. See the list of supported distributions in README file
+        distribution: 'oracle'
 
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
 
-            - name: Setup Java JDK
-              uses: actions/setup-java@v3.12.0
-              with:
-                  # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
-                  java-version: 17
-                  # Java distribution. See the list of supported distributions in README file
-                  distribution: 'oracle'
+    - name: Build SampleApplication
+      run: ./gradlew --no-daemon build
 
-            - uses: actions/checkout@v3
-              with:
-                  distribution: 'oracle'
-                  java-version: '17'
-            - name: Run tests
-              run: ./gradlew test
+    - uses: actions/checkout@v3
+      with:
+        distribution: 'oracle' # See 'Supported distributions' for available options
+        java-version: '17'
+    - name: Unit tests
+      run: ./gradlew test
