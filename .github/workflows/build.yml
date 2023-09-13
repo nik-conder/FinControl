@@ -25,10 +25,11 @@ jobs:
           distribution: 'oracle'
 
       # Permission for gradlew
+      - uses: actions/checkout@v3
       - run: echo "The workflow is now ready to test your code."
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      
+
       # Building APK
       - run: echo "Building APK."
       - name: Build with Gradle
