@@ -1,4 +1,4 @@
-name: Unit tests
+name: Tests
 
 on:
   push:
@@ -25,5 +25,5 @@ jobs:
       with:
         distribution: 'oracle' # See 'Supported distributions' for available options
         java-version: '18'
-    - name: Unit tests
+    - name: All tests
       run: ./gradlew test
