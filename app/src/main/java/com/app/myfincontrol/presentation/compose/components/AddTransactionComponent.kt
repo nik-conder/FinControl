@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Button
@@ -46,7 +45,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -61,7 +59,7 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AddTransactionComponent(
     sheetState: SheetState,
@@ -276,8 +274,7 @@ fun AddTransactionComponent(
                             expanded = dropdownMenuState.value,
                             onDismissRequest = {
                                 dropdownMenuState.value = !dropdownMenuState.value
-                            },
-                            scrollState = dropdownMenuScrollState
+                            }
                         ) {
                             if (selectedType.value == TransactionType.INCOME) {
                                 categoriesIncome.forEach {
@@ -415,7 +412,10 @@ fun AddTransactionComponent(
                 },
                 supportingText = {
                     Text(
-                        text = stringResource(id = R.string.there_are_n_characters_left, (limitCharsNote - note.value.text.length)),
+                        text = stringResource(
+                            id = R.string.there_are_n_characters_left,
+                            (limitCharsNote - note.value.text.length)
+                        ),
                         color = if ((limitCharsNote - note.value.text.length) <= 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary,
                         fontSize = 12.sp
                     )
@@ -469,7 +469,7 @@ fun AddTransactionComponent(
     }
 }
 
-@PreviewLightDark
+@Preview
 @Composable
 fun AddTransactionComponentPreview() {
     var note by rememberSaveable { mutableStateOf("") }

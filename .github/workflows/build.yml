@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
+
+      # Setup Java JDK
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.12.0
+        with:
+          java-version: 18
+          distribution: 'oracle'
+
+      # Permission for gradlew
+      - run: echo "The workflow is now ready to test your code."
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      # Building APK
+      - run: echo "Building APK."
+      - name: Build with Gradle
+        run: ./gradlew build
+      - run: echo "Build status report=${{ job.status }}."

@@ -32,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,7 +53,6 @@ import com.app.myfincontrol.presentation.compose.components.AdvicesComponent
 import com.app.myfincontrol.presentation.compose.components.FeedComponent
 import com.app.myfincontrol.presentation.compose.components.HomeMainBoxComponent
 import com.app.myfincontrol.presentation.compose.components.NavigationComponent
-import com.app.myfincontrol.presentation.compose.components.PlainTooltipComponent
 import com.app.myfincontrol.presentation.compose.components.alerts.DebugModeAlertComponent
 import com.app.myfincontrol.presentation.utils.UtilsCompose
 import com.app.myfincontrol.presentation.viewModels.HomeViewModel

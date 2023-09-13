@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,14 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.presentation.utils.UtilsCompose
-import java.math.BigDecimal
 
 @Composable
 fun TransactionComponent(
@@ -111,71 +107,6 @@ fun TransactionComponent(
                 text = UtilsCompose.Date.formatDate(transaction.datetime * 1000),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary
-            )
-        }
-    }
-}
-
-@PreviewLightDark
-@Composable
-fun TransactionComponentPreview() {
-
-    val tList = listOf(
-        Transaction(
-            id = 1,
-            type = TransactionType.EXPENSE,
-            profileId = 1,
-            amount = BigDecimal(100),
-            category = TransactionCategories.ExpenseCategories.TRANSPORTATION.name,
-            datetime = System.currentTimeMillis(),
-            note = "dskfjsdklfkljsdfhkjs"
-        ),
-        /*Transaction(
-            id = 2,
-            type = TransactionType.INCOME,
-            profileId = 1,
-            amount = BigDecimal(2053534),
-            category = TransactionCategories.IncomeCategories.INVESTMENTS.name,
-            datetime = System.currentTimeMillis(),
-        )*/
-    )
-    LazyColumn(
-        modifier = Modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(items = tList) {
-            TransactionComponent(
-                transaction = it,
-                hideBalanceState = false,
-                debugModeState = false
-            )
-        }
-    }
-}
-
-@PreviewLightDark
-@Composable
-fun TransactionComponentPreview2() {
-
-    val tList = listOf(
-        Transaction(
-            id = 2,
-            type = TransactionType.INCOME,
-            profileId = 1,
-            amount = BigDecimal(2053534),
-            category = TransactionCategories.IncomeCategories.INVESTMENTS.name,
-            datetime = System.currentTimeMillis(),
-        )
-    )
-    LazyColumn(
-        modifier = Modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(items = tList) {
-            TransactionComponent(
-                transaction = it,
-                hideBalanceState = false,
-                debugModeState = false
             )
         }
     }

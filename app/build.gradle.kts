@@ -5,11 +5,6 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-}
-
 android {
     namespace = "com.app.myfincontrol"
     compileSdk = 34
@@ -89,12 +84,23 @@ android {
         generateLocaleConfig = true
     }
 
-//    packagingOptions {
-//        resources {
-//            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-//        }
-//    }
+    kapt {
+        correctErrorTypes = true
+        useBuildCache = true
+    }
+/*
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+*/
+
+  /*  packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+*/
     kotlinOptions {
         jvmTarget = "18"
     }
@@ -199,7 +205,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:${composeVersion}")
 
     implementation("androidx.compose.material:material:${composeVersion}")
-    implementation("androidx.compose.material3:material3:1.2.0-alpha07")
+    implementation("androidx.compose.material3:material3:1.1.1")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
