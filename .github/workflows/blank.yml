@@ -34,3 +34,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: Test step
+        run: echo "Test step is good"
+        run: echo "Test step is good 123"
