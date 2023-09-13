@@ -32,7 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberPlainTooltipState
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -85,8 +85,6 @@ fun HomeScreen(
     val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
     val adviceBoxState = store.adviceBox.collectAsState(initial = false)
     val debugModeState = store.debugModeState.collectAsState(initial = false)
-
-    val tooltipState = rememberPlainTooltipState()
 
     val feedPager = vm.feedPager.flow.collectAsLazyPagingItems()
 
@@ -188,20 +186,14 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            PlainTooltipComponent(
-                tooltip = { Text(text = stringResource(id = R.string.add_transaction)) },
-                tooltipState = tooltipState,
+            FloatingActionButton(
+                modifier = Modifier,
+                onClick = { scope.launch { sheetState.show() } }
             ) {
-                FloatingActionButton(
-                    modifier = Modifier
-                        .tooltipTrigger(),
-                    onClick = { scope.launch { sheetState.show() } }
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = stringResource(id = R.string.add_transaction)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Outlined.Add,
+                    contentDescription = stringResource(id = R.string.add_transaction)
+                )
             }
         },
         bottomBar = {

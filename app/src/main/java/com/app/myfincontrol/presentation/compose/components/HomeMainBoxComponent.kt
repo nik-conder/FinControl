@@ -17,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberPlainTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -53,7 +52,6 @@ fun HomeMainBoxComponent(
     val scope = rememberCoroutineScope()
     val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
     val dropdownAmountSortState = remember { mutableStateOf(false) }
-    val tooltipState = rememberPlainTooltipState()
 
     Box(
         modifier = Modifier
@@ -90,20 +88,15 @@ fun HomeMainBoxComponent(
                     )
                 }
                 Column {
-                    PlainTooltipComponent(
-                        tooltip = { Text(text = stringResource(id = R.string.hide_balance_tooltip)) },
-                        tooltipState = tooltipState,
+                    IconButton(
+                        modifier = Modifier,
+                        onClick = { scope.launch { store.sethideBalanceState() } }
                     ) {
-                        IconButton(
-                            modifier = Modifier.tooltipTrigger(),
-                            onClick = { scope.launch { store.sethideBalanceState() } }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = if (hideBalanceState.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
-                                contentDescription = stringResource(id = R.string.visibility_content_description),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
+                        Icon(
+                            painter = painterResource(id = if (hideBalanceState.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
+                            contentDescription = stringResource(id = R.string.visibility_content_description),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
                 }
             }

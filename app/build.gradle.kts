@@ -98,19 +98,20 @@ android {
     kotlinOptions {
         jvmTarget = "18"
     }
+    buildToolsVersion = "34.0.0 rc1"
 }
 
 dependencies {
 
-    val roomVersion = "2.5.1"
-    val composeVersion = "1.6.0-alpha01"
+    val roomVersion = "2.5.2"
+    val composeVersion = "1.5.1"
     val junit5Version = "5.10.0"
-    val mockkVersion = "1.13.5"
+    val mockkVersion = "1.13.7"
 
     // Paging
-    implementation("androidx.paging:paging-compose:3.2.0-rc01")
-    implementation("androidx.paging:paging-common-ktx:3.1.1")
-    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.paging:paging-compose:3.2.1")
+    implementation("androidx.paging:paging-common-ktx:3.2.1")
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
 
     //Data story
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -124,22 +125,22 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$roomVersion")
 
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.5-beta")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation("androidx.navigation:navigation-compose:2.7.2")
 
     // Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.46.1")
-    kapt("com.google.dagger:hilt-compiler:2.46.1")
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    annotationProcessor("com.google.dagger:hilt-compiler:2.46.1")
+    annotationProcessor("com.google.dagger:hilt-compiler:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     // Charts
-    implementation("com.patrykandpatrick.vico:core:1.6.5")
-    implementation("com.patrykandpatrick.vico:compose:1.6.5")
-    implementation("com.patrykandpatrick.vico:compose-m3:1.6.5")
+    implementation("com.patrykandpatrick.vico:core:1.11.3")
+    implementation("com.patrykandpatrick.vico:compose:1.11.3")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.11.3")
 
     // Tests
     testImplementation("org.junit.jupiter:junit-jupiter:${junit5Version}")
@@ -147,7 +148,7 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${junit5Version}")
     implementation("androidx.test.ext:junit-ktx:1.1.5")
     implementation("androidx.test:runner:1.5.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
 
 
@@ -168,12 +169,12 @@ dependencies {
         androidTestImplementation("androidx.compose.ui:ui-test-junit4")*/
 
     // Hilt: local unit tests
-    testImplementation("com.google.dagger:hilt-android-testing:2.46.1")
-    testAnnotationProcessor("com.google.dagger:hilt-compiler:2.46.1")
+    testImplementation("com.google.dagger:hilt-android-testing:2.48")
+    testAnnotationProcessor("com.google.dagger:hilt-compiler:2.48")
 
     // Hilt: instrumentation tests
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.46.1")
-    androidTestAnnotationProcessor("com.google.dagger:hilt-compiler:2.46.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
+    androidTestAnnotationProcessor("com.google.dagger:hilt-compiler:2.48")
 
     //implementation("com.himanshoe:charty:1.0.1")
 
@@ -189,16 +190,16 @@ dependencies {
 
     // Compose
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
-    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
+    implementation(platform("androidx.compose:compose-bom:2023.09.00"))
     implementation("androidx.compose.ui:ui:${composeVersion}")
     implementation("androidx.compose.ui:ui-graphics:${composeVersion}")
     implementation("androidx.compose.ui:ui-tooling-preview:${composeVersion}")
 
     implementation("androidx.compose.material:material:${composeVersion}")
-    implementation("androidx.compose.material3:material3:1.2.0-alpha03")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha07")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
