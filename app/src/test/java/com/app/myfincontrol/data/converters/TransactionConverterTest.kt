@@ -17,7 +17,7 @@ class TransactionConverterTest {
     fun toIncomeCategory() {
         val incomeCategory = TransactionCategories.IncomeCategories.BUSINESS
         assertEquals(
-            incomeCategory.name,
+            incomeCategory,
             TransactionConverter().toIncomeCategory(incomeCategory.name)
         )
     }

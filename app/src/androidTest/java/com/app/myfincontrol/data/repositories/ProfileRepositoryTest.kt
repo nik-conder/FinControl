@@ -31,9 +31,10 @@ class ProfileRepositoryTest {
     @Test
     fun checkCreateProfile() = runBlocking {
         val profile = Profile(uid = 1, name = "account #1", currency = Currency.USD)
-        val result = profileRepository.createProfile(profile)
+        profileRepository.createProfile(profile)
+        val result = profileRepository.getProfile(uid = profile.uid).first()
         println("result: $result")
-        assertEquals(1L, result)
+        assertEquals(profile, result)
     }
 
     @Test
