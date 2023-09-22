@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.app.myfincontrol.data.Configuration
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.entities.Session
-import com.app.myfincontrol.data.sources.UserStore
 import com.app.myfincontrol.domain.useCases.ProfileUseCase
 import com.app.myfincontrol.domain.useCases.SessionUseCase
 import com.app.myfincontrol.domain.useCases.ValidationResult
@@ -57,6 +56,8 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginEvents.CreateAccount -> createAccount(event.profile)
+
+            is LoginEvents.ChangeCurrencyAlert -> changeCurrencyAlert()
 
         }
     }
@@ -138,5 +139,11 @@ class LoginViewModel @Inject constructor(
         } else {
             Log.e("Error", "Limit of profiles exceeded")
         }
+    }
+
+    private fun changeCurrencyAlert() {
+        _states.value = _states.value.copy(
+            changeCurrencyAlert = !states.value.changeCurrencyAlert
+        )
     }
 }

@@ -93,7 +93,9 @@ fun TransactionComponent(
                     .padding(top = 8.dp)
             ) {
                 Text(
-                    text = transaction.note
+                    text = transaction.note,
+                    maxLines = 3,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }

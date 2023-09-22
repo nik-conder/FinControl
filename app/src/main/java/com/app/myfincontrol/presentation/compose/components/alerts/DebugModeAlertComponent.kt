@@ -65,7 +65,12 @@ fun DebugModeAlertComponent(
                             scope.launch {
                                 snackBarHostState.showSnackbar("Будет сгенерировано ${countTransactions} транзакций")
                             }
-                            onEvent(DebugEvents.GenerateTransactions(TransactionType.INCOME, countTransactions))
+                            onEvent(
+                                DebugEvents.GenerateTransactions(
+                                    TransactionType.INCOME,
+                                    countTransactions
+                                )
+                            )
                         }) {
                             Text("Сгенерировать транзакции +")
                         }

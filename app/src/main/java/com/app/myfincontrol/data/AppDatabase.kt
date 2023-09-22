@@ -14,7 +14,6 @@ import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.entities.Session
 import com.app.myfincontrol.data.entities.Settings
 import com.app.myfincontrol.data.entities.Transaction
-import com.app.myfincontrol.data.sources.database.BalanceDao
 import com.app.myfincontrol.data.sources.database.ProfileDao
 import com.app.myfincontrol.data.sources.database.SessionDAO
 import com.app.myfincontrol.data.sources.database.SettingsDAO
@@ -38,13 +37,12 @@ import com.app.myfincontrol.data.sources.database.TransactionDAO
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
-    abstract fun balanceDao(): BalanceDao
     abstract fun sessionDao(): SessionDAO
     abstract fun transactionDao(): TransactionDAO
     abstract fun settingsDao(): SettingsDAO
 }
 
-val MIGRATE_1_2 = object : Migration(1,2) {
+val MIGRATE_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE Transaction ADD note STRING NULL")
     }

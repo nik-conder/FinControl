@@ -20,7 +20,11 @@ class RoomModule @Inject constructor() {
     @Singleton
     @Provides
     fun providesAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, Configuration.Database.DATABASE_NAME)
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            Configuration.Database.DATABASE_NAME
+        )
             .fallbackToDestructiveMigration()
             .addMigrations(MIGRATE_1_2)
             .allowMainThreadQueries()

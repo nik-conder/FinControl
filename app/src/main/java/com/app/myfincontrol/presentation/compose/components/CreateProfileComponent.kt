@@ -1,6 +1,5 @@
 package com.app.myfincontrol.presentation.compose.components
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -34,7 +33,6 @@ import com.app.myfincontrol.data.Configuration
 import com.app.myfincontrol.data.entities.Profile
 import com.app.myfincontrol.data.enums.Currency
 import com.app.myfincontrol.presentation.viewModels.events.LoginEvents
-import kotlinx.coroutines.launch
 
 @Composable
 fun CreateProfileComponent(
@@ -161,12 +159,8 @@ fun CreateProfileComponent(
                     .padding(8.dp)
             ) {
 
-                val toastText = stringResource(id = R.string.in_developing)
-
                 TextButton(onClick = {
-                    scope.launch {
-                        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
-                    }
+                    onEvents(LoginEvents.ChangeCurrencyAlert)
                 }) {
                     Text(text = stringResource(id = R.string.more))
                 }

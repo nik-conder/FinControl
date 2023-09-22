@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -67,6 +68,10 @@ fun HomeScreen(
     store: UserStore,
     snackBarHostState: SnackbarHostState
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
     val vm = hiltViewModel<HomeViewModel>()
     val onEventsTransaction = vm::onEventsTransaction
     val onEventDebugMode = vm::onEventDebugMode
@@ -110,12 +115,15 @@ fun HomeScreen(
                             Text(text = stringResource(id = R.string.app_name))
                         }
                         AnimatedVisibility(
-                            visible = scrollState.value > 100,
+                            visible = scrollState.value > (screenHeight * 0.2f).value,
                             enter = fadeIn() + slideInVertically(),
                             exit = fadeOut() + slideOutVertically(),
                         ) {
                             if (state.value.selectedProfile != null) {
-                                Column {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(end = 12.dp)
+                                ) {
                                     Box(
                                         modifier = Modifier
                                             .background(
@@ -153,11 +161,12 @@ fun HomeScreen(
                 },
                 actions = {
                     Column {
-                        IconButton(onClick = {
-                            scope.launch {
-                                store.setDarkMode()
-                            }
-                        }) {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    store.setDarkMode()
+                                }
+                            }) {
                             Icon(
                                 painter = painterResource(id = if (darkMode.value) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24),
                                 contentDescription = stringResource(

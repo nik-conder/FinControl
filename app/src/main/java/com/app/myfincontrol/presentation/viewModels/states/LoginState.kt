@@ -8,5 +8,6 @@ data class LoginState(
     val startDestination: String = Screen.Login.route,
     val profilesList: List<Profile> = emptyList(),
     val selectedProfile: Int = 0,
-    val darkMode: Boolean = false
+    val darkMode: Boolean = false,
+    val changeCurrencyAlert: Boolean = false
 )

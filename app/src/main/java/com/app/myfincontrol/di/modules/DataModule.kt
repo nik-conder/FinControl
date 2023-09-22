@@ -2,12 +2,10 @@ package com.app.myfincontrol.di.modules
 
 import android.content.Context
 import com.app.myfincontrol.data.sources.UserStore
-import com.app.myfincontrol.data.repositories.BalanceRepository
 import com.app.myfincontrol.data.repositories.ProfileRepository
 import com.app.myfincontrol.data.repositories.SessionRepository
 import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.app.myfincontrol.data.sources.FeedDataSource
-import com.app.myfincontrol.data.sources.database.BalanceDao
 import com.app.myfincontrol.data.sources.database.ProfileDao
 import com.app.myfincontrol.data.sources.database.SessionDAO
 import com.app.myfincontrol.data.sources.database.TransactionDAO
@@ -36,14 +34,6 @@ class DataModule @Inject constructor() {
         profileDao: ProfileDao
     ): ProfileRepository = ProfileRepository(
         profileDao
-    )
-
-    @Singleton
-    @Provides
-    fun providerBalanceRepository(
-        balanceDao: BalanceDao
-    ): BalanceRepository = BalanceRepository(
-        balanceDao
     )
 
     @Singleton

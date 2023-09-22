@@ -6,4 +6,5 @@ sealed class LoginEvents {
     object Login : LoginEvents()
     class CreateAccount(val profile: Profile) : LoginEvents()
     class SelectProfile(val uid: Int) : LoginEvents()
+    object ChangeCurrencyAlert : LoginEvents()
 }

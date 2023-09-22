@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.Configuration
 import com.app.myfincontrol.presentation.compose.components.CreateProfileComponent
+import com.app.myfincontrol.presentation.compose.components.alerts.ChangeCurrencyAlertDialog
 import com.app.myfincontrol.presentation.viewModels.LoginViewModel
 
 @Composable
@@ -40,7 +41,13 @@ fun CreateProfileScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+
             val (createProfileBox) = createRefs()
+
+            ChangeCurrencyAlertDialog(
+                state = states.value.changeCurrencyAlert,
+                onEvents = onEvents
+            )
 
             BoxWithConstraints(
                 modifier = Modifier

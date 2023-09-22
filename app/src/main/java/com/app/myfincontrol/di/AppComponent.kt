@@ -9,7 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class ])
+@Component(modules = [AppModule::class])
 interface AppComponent {
 
     @Component.Factory

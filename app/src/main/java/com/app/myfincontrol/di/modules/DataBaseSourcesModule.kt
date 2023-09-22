@@ -2,7 +2,6 @@ package com.app.myfincontrol.di.modules
 
 import com.app.myfincontrol.data.AppDatabase
 import com.app.myfincontrol.data.sources.FeedDataSource
-import com.app.myfincontrol.data.sources.database.BalanceDao
 import com.app.myfincontrol.data.sources.database.ProfileDao
 import com.app.myfincontrol.data.sources.database.SessionDAO
 import com.app.myfincontrol.data.sources.database.TransactionDAO
@@ -24,16 +23,11 @@ class DataBaseSourcesModule @Inject constructor() {
     ): FeedDataSource {
         return FeedDataSource(transactionDAO)
     }
+
     @Singleton
     @Provides
     fun providerProfileDAO(appDatabase: AppDatabase): ProfileDao {
         return appDatabase.profileDao()
-    }
-
-    @Singleton
-    @Provides
-    fun providerBalanceDAO(appDatabase: AppDatabase): BalanceDao {
-        return appDatabase.balanceDao()
     }
 
     @Singleton

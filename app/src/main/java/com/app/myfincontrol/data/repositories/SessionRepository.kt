@@ -10,9 +10,14 @@ class SessionRepository @Inject constructor(
     private val sessionDAO: SessionDAO
 ) {
 
+
+    private suspend fun insertSession(session: Session): Long {
+        return sessionDAO.insertSession(session)
+    }
+
     suspend fun setSession(session: Session): Long {
         sessionDAO.deleteAllSessions()
-        return sessionDAO.insertSession(session)
+        return insertSession(session)
     }
 
     fun getAllSessions(): Flow<List<Session>> {
