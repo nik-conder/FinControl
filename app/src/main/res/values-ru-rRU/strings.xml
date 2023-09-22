@@ -121,4 +121,6 @@
     <string name="automatic_login">Автоматический вход</string>
     <string name="automatic_login_description">Вход в выбранный профиль будет автоматическим. Чтобы изменить его, выйдите из текущего или отключите эту опцию</string>
     <string name="note">Note</string>
+    <string name="collapse">Свернуть</string>
+    <string name="expand">Развернуть</string>
 </resources>

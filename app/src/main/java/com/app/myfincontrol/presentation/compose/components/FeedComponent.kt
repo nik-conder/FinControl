@@ -158,8 +158,7 @@ fun FeedComponent(
                             feedPager.itemKey { element!!.id }
                             TransactionComponent(
                                 transaction = element!!,
-                                hideBalanceState = hideBalanceState,
-                                debugModeState = debugModeState
+                                hideBalanceState = hideBalanceState
                             )
                         })
                 }

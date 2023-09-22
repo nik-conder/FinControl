@@ -124,4 +124,6 @@
     <string name="automatic_login">Automatic login</string>
     <string name="automatic_login_description">The login to the selected profile will be automatic. To change it, exit the current one or disable this option</string>
     <string name="note">Note</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
 </resources>
