@@ -37,7 +37,7 @@ interface TransactionDAO {
     @Query("SELECT t.* FROM `transaction` t " +
             "INNER JOIN (SELECT profile_id, uid FROM `Session` ORDER BY uid DESC LIMIT 1) s ON t.profile_id = s.profile_id " +
             "WHERE type = :type AND datetime >= :startTime AND datetime <= :endTime")
-    fun getChartTransactions(type: TransactionType = TransactionType.INCOME, startTime: Long, endTime: Long): List<Transaction>
+    fun getChartTransactions(type: TransactionType, startTime: Long, endTime: Long): List<Transaction>
 
     @Query("SELECT * FROM `transaction`")
     fun getTransactions(): List<Transaction>

@@ -1,7 +1,11 @@
 package com.app.myfincontrol.domain.useCases
 
 import android.os.Environment
+import androidx.compose.runtime.mutableStateListOf
+import com.app.myfincontrol.data.FormatDate
+import com.app.myfincontrol.data.FormatDateImpl
 import com.app.myfincontrol.data.enums.ChartSort
+import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.repositories.TransactionRepository
 import com.patrykandpatrick.vico.core.entry.FloatEntry
 import java.io.File
@@ -15,6 +19,17 @@ class DataExchangeUseCase @Inject constructor(
 ) {
 
     private val format = ".csv"
+
+/*
+    private fun getStatistics(sort: ChartSort): List<FloatEntry> {
+
+        val currentTime = FormatDateImpl.getStartPeriod(sort)
+
+        val result = transactionRepository.getChartTransactions(type = TransactionType.INCOME, startTime = 0, endTime = currentTime)
+
+        return result
+    }
+*/
 
     fun exportToCsv(sort: ChartSort, fileName: String, data: List<FloatEntry>) {
         try {

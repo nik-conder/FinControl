@@ -9,21 +9,12 @@ import com.app.myfincontrol.data.entities.Session
 import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.impl.annotations.MockK
-import io.mockk.junit4.MockKRule
-import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
-import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
@@ -233,7 +224,7 @@ class TransactionDAOTest {
         }
         println("startTime: $startTime endTime: $endTime")
 
-        val result = transactionDAO.getChartTransactions(startTime = 0, endTime = 169076081567234)
+        val result = transactionDAO.getChartTransactions(type = TransactionType.INCOME,startTime = 0, endTime = 169076081567234)
         result.forEach {
             println(it)
         }

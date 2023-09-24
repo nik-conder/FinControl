@@ -288,14 +288,16 @@ fun StatisticsScreen(
                             .horizontalScroll(horizontalScrollState),
                     ) {
                         Column {
-                            TextButton(onClick = {
-                                onEvents(
-                                    StatisticsEvents.GetChart(
-                                        type = TransactionType.EXPENSE,
-                                        sort = ChartSort.DAY
+                            TextButton(
+                                onClick = {
+                                    onEvents(
+                                        StatisticsEvents.GetChart(
+                                            type = TransactionType.EXPENSE,
+                                            sort = ChartSort.DAY
+                                        )
                                     )
-                                )
-                            }) {
+                                },
+                            ) {
                                 Text(text = stringResource(id = R.string.day))
                             }
                         }
@@ -328,6 +330,18 @@ fun StatisticsScreen(
                                 onEvents(
                                     StatisticsEvents.GetChart(
                                         type = TransactionType.EXPENSE,
+                                        sort = ChartSort.QUARTER
+                                    )
+                                )
+                            }) {
+                                Text(text = stringResource(id = R.string.quarter))
+                            }
+                        }
+                        Column {
+                            TextButton(onClick = {
+                                onEvents(
+                                    StatisticsEvents.GetChart(
+                                        type = TransactionType.EXPENSE,
                                         sort = ChartSort.YEAR
                                     )
                                 )
@@ -341,7 +355,7 @@ fun StatisticsScreen(
                         modifier = Modifier
                             .padding(16.dp)
                     ) {
-                        ChartsComponent(data = chartIncome)
+                        ChartsComponent(data = chartExpense)
                     }
                 }
             }

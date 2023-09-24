@@ -56,10 +56,10 @@ class StatisticsUseCase @Inject constructor(
             calendar.time = date
             when (sort) {
                 ChartSort.DAY -> calendar.get(Calendar.HOUR_OF_DAY)
-                ChartSort.WEEK -> calendar.get(Calendar.DAY_OF_WEEK)
+                ChartSort.WEEK -> calendar.get(Calendar.DAY_OF_MONTH)
                 ChartSort.MONTH -> calendar.get(Calendar.DAY_OF_MONTH)
                 ChartSort.YEAR -> calendar.get(Calendar.MONTH) + 1
-                ChartSort.QUARTER -> calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)
+                ChartSort.QUARTER -> calendar.get(Calendar.MONTH) + 1
             }
         }.mapValues { entry ->
             entry.value.sumOf { transaction -> transaction.amount.toDouble() }
@@ -67,7 +67,7 @@ class StatisticsUseCase @Inject constructor(
         transactionsByPeriod.forEach {
             list.add(FloatEntry(x = it.key.toFloat(), y = it.value.toFloat()))
         }
-
+        println("transactionsByPeriod $transactionsByPeriod")
         return list
     }
 }
