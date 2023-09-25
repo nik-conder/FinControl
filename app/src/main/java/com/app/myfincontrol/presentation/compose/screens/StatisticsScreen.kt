@@ -2,6 +2,7 @@ package com.app.myfincontrol.presentation.compose.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -144,15 +147,54 @@ fun StatisticsScreen(
                         modifier = Modifier
                             .padding(top = 8.dp, bottom = 8.dp)
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.chart_incomes_of_the) + " " + when (state.value.chartCurrentSortIncome) {
-                                ChartSort.WEEK -> stringResource(id = R.string.week)
-                                ChartSort.MONTH -> stringResource(id = R.string.month)
-                                ChartSort.QUARTER -> stringResource(id = R.string.quarter)
-                                ChartSort.YEAR -> stringResource(id = R.string.year)
-                                else -> stringResource(id = R.string.day)
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.chart_incomes_of_the),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 6.dp)
+                        ) {
+                            Crossfade(
+                                targetState = state.value.chartCurrentSortIncome,
+                                label = ""
+                            ) { text ->
+                                when (text) {
+                                    ChartSort.DAY -> Text(
+                                        stringResource(R.string.day),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.WEEK -> Text(
+                                        stringResource(R.string.week),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.MONTH -> Text(
+                                        stringResource(R.string.month),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.QUARTER -> Text(
+                                        stringResource(R.string.quarter),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.YEAR -> Text(
+                                        stringResource(R.string.year),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
-                        )
+                        }
                     }
                     Row(
                         modifier = Modifier
@@ -272,15 +314,53 @@ fun StatisticsScreen(
                             .padding(top = 8.dp, bottom = 8.dp)
                             .fillMaxWidth(),
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.chart_expenses_of_the) + " " + when (state.value.chartCurrentSortExpense) {
-                                ChartSort.WEEK -> stringResource(id = R.string.week)
-                                ChartSort.MONTH -> stringResource(id = R.string.month)
-                                ChartSort.QUARTER -> stringResource(id = R.string.quarter)
-                                ChartSort.YEAR -> stringResource(id = R.string.year)
-                                else -> stringResource(id = R.string.day)
-                            },
-                        )
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.chart_expenses_of_the),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                        ) {
+                            Crossfade(
+                                targetState = state.value.chartCurrentSortExpense,
+                                label = ""
+                            ) { text ->
+                                when (text) {
+                                    ChartSort.DAY -> Text(
+                                        stringResource(R.string.day),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.WEEK -> Text(
+                                        stringResource(R.string.week),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.MONTH -> Text(
+                                        stringResource(R.string.month),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.QUARTER -> Text(
+                                        stringResource(R.string.quarter),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    ChartSort.YEAR -> Text(
+                                        stringResource(R.string.year),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     Row(

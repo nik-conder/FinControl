@@ -149,7 +149,7 @@ class HomeViewModel @Inject constructor(
     private fun generateTransactions(type: TransactionType) {
         var startDate = LocalDateTime.of(2023, 1, 1, 0, 0, 0).toLocalDate()
 
-        repeat(206) {
+        repeat(300) {
             val date = startDate.plusDays(1)
             startDate = date
             val unixTimestamp = date.atStartOfDay(ZoneOffset.UTC).toEpochSecond()

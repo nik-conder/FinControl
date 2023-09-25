@@ -11,20 +11,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.app.myfincontrol.R
 import com.app.myfincontrol.data.entities.InfoPageType
 import com.app.myfincontrol.presentation.compose.navigation.Screen
-import com.example.compose.FinControlTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -49,25 +47,13 @@ fun InfoPageComponent(
                     stringResource(id = R.string.loading),
                     style = MaterialTheme.typography.headlineMedium
                 )
+
                 InfoPageType.NO_DATA -> {
 
                 }
             }
         }
 
-        Row(
-            modifier = Modifier
-                .padding(top = 24.dp)
-        ) {
-            Text(
-                text = when (type) {
-                    InfoPageType.NOT_PROFILE -> stringResource(id = R.string.create_new_profile)
-                    InfoPageType.LOADING -> stringResource(id = R.string.wait)
-                    InfoPageType.NO_DATA -> stringResource(id = R.string.no_data)
-                },
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
         Row(
             modifier = Modifier
                 .padding(top = 24.dp)
@@ -92,6 +78,21 @@ fun InfoPageComponent(
                 }
             }
         }
+
+        Row(
+            modifier = Modifier
+                .padding(top = 24.dp)
+        ) {
+            Text(
+                text = when (type) {
+                    InfoPageType.NOT_PROFILE -> stringResource(id = R.string.create_new_profile)
+                    InfoPageType.LOADING -> stringResource(id = R.string.wait)
+                    InfoPageType.NO_DATA -> stringResource(id = R.string.no_data)
+                },
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+
         Row(
             modifier = Modifier
                 .padding(top = 24.dp)
@@ -120,7 +121,7 @@ fun ClockEmojiAnimation() {
         "\uD83D\uDD57", "\uD83D\uDD58", "\uD83D\uDD59", "\uD83D\uDD5A"
     )
 
-    var currentEmojiIndex by remember { mutableStateOf(0) }
+    var currentEmojiIndex by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -136,13 +137,5 @@ fun ClockEmojiAnimation() {
             text = clockEmojis[currentEmojiIndex],
             fontSize = 48.sp
         )
-    }
-}
-
-@Preview
-@Composable
-fun InfoPageComponentPreview() {
-    FinControlTheme {
-        InfoPageComponent(type = InfoPageType.NO_DATA)
     }
 }

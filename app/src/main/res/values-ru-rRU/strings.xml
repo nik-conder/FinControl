@@ -37,36 +37,46 @@
 
     <string name="limit">Превышен лимит</string>
 
-    <string name="salary">Зарплата</string>
-    <string name="freelance">Фриланс</string>
-    <string name="investments">Инвестиции</string>
-    <string name="rent">Аренда</string>
-    <string name="business">Бизнес</string>
-    <string name="part_time_jobs">Частичная занятость</string>
-    <string name="pension">Пенсия</string>
-    <string name="gifts">Подарки</string>
-    <string name="dividends">Дивиденды</string>
-    <string name="scholarships_and_grants">Стипендии и гранты</string>
-    <string name="alimony">Алименты</string>
-    <string name="social_benefits">Социальные выплаты</string>
-    <string name="copyright_royalties">Авторские вознаграждения</string>
-    <string name="prizes_and_lotteries">Призы и лотереи</string>
-    <string name="refunds">Возвраты</string>
-    <string name="other_income">Другой доход</string>
+    <string name="health">🏥 Здоровье</string>
+    <string name="transport">🚗 Транспорт</string>
+    <string name="real_estate">🏠 Недвижимость</string>
+    <string name="food">🍽️ Питание</string>
+    <string name="clothing">👕 Одежда и обувь</string>
+    <string name="fitness">💪 Фитнес</string>
+    <string name="beauty_health">💅 Красота и здоровье</string>
+    <string name="debt">💸 Долг</string>
+    <string name="credit">🏦 Кредит</string>
+    <string name="charity">🤝 Благотворительность</string>
+    <string name="electronics">📱 Техника и электроника</string>
+    <string name="communication">📞 Связь</string>
+    <string name="household">🏠 Бытовые</string>
+    <string name="subscriptions">📰 Подписки</string>
+    <string name="hobbies">🎮 Увлечения</string>
+    <string name="entertainment">🎉 Развлечения</string>
+    <string name="children">👶 Дети</string>
+    <string name="family">👨‍👩‍👧‍👦 Семья</string>
+    <string name="relationships">❤️ Отношения</string>
+    <string name="utilities">🏡 Коммунальные услуги</string>
+    <string name="pets">🐶 Домашние животные</string>
+    <string name="education">📚 Образование</string>
+    <string name="personal_development">🧠 Личное развитие</string>
+    <string name="legal_obligations">⚖️ Судебные обязательства</string>
+    <string name="taxes">📝 Налоги</string>
+    <string name="travel">✈️ Путешествия</string>
+    <string name="other_expenses">📦 Прочие расходы</string>
 
-    <string name="food">Еда</string>
-    <string name="housing">Жилье</string>
-    <string name="transportation">Транспорт</string>
-    <string name="health">Здоровье</string>
-    <string name="entertainment">Развлечения</string>
-    <string name="clothing_and_footwear">Одежда и обувь</string>
-    <string name="personal_hygiene_and_beauty">Гигиена и красота</string>
-    <string name="education">Образование</string>
-    <string name="pets">Домашние животные</string>
-    <string name="travel">Путешествия</string>
-    <string name="children">Дети</string>
-    <string name="charity">Благотворительность</string>
-    <string name="technology_and_electronics">Техника и электроника</string>
+    <string name="gifts">🎁 Подарки</string>
+    <string name="primary_income">💼 Основной доход</string>
+    <string name="additional_income">💰 Дополнительный доход</string>
+    <string name="business">🏢 Бизнес</string>
+    <string name="investments">📈 Инвестиции</string>
+    <string name="legal_obligations_income">⚖️ Судебные обязательства</string>
+    <string name="social_payments">🤲 Социальные выплаты</string>
+    <string name="scholarships_grants">🎓 Стипендии и гранты</string>
+    <string name="pension">🏦 Пенсия</string>
+    <string name="returns">🔄 Возвраты</string>
+    <string name="other_income">🌟 Прочие доходы</string>
+
 
     <string name="add_transaction">Новая транзакция</string>
     <string name="add_transaction_description">Добавить новую транзакцию. Укажите тип, категорию и сумму</string>

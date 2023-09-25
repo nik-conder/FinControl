@@ -89,7 +89,7 @@ fun TransactionComponent(
             Column {
                 TagComponent(
                     text = stringResource(
-                        id = categoriesTranscript(
+                        id = UtilsCompose.Transcription.categoriesTranscript(
                             category =
                             if (transaction.type == TransactionType.EXPENSE)
                                 TransactionCategories.ExpenseCategories.valueOf(transaction.category)

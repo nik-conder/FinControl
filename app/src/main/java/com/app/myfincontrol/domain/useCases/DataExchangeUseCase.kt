@@ -1,9 +1,11 @@
 package com.app.myfincontrol.domain.useCases
 
+import android.icu.text.SimpleDateFormat
 import android.os.Environment
 import androidx.compose.runtime.mutableStateListOf
 import com.app.myfincontrol.data.FormatDate
 import com.app.myfincontrol.data.FormatDateImpl
+import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.ChartSort
 import com.app.myfincontrol.data.enums.TransactionType
 import com.app.myfincontrol.data.repositories.TransactionRepository
@@ -11,6 +13,7 @@ import com.patrykandpatrick.vico.core.entry.FloatEntry
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -20,8 +23,13 @@ class DataExchangeUseCase @Inject constructor(
 
     private val format = ".csv"
 
-/*
-    private fun getStatistics(sort: ChartSort): List<FloatEntry> {
+    private fun formatDate(date: Long): String {
+        val sdf = SimpleDateFormat("dd.MM.yy HH:mm:ss", Locale.getDefault())
+        return sdf.format(date * 1000L)
+    }
+
+
+    private fun getStatistics(sort: ChartSort): List<Transaction> {
 
         val currentTime = FormatDateImpl.getStartPeriod(sort)
 
@@ -29,7 +37,48 @@ class DataExchangeUseCase @Inject constructor(
 
         return result
     }
-*/
+
+    fun exportToCsv(sort: ChartSort, fileName: String, data: List<FloatEntry>) {
+        val data = getStatistics(sort)
+
+        try {
+            val fileName = "${fileName}${format}" // Имя файла
+            val documentsDir =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+            val file = File(documentsDir, fileName)
+
+            // Открываем файл для записи
+            val writer = FileWriter(file)
+
+            // Записываем данные (пример записи в CSV)
+            writer.append("Дата,")
+            writer.append("Сумма,")
+            writer.append("Заметка")
+            writer.append("\n")
+            data.forEach {
+                writer.append(formatDate(it.datetime) + ",")
+                writer.append(it.amount.toString() + ",")
+                writer.append(it.note.toString() + "\n")
+            }
+
+            writer.append("\n")
+
+            // Добавьте другие строки с данными по необходимости
+
+            // Закрываем файл
+            writer.flush()
+            writer.close()
+
+            println(fileName)
+            println(documentsDir)
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+
+    }
+/*
 
     fun exportToCsv(sort: ChartSort, fileName: String, data: List<FloatEntry>) {
         try {
@@ -43,7 +92,8 @@ class DataExchangeUseCase @Inject constructor(
 
             // Записываем данные (пример записи в CSV)
             writer.append("Месяц,")
-            writer.append("Сумма")
+            writer.append("Сумма,")
+            writer.append("Заметка")
             writer.append("\n")
             data.forEach {
                 writer.append(it.x.toString() + ",")
@@ -65,6 +115,7 @@ class DataExchangeUseCase @Inject constructor(
             e.printStackTrace()
         }
     }
+*/
 
     // Метод для экспорта списка объектов Transaction в файл формата XLSX
     fun exportToXlsx(sort: ChartSort) {

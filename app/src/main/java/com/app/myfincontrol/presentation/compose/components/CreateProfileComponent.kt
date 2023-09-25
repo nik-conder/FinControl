@@ -41,11 +41,7 @@ fun CreateProfileComponent(
     val accountName = remember {
         mutableStateOf(TextFieldValue(""))
     }
-
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val accountNameMaxChar = Configuration.Limits.LIMIT_CHARS_NAME_PROFILE
-
     val selectedCurrency = remember {
         mutableStateOf(Currency.USD)
     }

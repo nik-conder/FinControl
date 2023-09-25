@@ -54,6 +54,7 @@ import com.app.myfincontrol.data.Configuration
 import com.app.myfincontrol.data.entities.Transaction
 import com.app.myfincontrol.data.enums.TransactionCategories
 import com.app.myfincontrol.data.enums.TransactionType
+import com.app.myfincontrol.presentation.utils.UtilsCompose
 import com.app.myfincontrol.presentation.viewModels.events.TransactionEvents
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -69,13 +70,12 @@ fun AddTransactionComponent(
 
     val scrollState = rememberScrollState()
     val keyboardController = LocalSoftwareKeyboardController.current
-    val dropdownMenuScrollState = rememberScrollState()
     val dropdownMenuState = remember { mutableStateOf(false) }
     val selectedType = remember { mutableStateOf(TransactionType.INCOME) }
     val selectedCategory =
         remember { mutableStateOf<TransactionCategories>(TransactionCategories.IncomeCategories.INVESTMENTS) }
     var amount by rememberSaveable { mutableStateOf(BigDecimal.ZERO) }
-    var note = remember {
+    val note = remember {
         mutableStateOf(TextFieldValue(""))
     }
     val categoriesIncome: List<TransactionCategories> = remember {
@@ -203,7 +203,7 @@ fun AddTransactionComponent(
                                     onClick = {
                                         selectedType.value = TransactionType.EXPENSE
                                         selectedCategory.value =
-                                            TransactionCategories.ExpenseCategories.TRANSPORTATION
+                                            TransactionCategories.ExpenseCategories.values()[0]
                                     }
                                 ) {
                                     Text(
@@ -263,7 +263,7 @@ fun AddTransactionComponent(
                         }) {
                             Text(
                                 text = stringResource(
-                                    id = categoriesTranscript(
+                                    id = UtilsCompose.Transcription.categoriesTranscript(
                                         category = selectedCategory.value
                                     )
                                 )
@@ -282,7 +282,7 @@ fun AddTransactionComponent(
                                         text = {
                                             Text(
                                                 text = stringResource(
-                                                    id = categoriesTranscript(
+                                                    id = UtilsCompose.Transcription.categoriesTranscript(
                                                         category = it
                                                     )
                                                 )
@@ -300,7 +300,7 @@ fun AddTransactionComponent(
                                         text = {
                                             Text(
                                                 text = stringResource(
-                                                    id = categoriesTranscript(
+                                                    id = UtilsCompose.Transcription.categoriesTranscript(
                                                         category = it
                                                     )
                                                 )

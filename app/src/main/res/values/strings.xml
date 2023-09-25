@@ -35,40 +35,48 @@
     <string name="for_year">for year</string>
     <string name="for_all_time">for all time</string>
 
-
-
     <string name="limit">Exceeded the limit</string>
 
-    <string name="salary">Salary</string>
-    <string name="freelance">Freelance</string>
-    <string name="investments">Investments</string>
-    <string name="rent">Rent</string>
-    <string name="business">Business</string>
-    <string name="part_time_jobs">Part-time jobs</string>
-    <string name="pension">Pension</string>
-    <string name="gifts">Gifts</string>
-    <string name="dividends">Dividends</string>
-    <string name="scholarships_and_grants">Scholarships and grants</string>
-    <string name="alimony">Alimony</string>
-    <string name="social_benefits">Social benefits</string>
-    <string name="copyright_royalties">Copyright royalties</string>
-    <string name="prizes_and_lotteries">Prizes and lotteries</string>
-    <string name="refunds">Refunds</string>
-    <string name="other_income">Other income</string>
+    <string name="health">🏥 Health</string>
+    <string name="transport">🚗 Transport</string>
+    <string name="real_estate">🏠 Real Estate</string>
+    <string name="food">🍽️ Food</string>
+    <string name="clothing">👕 Clothing and Shoes</string>
+    <string name="fitness">💪 Fitness</string>
+    <string name="beauty_health">💅 Beauty and Health</string>
+    <string name="debt">💸 Debt</string>
+    <string name="credit">🏦 Credit</string>
+    <string name="charity">🤝 Charity</string>
+    <string name="electronics">📱 Electronics</string>
+    <string name="communication">📞 Communication</string>
+    <string name="household">🏠 Household</string>
+    <string name="subscriptions">📰 Subscriptions</string>
+    <string name="hobbies">🎮 Hobbies</string>
+    <string name="entertainment">🎉 Entertainment</string>
+    <string name="children">👶 Children</string>
+    <string name="family">👨‍👩‍👧‍👦 Family</string>
+    <string name="relationships">❤️ Relationships</string>
+    <string name="utilities">🏡 Utilities</string>
+    <string name="pets">🐶 Pets</string>
+    <string name="education">📚 Education</string>
+    <string name="personal_development">🧠 Personal Development</string>
+    <string name="legal_obligations">⚖️ Legal Obligations</string>
+    <string name="taxes">📝 Taxes</string>
+    <string name="travel">✈️ Travel</string>
+    <string name="other_expenses">📦 Other Expenses</string>
 
-    <string name="food">Food</string>
-    <string name="housing">Housing</string>
-    <string name="transportation">Transportation</string>
-    <string name="health">Health</string>
-    <string name="entertainment">Entertainment</string>
-    <string name="clothing_and_footwear">Clothing and footwear</string>
-    <string name="personal_hygiene_and_beauty">Personal hygiene and beauty</string>
-    <string name="education">Education</string>
-    <string name="pets">Pets</string>
-    <string name="travel">Travel</string>
-    <string name="children">Children</string>
-    <string name="charity">Charity</string>
-    <string name="technology_and_electronics">Technology and electronics</string>
+    <string name="gifts">🎁 Gifts</string>
+    <string name="primary_income">💼 Primary Income</string>
+    <string name="additional_income">💰 Additional Income</string>
+    <string name="business">🏢 Business</string>
+    <string name="investments">📈 Investments</string>
+    <string name="legal_obligations_income">⚖️ Legal Obligations</string>
+    <string name="social_payments">🤲 Social Payments</string>
+    <string name="scholarships_grants">🎓 Scholarships and Grants</string>
+    <string name="pension">🏦 Pension</string>
+    <string name="returns">🔄 Returns</string>
+    <string name="other_income">🌟 Other Income</string>
+
 
     <string name="add_transaction">New transaction</string>
     <string name="add_transaction_description">Add a new transaction. Specify the type, category and amount</string>

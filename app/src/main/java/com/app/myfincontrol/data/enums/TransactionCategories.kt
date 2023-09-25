@@ -2,38 +2,47 @@ package com.app.myfincontrol.data.enums
 
 interface TransactionCategories {
 
-    enum class IncomeCategories: TransactionCategories {
-        SALARY,
-        FREELANCE,
-        INVESTMENTS,
-        RENT,
-        BUSINESS,
-        PART_TIME_JOBS,
-        PENSION,
+    enum class IncomeCategories : TransactionCategories {
         GIFTS,
-        DIVIDENDS,
-        SCHOLARSHIPS_AND_GRANTS,
-        ALIMONY,
-        SOCIAL_BENEFITS,
-        COPYRIGHT_ROYALTIES,
-        PRIZES_AND_LOTTERIES,
-        REFUNDS,
+        PRIMARY_INCOME,
+        ADDITIONAL_INCOME,
+        BUSINESS,
+        INVESTMENTS,
+        LEGAL_OBLIGATIONS_INCOME,
+        SOCIAL_PAYMENTS,
+        SCHOLARSHIPS_GRANTS,
+        PENSION,
+        RETURNS,
         OTHER_INCOME
     }
 
-    enum class ExpenseCategories: TransactionCategories {
-        FOOD,
-        HOUSING,
-        TRANSPORTATION,
+    enum class ExpenseCategories : TransactionCategories {
         HEALTH,
-        ENTERTAINMENT,
-        CLOTHING_AND_FOOTWEAR,
-        PERSONAL_HYGIENE_AND_BEAUTY,
-        EDUCATION,
-        PETS,
-        TRAVEL,
-        CHILDREN,
+        TRANSPORT,
+        REAL_ESTATE,
+        FOOD,
+        CLOTHING,
+        FITNESS,
+        BEAUTY_HEALTH,
+        DEBT,
+        CREDIT,
         CHARITY,
-        TECHNOLOGY_AND_ELECTRONICS
+        ELECTRONICS,
+        COMMUNICATION,
+        HOUSEHOLD,
+        SUBSCRIPTIONS,
+        HOBBIES,
+        ENTERTAINMENT,
+        CHILDREN,
+        FAMILY,
+        RELATIONSHIPS,
+        UTILITIES,
+        PETS,
+        EDUCATION,
+        PERSONAL_DEVELOPMENT,
+        LEGAL_OBLIGATIONS,
+        TAXES,
+        TRAVEL,
+        OTHER_EXPENSES
     }
 }

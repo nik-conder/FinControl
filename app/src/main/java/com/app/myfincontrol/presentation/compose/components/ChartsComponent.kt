@@ -114,10 +114,7 @@ fun ChartsComponent(
                 }
             }
         } else {
-            Text(
-                text = stringResource(id = R.string.no_data),
-                style = MaterialTheme.typography.bodyMedium
-            )
+            InfoPageComponent(InfoPageType.NO_DATA)
         }
     }
 }
