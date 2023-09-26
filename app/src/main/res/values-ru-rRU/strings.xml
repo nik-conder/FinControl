@@ -133,4 +133,6 @@
     <string name="note">Note</string>
     <string name="collapse">Свернуть</string>
     <string name="expand">Развернуть</string>
+    <string name="data_is_hidden">Данные скрыты</string>
+    <string name="data_is_hidden_description">Включите отображение баланса в Настройках</string>
 </resources>

@@ -13,8 +13,8 @@ android {
         applicationId = "com.app.myfincontrol"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "0.2"
         testInstrumentationRunner = "com.app.myfincontrol.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true

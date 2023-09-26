@@ -51,6 +51,13 @@ fun InfoPageComponent(
                 InfoPageType.NO_DATA -> {
 
                 }
+
+                InfoPageType.HIDDEN_BALANCE -> {
+                    Text(
+                        stringResource(id = R.string.data_is_hidden),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                }
             }
         }
 
@@ -76,6 +83,13 @@ fun InfoPageComponent(
                         fontSize = 48.sp
                     )
                 }
+
+                InfoPageType.HIDDEN_BALANCE -> {
+                    Text(
+                        text = "\uD83E\uDEE3",
+                        fontSize = 48.sp
+                    )
+                }
             }
         }
 
@@ -88,6 +102,7 @@ fun InfoPageComponent(
                     InfoPageType.NOT_PROFILE -> stringResource(id = R.string.create_new_profile)
                     InfoPageType.LOADING -> stringResource(id = R.string.wait)
                     InfoPageType.NO_DATA -> stringResource(id = R.string.no_data)
+                    InfoPageType.HIDDEN_BALANCE -> stringResource(R.string.data_is_hidden_description)
                 },
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -108,6 +123,7 @@ fun InfoPageComponent(
 
                 InfoPageType.LOADING -> {}
                 InfoPageType.NO_DATA -> {}
+                InfoPageType.HIDDEN_BALANCE -> {}
             }
         }
     }

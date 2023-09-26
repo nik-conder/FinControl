@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -70,7 +71,6 @@ fun HomeScreen(
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-    val screenWidth = configuration.screenWidthDp.dp
 
     val vm = hiltViewModel<HomeViewModel>()
     val onEventsTransaction = vm::onEventsTransaction
@@ -161,18 +161,26 @@ fun HomeScreen(
                 },
                 actions = {
                     Column {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    store.setDarkMode()
-                                }
-                            }) {
-                            Icon(
-                                painter = painterResource(id = if (darkMode.value) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24),
-                                contentDescription = stringResource(
-                                    id = R.string.dark_mode
+                        PlainTooltipBox(
+                            tooltip = {
+                                Text(text = stringResource(R.string.dark_mode))
+                            }
+                        ) {
+                            IconButton(
+                                modifier = Modifier
+                                    .tooltipAnchor(),
+                                onClick = {
+                                    scope.launch {
+                                        store.setDarkMode()
+                                    }
+                                }) {
+                                Icon(
+                                    painter = painterResource(id = if (darkMode.value) R.drawable.ic_baseline_light_mode_24 else R.drawable.ic_baseline_dark_mode_24),
+                                    contentDescription = stringResource(
+                                        id = R.string.dark_mode
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                     if (debugModeState.value) {
@@ -253,7 +261,6 @@ fun HomeScreen(
                     store = store,
                     currency = state.value.selectedProfile?.currency ?: Currency.USD,
                     snackBarHostState = snackBarHostState,
-                    onEventsTransaction = onEventsTransaction,
                 )
             }
             BoxWithConstraints(

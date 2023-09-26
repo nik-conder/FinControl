@@ -22,6 +22,7 @@ class FeedDataSource @Inject constructor(
             val response = transactionDAO.getTransactions(actualLastId.toLong(), params.loadSize)
 
             lastLoadedKey = response.lastOrNull()?.id
+            println("lastLoadedKey: $lastLoadedKey")
 
             val nextKey = if (response.isNotEmpty()) {
                 response.last().id

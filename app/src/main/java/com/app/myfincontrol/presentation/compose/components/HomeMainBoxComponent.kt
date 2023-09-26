@@ -1,5 +1,6 @@
 package com.app.myfincontrol.presentation.compose.components
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,8 +48,7 @@ fun HomeMainBoxComponent(
     profileName: String,
     balance: BigDecimal,
     currency: Currency,
-    snackBarHostState: SnackbarHostState,
-    onEventsTransaction: (TransactionEvents) -> Unit,
+    snackBarHostState: SnackbarHostState
 ) {
     val scope = rememberCoroutineScope()
     val hideBalanceState = store.hideBalanceState.collectAsState(initial = false)
@@ -78,25 +79,53 @@ fun HomeMainBoxComponent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text(
-                        text = if (hideBalanceState.value) "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11" else "${
-                            UtilsCompose.Numbers.formatBigDecimalWithSpaces(balance)
-                        } ${UtilsCompose.Symbols.currencySymbolComponent(currency)}",
-                        fontSize = 42.sp,
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        fontWeight = FontWeight(500)
-                    )
+                    Crossfade(
+                        targetState = hideBalanceState.value, label = ""
+                    ) { state ->
+                        when (state) {
+                            true -> {
+                                Text(
+                                    text = "\uD83E\uDD11 \uD83E\uDD11 \uD83E\uDD11",
+                                    fontSize = 36.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary,
+                                    fontWeight = FontWeight(500)
+                                )
+                            }
+
+                            false -> {
+                                Text(
+                                    text = "${
+                                        UtilsCompose.Numbers.formatBigDecimalWithSpaces(
+                                            balance
+                                        )
+                                    } ${UtilsCompose.Symbols.currencySymbolComponent(currency)}",
+                                    fontSize = 36.sp,
+                                    color = MaterialTheme.colorScheme.onSecondary,
+                                    fontWeight = FontWeight(500)
+                                )
+                            }
+                        }
+
+                    }
+
                 }
                 Column {
-                    IconButton(
-                        modifier = Modifier,
-                        onClick = { scope.launch { store.sethideBalanceState() } }
+                    PlainTooltipBox(
+                        tooltip = {
+                            Text(text = stringResource(R.string.hide_balance_setting))
+                        }
                     ) {
-                        Icon(
-                            painter = painterResource(id = if (hideBalanceState.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
-                            contentDescription = stringResource(id = R.string.visibility_content_description),
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        IconButton(
+                            modifier = Modifier
+                                .tooltipAnchor(),
+                            onClick = { scope.launch { store.sethideBalanceState() } }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = if (hideBalanceState.value) R.drawable.ic_baseline_visibility_off_24 else R.drawable.ic_baseline_visibility_24),
+                                contentDescription = stringResource(id = R.string.visibility_content_description),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
                     }
                 }
             }

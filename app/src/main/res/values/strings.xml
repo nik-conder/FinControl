@@ -134,4 +134,6 @@
     <string name="note">Note</string>
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>
+    <string name="data_is_hidden">Data is hidden</string>
+    <string name="data_is_hidden_description">Enable balance display in Settings</string>
 </resources>
